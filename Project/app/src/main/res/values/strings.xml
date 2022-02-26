@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">BookReadingApp_Android</string>
+    <string name="library">Library</string>
+    <string name="settings_btn_desc">Settings</string>
+    <string name="add_btn_desc">Add book</string>
+    <string name="num_books"><![CDATA[<num> books]]></string>
+    <string name="sort_books_btn_desc">Sort books</string>
+    <string name="books_btn_desc">Books</string>
+    <string name="notes_btn_desc">Notes</string>
+    <string name="bookmarks_btn_desc">Bookmarks</string>
 </resources>
