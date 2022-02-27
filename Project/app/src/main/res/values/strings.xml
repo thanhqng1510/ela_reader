@@ -8,4 +8,8 @@
     <string name="books_btn_desc">Books</string>
     <string name="notes_btn_desc">Notes</string>
     <string name="bookmarks_btn_desc">Bookmarks</string>
+    <string name="book_cover_desc">Book cover</string>
+    <string name="title"><![CDATA[<title>]]></string>
+    <string name="author1_author2"><![CDATA[<author1>, <author2>]]></string>
+    <string name="sharing_btn_desc">Share with you</string>
 </resources>
