@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/activity_library.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/add_light.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/book_light.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/custom_searchview.xml" value="0.265625" />
