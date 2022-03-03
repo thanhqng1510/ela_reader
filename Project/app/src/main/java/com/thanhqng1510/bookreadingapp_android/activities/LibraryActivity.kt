@@ -1,12 +1,12 @@
 package com.thanhqng1510.bookreadingapp_android.activities
 
 import android.os.Bundle
-import android.view.inputmethod.InputMethodManager
 import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.constraintlayout.widget.ConstraintLayout
+import com.thanhqng1510.bookreadingapp_android.BookListAdapter
 import com.thanhqng1510.bookreadingapp_android.R
+import com.thanhqng1510.bookreadingapp_android.mocks.MockBooks
 
 class LibraryActivity : AppCompatActivity() {
     private lateinit var bookList: ListView
@@ -23,7 +23,7 @@ class LibraryActivity : AppCompatActivity() {
     private fun setupBindings() {
         bookList = findViewById(R.id.book_list)
         searchBar = findViewById(R.id.search_bar)
-        // bookList.adapter = BookListAdapter(this, android.R.layout.book_list_row_layout, MockBooks.getBooks())
+        bookList.adapter = BookListAdapter(this, R.layout.book_list_row_layout, MockBooks.getBooks())
     }
 
     private fun setupCallbacks() {

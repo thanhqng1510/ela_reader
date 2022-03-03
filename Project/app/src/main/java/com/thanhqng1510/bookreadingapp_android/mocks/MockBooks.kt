@@ -1,6 +1,5 @@
 package com.thanhqng1510.bookreadingapp_android.mocks
 
-import androidx.core.content.ContextCompat
 import com.thanhqng1510.bookreadingapp_android.models.Book
 
 object MockBooks {
