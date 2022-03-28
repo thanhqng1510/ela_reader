@@ -3,19 +3,17 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../layout/custom_preview.xml" value="0.33645833333333336" />
         <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/activity_library.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/add_light.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/book_light.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/custom_searchview.xml" value="0.265625" />
-        <entry key="app/src/main/res/drawable/new_status_light.xml" value="0.1" />
-        <entry key="app/src/main/res/drawable/reading_status_light.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/settings_light.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/shadow_down.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/shadow_up_light.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/sharing_light.xml" value="0.165625" />
-        <entry key="app/src/main/res/layout/activity_library.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_library.xml" value="0.2839083036801306" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24008300313404857" />
-        <entry key="app/src/main/res/layout/book_list_header.xml" value="0.2418478260869565" />
         <entry key="app/src/main/res/layout/book_list_row_layout.xml" value="0.2558119997222812" />
         <entry key="app/src/main/res/layout/custom_searchview.xml" value="0.213768115942029" />
       </map>
@@ -26,12 +24,5 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
-  </component>
-  <component name="VisualizationToolProject">
-    <option name="state">
-      <ProjectState>
-        <option name="scale" value="0.2558119997222812" />
-      </ProjectState>
-    </option>
   </component>
 </project>
