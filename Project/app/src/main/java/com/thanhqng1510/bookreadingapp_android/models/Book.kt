@@ -6,7 +6,7 @@ data class Book(
     val coverId: Int?,
     val title: String,
     val authors: Array<String>,
-    val pages: Int,
+    val numPage: Int,
     var sharingSessionId: UUID?
 ) {
     enum class STATUS(val sortOrder: Int) {
@@ -20,14 +20,14 @@ data class Book(
 
     var currentPage: Int = 1
         set(value) {
-            field = value
+            field = value.coerceIn(1, numPage)
 
-            status = if (field <= 1) {
+            status = if (field == 1) {
                 if (status == STATUS.FINISHED)
                     STATUS.READING
                 else
                     STATUS.NEW
-            } else if (field == pages)
+            } else if (field == numPage)
                 STATUS.FINISHED
             else
                 STATUS.READING

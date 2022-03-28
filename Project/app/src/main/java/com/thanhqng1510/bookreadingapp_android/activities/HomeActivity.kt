@@ -8,7 +8,7 @@ import com.thanhqng1510.bookreadingapp_android.BookListAdapter
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.mocks.MockBooks
 
-class LibraryActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private lateinit var bookList: ListView
     private lateinit var searchBar: SearchView
 
