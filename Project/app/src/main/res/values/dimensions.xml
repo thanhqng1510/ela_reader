@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="globalPadding">20dp</dimen>
-    <dimen name="componentMargin">15dp</dimen>
+    <dimen name="globalSpacing">20dp</dimen>
+    <dimen name="componentSpacing">15dp</dimen>
     <dimen name="heading1Text">40sp</dimen>
     <dimen name="bodyText">20sp</dimen>
+
+    <dimen name="bookListRowHeight">90dp</dimen>
+    <dimen name="bookListRowCoverWidth">60dp</dimen>
 </resources>

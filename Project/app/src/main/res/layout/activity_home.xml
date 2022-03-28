@@ -21,8 +21,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="@dimen/globalPadding"
-            android:layout_marginTop="@dimen/globalPadding">
+            android:layout_marginHorizontal="@dimen/globalSpacing"
+            android:layout_marginTop="@dimen/globalSpacing">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -56,11 +56,11 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:elevation="2dp"
-            android:layout_marginTop="@dimen/componentMargin"
+            android:layout_marginTop="@dimen/componentSpacing"
             android:background="@drawable/shadow_down_light" />
 
-        <ScrollView
-            android:layout_width="wrap_content"
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
             android:fillViewport="true">
@@ -74,21 +74,21 @@
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/componentMargin"
+                    android:layout_marginTop="@dimen/componentSpacing"
                     app:iconifiedByDefault="false"
                     android:background="@drawable/custom_searchview"
                     app:queryBackground="@null"
                     app:queryHint="Search Here"
                     app:submitBackground="@null"
-                    android:layout_marginHorizontal="@dimen/globalPadding" />
+                    android:layout_marginHorizontal="@dimen/globalSpacing" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/componentMargin"
+                    android:layout_marginTop="@dimen/componentSpacing"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginHorizontal="@dimen/globalPadding">
+                    android:layout_marginHorizontal="@dimen/globalSpacing">
 
                     <TextView
                         android:id="@+id/book_count"
@@ -111,14 +111,15 @@
                         android:contentDescription="@string/sort_books_btn_desc" />
                 </LinearLayout>
 
-                <ListView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/book_list"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:layout_marginHorizontal="@dimen/globalPadding" />
+                    android:layout_weight="1" />
+
             </LinearLayout>
-        </ScrollView>
+
+        </androidx.core.widget.NestedScrollView>
 
         <View
             android:layout_width="match_parent"
@@ -129,8 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginHorizontal="@dimen/globalPadding"
-            android:layout_marginBottom="@dimen/componentMargin"
+            android:layout_marginHorizontal="@dimen/globalSpacing"
+            android:layout_marginBottom="@dimen/componentSpacing"
             android:baselineAligned="false">
 
             <LinearLayout
