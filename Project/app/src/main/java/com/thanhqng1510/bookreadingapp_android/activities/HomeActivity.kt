@@ -1,6 +1,9 @@
 package com.thanhqng1510.bookreadingapp_android.activities
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,9 +30,16 @@ class HomeActivity : AppCompatActivity() {
 
         bookList.adapter = BookListAdapter(MockBooks.getBooks())
         bookList.layoutManager = LinearLayoutManager(this)
+
+        val bookCountView : TextView = findViewById(R.id.book_count)
+        bookCountView.text = "${bookList.adapter!!.itemCount} book(s)"
     }
 
     private fun setupCallbacks() {
-
+        val settingsButton : ImageButton = findViewById(R.id.settings_btn)
+        settingsButton.setOnClickListener {
+            val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

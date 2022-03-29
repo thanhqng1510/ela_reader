@@ -12,4 +12,5 @@
     <string name="title"><![CDATA[<title>]]></string>
     <string name="author1_author2"><![CDATA[<author1>, <author2>]]></string>
     <string name="sharing_btn_desc">Share with you</string>
+    <string name="back_btn_desc">Back</string>
 </resources>
