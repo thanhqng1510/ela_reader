@@ -5,13 +5,12 @@ import android.os.Bundle
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
+import com.thanhqng1510.bookreadingapp_android.datamodels.Book
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
-import com.thanhqng1510.bookreadingapp_android.models.Book
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -66,12 +65,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun onBookListDataChange(type: BookListAdapter.DATACHANGED, atIdx: Int, size: Int) {
-        when (type) {
-            BookListAdapter.DATACHANGED.INSERT -> bookListAdapter.notifyItemRangeInserted(atIdx, size)
-            BookListAdapter.DATACHANGED.REMOVE -> {
-                // TODO: handle this case
-            }
-        }
+        bookListAdapter.onBookListDataChange(type, atIdx, size)
         bookCount.text = getString(R.string.num_books, bookListData.size)
     }
 }

@@ -1,6 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.datastore.localstore
 
-import com.thanhqng1510.bookreadingapp_android.models.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.Book
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

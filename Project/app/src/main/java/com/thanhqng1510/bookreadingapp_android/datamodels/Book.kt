@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.models
+package com.thanhqng1510.bookreadingapp_android.datamodels
 
 import java.util.*
 

@@ -1,6 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.datastore.localstore
 
-import com.thanhqng1510.bookreadingapp_android.models.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.Book
 import kotlinx.coroutines.*
 import javax.inject.Inject
 import javax.inject.Qualifier

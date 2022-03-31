@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.models.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.Book
 
 internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -43,5 +43,14 @@ internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.A
     enum class DATACHANGED {
         INSERT,
         REMOVE
+    }
+
+    fun onBookListDataChange(type: DATACHANGED, atIdx: Int, size: Int) {
+        when (type) {
+            DATACHANGED.INSERT -> notifyItemRangeInserted(atIdx, size)
+            DATACHANGED.REMOVE -> {
+                // TODO: handle this case
+            }
+        }
     }
 }
