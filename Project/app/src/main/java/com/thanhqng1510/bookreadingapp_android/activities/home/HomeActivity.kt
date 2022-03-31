@@ -2,9 +2,12 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -22,6 +25,8 @@ class HomeActivity : AppCompatActivity() {
     lateinit var dataStore: DataStore
 
     private lateinit var bookList: RecyclerView
+    private lateinit var emptyBookListLayout: LinearLayout
+    private lateinit var bookListScrollLayout: NestedScrollView
     private lateinit var settingsBtn: ImageButton
     private lateinit var bookCount: TextView
     private lateinit var refreshLayout: SwipeRefreshLayout
@@ -38,6 +43,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun setupBindings() {
         bookList = findViewById(R.id.book_list)
+        emptyBookListLayout = findViewById(R.id.empty_book_list_layout)
+        bookListScrollLayout = findViewById(R.id.book_list_scroll_layout)
         settingsBtn = findViewById(R.id.settings_btn)
         bookCount = findViewById(R.id.book_count)
         refreshLayout = findViewById(R.id.refresh_layout)
@@ -46,6 +53,7 @@ class HomeActivity : AppCompatActivity() {
         bookList.adapter = bookListAdapter
         bookList.layoutManager = LinearLayoutManager(this)
 
+        refreshBookListView()
         loadBookListData()
     }
 
@@ -86,5 +94,17 @@ class HomeActivity : AppCompatActivity() {
     private fun onBookListDataChange(type: BookListAdapter.DATACHANGED, atIdx: Int, size: Int) {
         bookListAdapter.onBookListDataChange(type, atIdx, size)
         bookCount.text = getString(R.string.num_books, bookListData.size)
+        refreshBookListView()
+    }
+
+    private fun refreshBookListView() {
+        if (bookListData.isEmpty()) {
+            bookListScrollLayout.visibility = View.GONE
+            emptyBookListLayout.visibility = View.VISIBLE
+        }
+        else {
+            bookListScrollLayout.visibility = View.VISIBLE
+            emptyBookListLayout.visibility = View.GONE
+        }
     }
 }
