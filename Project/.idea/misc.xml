@@ -15,8 +15,8 @@
         <entry key="app/src/main/res/drawable/shadow_down_light.xml" value="0.247" />
         <entry key="app/src/main/res/drawable/shadow_up_light.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/sharing_light.xml" value="0.165625" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.21105072463768115" />
-        <entry key="app/src/main/res/layout/activity_library.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/layout/activity_library.xml" value="0.2839083036801306" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24008300313404857" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.21105072463768115" />
         <entry key="app/src/main/res/layout/book_list_header.xml" value="0.2418478260869565" />
