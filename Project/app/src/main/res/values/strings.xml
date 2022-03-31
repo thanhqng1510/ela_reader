@@ -3,14 +3,12 @@
     <string name="library">Library</string>
     <string name="settings_btn_desc">Settings</string>
     <string name="add_btn_desc">Add book</string>
-    <string name="num_books"><![CDATA[<num> books]]></string>
+    <string name="num_books">%1$d books</string>
     <string name="sort_books_btn_desc">Sort books</string>
     <string name="books_btn_desc">Books</string>
     <string name="notes_btn_desc">Notes</string>
     <string name="bookmarks_btn_desc">Bookmarks</string>
     <string name="book_cover_desc">Book cover</string>
-    <string name="title"><![CDATA[<title>]]></string>
-    <string name="author1_author2"><![CDATA[<author1>, <author2>]]></string>
     <string name="sharing_btn_desc">Share with you</string>
     <string name="back_btn_desc">Back</string>
 </resources>

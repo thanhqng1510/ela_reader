@@ -1,27 +1,20 @@
-package com.thanhqng1510.bookreadingapp_android
+package com.thanhqng1510.bookreadingapp_android.activities.home
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.models.Book
 
-class BookListAdapter(private val bookList: List<Book>) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val title: TextView
-        val author: TextView
-        val cover: ImageView
-        val status: ImageView
-
-        init {
-            title = view.findViewById(R.id.title)
-            author = view.findViewById(R.id.author)
-            cover = view.findViewById(R.id.cover)
-            status = view.findViewById(R.id.book_status)
-        }
+internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
+    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+        val title: TextView = view.findViewById(R.id.title)
+        val author: TextView = view.findViewById(R.id.author)
+        val cover: ImageView = view.findViewById(R.id.cover)
+        val status: ImageView = view.findViewById(R.id.book_status)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -39,11 +32,16 @@ class BookListAdapter(private val bookList: List<Book>) : RecyclerView.Adapter<B
                 when (bookList[position].status) {
                     Book.STATUS.NEW -> R.drawable.new_status_light
                     Book.STATUS.READING -> R.drawable.reading_status_light
-                    else -> 0
+                    else -> 0 // TODO: need enhancement
                 }
             )
         }
     }
 
     override fun getItemCount(): Int = bookList.size
+
+    enum class DATACHANGED {
+        INSERT,
+        REMOVE
+    }
 }
