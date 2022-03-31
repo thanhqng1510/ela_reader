@@ -45,58 +45,63 @@
         android:elevation="2dp"
         android:layout_marginTop="@dimen/componentSpacing"
         android:background="@drawable/shadow_down_light" />
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:fillViewport="true">
-        <LinearLayout
+        android:layout_weight="1">
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_bar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/componentSpacing"
-                app:iconifiedByDefault="false"
-                android:background="@drawable/custom_searchview"
-                app:queryBackground="@null"
-                app:queryHint="Search Here"
-                app:submitBackground="@null"
-                android:layout_marginHorizontal="@dimen/globalSpacing" />
+            android:fillViewport="true">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/componentSpacing"
-                android:orientation="horizontal"
-                android:gravity="center"
-                android:layout_marginHorizontal="@dimen/globalSpacing">
-                <TextView
-                    android:id="@+id/book_count"
-                    android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/num_books"
-                    android:textSize="@dimen/bodyText"/>
-                <Space
-                    android:layout_width="0dp"
+                    android:layout_marginTop="@dimen/componentSpacing"
+                    app:iconifiedByDefault="false"
+                    android:background="@drawable/custom_searchview"
+                    app:queryBackground="@null"
+                    app:queryHint="Search Here"
+                    app:submitBackground="@null"
+                    android:layout_marginHorizontal="@dimen/globalSpacing" />
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/componentSpacing"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginHorizontal="@dimen/globalSpacing">
+                    <TextView
+                        android:id="@+id/book_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/num_books"
+                        android:textSize="@dimen/bodyText"/>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                    <ImageButton
+                        android:id="@+id/sort_books_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:srcCompat="@drawable/sort_light"
+                        android:backgroundTint="#00FFFFFF"
+                        android:contentDescription="@string/sort_books_btn_desc" />
+                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/book_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
                     android:layout_weight="1" />
-                <ImageButton
-                    android:id="@+id/sort_books_btn"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@drawable/sort_light"
-                    android:backgroundTint="#00FFFFFF"
-                    android:contentDescription="@string/sort_books_btn_desc" />
             </LinearLayout>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/book_list"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"

@@ -48,9 +48,7 @@ internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.A
     fun onBookListDataChange(type: DATACHANGED, atIdx: Int, size: Int) {
         when (type) {
             DATACHANGED.INSERT -> notifyItemRangeInserted(atIdx, size)
-            DATACHANGED.REMOVE -> {
-                // TODO: handle this case
-            }
+            DATACHANGED.REMOVE -> notifyItemRangeRemoved(atIdx, size)
         }
     }
 }

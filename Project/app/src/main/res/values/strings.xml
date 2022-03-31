@@ -11,4 +11,5 @@
     <string name="book_cover_desc">Book cover</string>
     <string name="sharing_btn_desc">Share with you</string>
     <string name="back_btn_desc">Back</string>
+    <string name="book_status">Book status</string>
 </resources>
