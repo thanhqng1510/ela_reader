@@ -132,7 +132,8 @@ class HomeActivity : AppCompatActivity() {
         onBookListDataChange(BookListAdapter.DATACHANGED.REMOVE, 0, prevListSize)
 
         bookListDisplayData.addAll(bookListData.stream().filter {
-                book -> book.title.contains(query ?: "")
+                book -> book.title.contains(query ?: "", ignoreCase = true) ||
+                        book.authors.any { name -> name.contains(query ?: "", ignoreCase = true) }
         }.toList())
         onBookListDataChange(BookListAdapter.DATACHANGED.INSERT, 0, bookListDisplayData.size)
     }
