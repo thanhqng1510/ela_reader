@@ -1,12 +1,15 @@
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +21,7 @@ import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
 import javax.inject.Inject
+import kotlin.streams.toList
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -29,9 +33,11 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var settingsBtn: ImageButton
     private lateinit var bookCount: TextView
     private lateinit var refreshLayout: SwipeRefreshLayout
+    private lateinit var searchBar: SearchView
 
     private var bookListData = mutableListOf<Book>()
-    private var bookListAdapter = BookListAdapter(bookListData)
+    private var bookListDisplayData = mutableListOf<Book>()
+    private val bookListAdapter = BookListAdapter(bookListDisplayData)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +53,7 @@ class HomeActivity : AppCompatActivity() {
         settingsBtn = findViewById(R.id.settings_btn)
         bookCount = findViewById(R.id.book_count)
         refreshLayout = findViewById(R.id.refresh_layout)
+        searchBar = findViewById(R.id.search_bar)
 
         bookCount.text = getString(R.string.num_books, bookListData.size)
         bookList.adapter = bookListAdapter
@@ -63,7 +70,7 @@ class HomeActivity : AppCompatActivity() {
         }
         refreshLayout.setOnRefreshListener {
             CoroutineScope(Dispatchers.IO).launch {
-                val ensureWaitTimeJob = launch { delay(1000L) }
+                val ensureWaitTimeJob = launch { delay(500L) }
                 loadBookListData().join()
                 ensureWaitTimeJob.join()
 
@@ -72,20 +79,30 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
         }
+        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+            @RequiresApi(Build.VERSION_CODES.N)
+            override fun onQueryTextChange(query: String?): Boolean {
+                filterBookListDisplayData(query)
+                return false
+            }
+        })
     }
 
     private fun loadBookListData(): Job {
         return CoroutineScope(Dispatchers.IO).launch {
-            val newData = dataStore.getAllBooks()
+            bookListData = dataStore.getAllBooks().toMutableList()
             withContext(Dispatchers.Main) {
                 synchronized(this) {
-                    val prevListSize = bookListData.size
-                    bookListData.clear()
+                    val prevListSize = bookListDisplayData.size
+                    bookListDisplayData.clear()
                     onBookListDataChange(BookListAdapter.DATACHANGED.REMOVE, 0, prevListSize)
                 }
                 synchronized(this) {
-                    bookListData.addAll(newData)
-                    onBookListDataChange(BookListAdapter.DATACHANGED.INSERT, 0, newData.size)
+                    bookListDisplayData.addAll(bookListData)
+                    onBookListDataChange(BookListAdapter.DATACHANGED.INSERT, 0, bookListData.size)
                 }
             }
         }
@@ -93,7 +110,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun onBookListDataChange(type: BookListAdapter.DATACHANGED, atIdx: Int, size: Int) {
         bookListAdapter.onBookListDataChange(type, atIdx, size)
-        bookCount.text = getString(R.string.num_books, bookListData.size)
+        bookCount.text = getString(R.string.num_books, bookListDisplayData.size)
         refreshBookListView()
     }
 
@@ -106,5 +123,17 @@ class HomeActivity : AppCompatActivity() {
             bookListScrollLayout.visibility = View.VISIBLE
             emptyBookListLayout.visibility = View.GONE
         }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun filterBookListDisplayData(query: String?) {
+        val prevListSize = bookListDisplayData.size
+        bookListDisplayData.clear()
+        onBookListDataChange(BookListAdapter.DATACHANGED.REMOVE, 0, prevListSize)
+
+        bookListDisplayData.addAll(bookListData.stream().filter {
+                book -> book.title.contains(query ?: "")
+        }.toList())
+        onBookListDataChange(BookListAdapter.DATACHANGED.INSERT, 0, bookListDisplayData.size)
     }
 }
