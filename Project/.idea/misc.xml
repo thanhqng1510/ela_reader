@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="../../../../../../../../../layout/custom_preview.xml" value="0.30885416666666665" />
         <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/activity_library.xml" value="0.33" />
         <entry key="app/src/main/res/drawable/add_light.xml" value="0.2984375" />
         <entry key="app/src/main/res/drawable/back_light.xml" value="0.247" />
@@ -15,12 +16,14 @@
         <entry key="app/src/main/res/drawable/shadow_down_light.xml" value="0.247" />
         <entry key="app/src/main/res/drawable/shadow_up_light.xml" value="0.265625" />
         <entry key="app/src/main/res/drawable/sharing_light.xml" value="0.165625" />
-        <entry key="app/src/main/res/layout/activity_home.xml" value="0.3098958333333333" />
+        <entry key="app/src/main/res/drawable/sort_light.xml" value="0.2535" />
+        <entry key="app/src/main/res/layout/activity_home.xml" value="0.18316802978515628" />
         <entry key="app/src/main/res/layout/activity_library.xml" value="0.2839083036801306" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24008300313404857" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.21105072463768115" />
+        <entry key="app/src/main/res/layout/activity_sort_option_spinner_adapter.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/book_list_header.xml" value="0.2418478260869565" />
-        <entry key="app/src/main/res/layout/book_list_row_layout.xml" value="0.2558119997222812" />
+        <entry key="app/src/main/res/layout/book_list_row_layout.xml" value="0.23115577889447236" />
         <entry key="app/src/main/res/layout/custom_searchview.xml" value="0.213768115942029" />
       </map>
     </option>

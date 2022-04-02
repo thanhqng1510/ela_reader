@@ -32,7 +32,7 @@ internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.A
                 when (bookList[position].status.eVal) {
                     Book.STATUS.NEW -> R.drawable.new_status_light
                     Book.STATUS.READING -> R.drawable.reading_status_light
-                    else -> 0 // TODO: need enhancement
+                    else -> 0 // TODO: Needs enhancement
                 }
             )
         }
@@ -42,13 +42,15 @@ internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.A
 
     enum class DATACHANGED {
         INSERT,
-        REMOVE
+        REMOVE,
+        CHANGE
     }
 
     fun onBookListDataChange(type: DATACHANGED, atIdx: Int, size: Int) {
         when (type) {
             DATACHANGED.INSERT -> notifyItemRangeInserted(atIdx, size)
             DATACHANGED.REMOVE -> notifyItemRangeRemoved(atIdx, size)
+            DATACHANGED.CHANGE -> notifyItemRangeChanged(atIdx, size)
         }
     }
 }
