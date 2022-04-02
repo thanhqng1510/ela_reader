@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.datamodels.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
 
 internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
@@ -25,11 +25,11 @@ internal class BookListAdapter(private val bookList: List<Book>): RecyclerView.A
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.title.text = bookList[position].title
         holder.author.text = bookList[position].authors.joinToString(", ")
-        holder.cover.setImageResource(bookList[position].coverId ?: R.mipmap.book_cover_default)
+        holder.cover.setImageResource(bookList[position].coverResId ?: R.mipmap.book_cover_default)
 
-        if (bookList[position].status != Book.STATUS.FINISHED) {
+        if (bookList[position].status.eVal != Book.STATUS.FINISHED) {
             holder.status.setImageResource(
-                when (bookList[position].status) {
+                when (bookList[position].status.eVal) {
                     Book.STATUS.NEW -> R.drawable.new_status_light
                     Book.STATUS.READING -> R.drawable.reading_status_light
                     else -> 0 // TODO: need enhancement

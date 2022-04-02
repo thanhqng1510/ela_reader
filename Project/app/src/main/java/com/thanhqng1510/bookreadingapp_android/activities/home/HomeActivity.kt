@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
-import com.thanhqng1510.bookreadingapp_android.datamodels.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
@@ -21,8 +21,7 @@ import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
-    @Inject
-    lateinit var dataStore: DataStore
+    @Inject lateinit var dataStore: DataStore
 
     private lateinit var bookList: RecyclerView
     private lateinit var emptyBookListLayout: LinearLayout
@@ -64,7 +63,10 @@ class HomeActivity : AppCompatActivity() {
         }
         refreshLayout.setOnRefreshListener {
             CoroutineScope(Dispatchers.IO).launch {
+                val ensureWaitTimeJob = launch { delay(1000L) }
                 loadBookListData().join()
+                ensureWaitTimeJob.join()
+
                 synchronized(this) {
                     refreshLayout.isRefreshing = false
                 }
@@ -74,15 +76,13 @@ class HomeActivity : AppCompatActivity() {
 
     private fun loadBookListData(): Job {
         return CoroutineScope(Dispatchers.IO).launch {
-            val newData = dataStore.getBookListAsync().await()
-
+            val newData = dataStore.getAllBooks()
             withContext(Dispatchers.Main) {
                 synchronized(this) {
                     val prevListSize = bookListData.size
                     bookListData.clear()
                     onBookListDataChange(BookListAdapter.DATACHANGED.REMOVE, 0, prevListSize)
                 }
-
                 synchronized(this) {
                     bookListData.addAll(newData)
                     onBookListDataChange(BookListAdapter.DATACHANGED.INSERT, 0, newData.size)

@@ -1,21 +1,17 @@
 package com.thanhqng1510.bookreadingapp_android.datastore
 
-import com.thanhqng1510.bookreadingapp_android.datamodels.Book
-import com.thanhqng1510.bookreadingapp_android.datastore.localstore.ILocalStore
-import com.thanhqng1510.bookreadingapp_android.datastore.localstore.MockLocal
-import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.INetworkStore
-import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.MockNetwork
-import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefstore.ISharedPrefStore
-import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefstore.MockSharedPref
-import kotlinx.coroutines.Deferred
+import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
+import com.thanhqng1510.bookreadingapp_android.datastore.localstore.LocalStore
+import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkStore
+import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class DataStore @Inject constructor(
-    @MockLocal private val localStore: ILocalStore,
-    @MockNetwork val networkStore: INetworkStore,
-    @MockSharedPref private val sharedPrefStore: ISharedPrefStore
+    private val localStore: LocalStore,
+    private val networkStore: NetworkStore,
+    private val sharedPrefHelper: SharedPrefHelper
 ) {
-    fun getBookListAsync(): Deferred<MutableList<Book>> = localStore.getBookListAsync()
+    fun getAllBooks(): List<Book> = localStore.bookDao().getAll().map { it.data }
 }
