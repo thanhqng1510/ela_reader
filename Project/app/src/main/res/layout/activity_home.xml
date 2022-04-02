@@ -91,13 +91,23 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
-                        <ImageButton
-                            android:id="@+id/sort_books_btn"
+                        <FrameLayout
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:srcCompat="@drawable/sort_light"
-                            android:backgroundTint="#00FFFFFF"
-                            android:contentDescription="@string/sort_books_btn_desc" />
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:id="@+id/sort_books_img"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:backgroundTint="#00FFFFFF"
+                                app:srcCompat="@drawable/sort_light"
+                                tools:ignore="ContentDescription" />
+                            <Spinner
+                                android:id="@+id/sort_option_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/transparent"
+                                android:contentDescription="@string/sort_books_btn_desc"/>
+                        </FrameLayout>
                     </LinearLayout>
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/book_list"

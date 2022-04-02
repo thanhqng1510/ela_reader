@@ -14,4 +14,5 @@ class DataStore @Inject constructor(
     private val sharedPrefHelper: SharedPrefHelper
 ) {
     fun getAllBooks(): List<Book> = localStore.bookDao().getAll().map { it.data }
+    // suspend fun getAllBooks(): List<Book> = localStore.getAllBooks()
 }
