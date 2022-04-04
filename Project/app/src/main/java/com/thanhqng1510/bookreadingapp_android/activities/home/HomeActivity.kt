@@ -42,7 +42,6 @@ class HomeActivity : AppCompatActivity() {
     private val bookListAdapter = BookListAdapter(bookListDisplayData)
 
     // Use to render sorting options
-    private var sortOptionIdx = 0
     private var sortOptionList = SortOptionSpinnerAdapter.SORTBY.values().map { it.dispString }
     private val sortSpinnerAdapter by lazy { // Must delegate to lazy lambda to ensure it runs after onCreate
         SortOptionSpinnerAdapter(android.R.layout.simple_spinner_dropdown_item, this, sortOptionList)
@@ -87,9 +86,7 @@ class HomeActivity : AppCompatActivity() {
         refreshLayout.setOnRefreshListener {
             CoroutineScope(Dispatchers.IO).launch {
                 resetDataFromDatastore().join()
-                synchronized(this) {
-                    refreshLayout.isRefreshing = false
-                }
+                synchronized(this) { refreshLayout.isRefreshing = false }
             }
         }
         searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
@@ -103,12 +100,9 @@ class HomeActivity : AppCompatActivity() {
         })
         sortOptionSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
             @RequiresApi(Build.VERSION_CODES.O)
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                sortOptionIdx = pos
-                sortBookListDisplayData()
-            }
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) = sortBookListDisplayData()
 
-            override fun onNothingSelected(parent: AdapterView<*>) { sortOptionSpinner.setSelection(0) }
+            override fun onNothingSelected(parent: AdapterView<*>) = sortOptionSpinner.setSelection(0)
         }
     }
 
@@ -129,9 +123,7 @@ class HomeActivity : AppCompatActivity() {
                     bookListDisplayData.addAll(bookListData)
                     submitBookListDisplayDataChange(BookListAdapter.DATACHANGED.INSERT, 0, bookListData.size)
                 }
-                synchronized(this) {
-                    searchBar.setQuery("", false)
-                }
+                synchronized(this) { searchBar.setQuery("", false) }
             }
         }
     }
@@ -190,7 +182,7 @@ class HomeActivity : AppCompatActivity() {
             }
         }
 
-        val userComparable = SortOptionSpinnerAdapter.SORTBY.forIndex(sortOptionIdx).getComparable()
+        val userComparable = SortOptionSpinnerAdapter.SORTBY.forIndex(sortOptionSpinner.selectedItemPosition).getComparable()
         val defaultComparables = SortOptionSpinnerAdapter.SORTBY.values().map { it.getComparable() }.toTypedArray()
         bookListDisplayData.sortWith { b1, b2 -> compareValuesBy(b1, b2, userComparable, *defaultComparables) }
 
