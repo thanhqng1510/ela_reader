@@ -45,7 +45,9 @@ class HomeActivity : AppCompatActivity() {
     private var sortOptionIdx = 0
     private var sortOptionList = SortOptionSpinnerAdapter.SORTBY.values().map { it.dispString }
     private val sortSpinnerAdapter by lazy { // Must delegate to lazy lambda to ensure it runs after onCreate
-        SortOptionSpinnerAdapter(android.R.layout.simple_spinner_dropdown_item, this, sortOptionList)
+        SortOptionSpinnerAdapter(sortOptionSpinner, android.R.layout.simple_spinner_item, this, sortOptionList).also {
+            adapter -> adapter.setDropDownViewResource(R.layout.sort_spinner_dropdown_layout)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -196,5 +198,6 @@ class HomeActivity : AppCompatActivity() {
 
         // Call bookListAdapter.onBookListDataChange instead of submitNewBookListDisplayData to prevent sorting again
         bookListAdapter.onBookListDataChange(BookListAdapter.DATACHANGED.CHANGE,0, bookListDisplayData.size)
+        // TODO: Needs enhancement
     }
 }
