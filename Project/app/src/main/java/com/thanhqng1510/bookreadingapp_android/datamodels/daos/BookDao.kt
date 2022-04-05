@@ -1,5 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.datamodels.daos
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Query
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookWrapper
@@ -7,7 +8,7 @@ import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookWrapper
 @Dao
 interface BookDao {
     @Query("SELECT rowid, * FROM books")
-    fun getAll(): List<BookWrapper>
+    fun getAll(): LiveData<List<BookWrapper>>
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

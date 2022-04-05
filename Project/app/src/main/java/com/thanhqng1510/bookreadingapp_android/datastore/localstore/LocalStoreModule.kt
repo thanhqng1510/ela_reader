@@ -15,12 +15,7 @@ import javax.inject.Singleton
 object LocalStoreModule {
     @Provides
     @Singleton
-    fun provideRoom(@ApplicationContext context: Context): LocalStore {
-        return Room.databaseBuilder(
-            context,
-            LocalStore::class.java, "local-db"
-        ).build()
-    }
+    fun provideRoom(@ApplicationContext context: Context): LocalStore = Room.databaseBuilder(context, LocalStore::class.java, "local-db").build()
 
     @Provides
     @Singleton

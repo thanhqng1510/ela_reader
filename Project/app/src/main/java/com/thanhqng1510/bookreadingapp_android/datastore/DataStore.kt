@@ -1,5 +1,7 @@
 package com.thanhqng1510.bookreadingapp_android.datastore
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
 import com.thanhqng1510.bookreadingapp_android.datastore.localstore.LocalStore
 import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkStore
@@ -13,6 +15,5 @@ class DataStore @Inject constructor(
     private val networkStore: NetworkStore,
     private val sharedPrefHelper: SharedPrefHelper
 ) {
-    fun getAllBooks(): List<Book> = localStore.bookDao().getAll().map { it.data }
-    // suspend fun getAllBooks(): List<Book> = localStore.getAllBooks()
+    fun getAllBooks(): LiveData<List<Book>> = localStore.bookDao().getAll().map { it.map { b -> b.data } }
 }

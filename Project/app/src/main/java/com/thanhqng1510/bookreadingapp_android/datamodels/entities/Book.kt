@@ -45,6 +45,24 @@ class Book(
             }
 
         abstract val eVal: STATUS
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (other !is BookStatus) return false
+
+            if (lastRead != other.lastRead) return false
+            if (currentPage != other.currentPage) return false
+            if (eVal != other.eVal) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            var result = lastRead?.hashCode() ?: 0
+            result = 31 * result + currentPage
+            result = 31 * result + eVal.hashCode()
+            return result
+        }
     }
 
     class NewStatus(master: Book) : BookStatus(master, null, 1) {

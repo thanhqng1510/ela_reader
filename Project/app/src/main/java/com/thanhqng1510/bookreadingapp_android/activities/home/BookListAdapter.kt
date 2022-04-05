@@ -5,16 +5,37 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncDifferConfig
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookDiffCallBack
 
-internal class BookListAdapter(private val bookList: List<Book>) : RecyclerView.Adapter<BookListAdapter.ViewHolder>() {
+internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(AsyncDifferConfig.Builder(
+    BookDiffCallBack()
+).build()) {
     class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val title: TextView = view.findViewById(R.id.title)
-        val author: TextView = view.findViewById(R.id.author)
-        val cover: ImageView = view.findViewById(R.id.cover)
-        val status: ImageView = view.findViewById(R.id.book_status)
+        private val title: TextView = view.findViewById(R.id.title)
+        private val author: TextView = view.findViewById(R.id.author)
+        private val cover: ImageView = view.findViewById(R.id.cover)
+        private val status: ImageView = view.findViewById(R.id.book_status)
+
+        fun bind(book: Book) {
+            title.text = book.title
+            author.text = book.authors.joinToString(", ")
+            cover.setImageResource(book.coverResId ?: R.mipmap.book_cover_default)
+
+            if (book.status.eVal != Book.STATUS.FINISHED) {
+                status.setImageResource(
+                    when (book.status.eVal) {
+                        Book.STATUS.NEW -> R.drawable.new_status_light
+                        Book.STATUS.READING -> R.drawable.reading_status_light
+                        else -> 0 // TODO: Remove this redundant case
+                    }
+                )
+            }
+        }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -23,34 +44,6 @@ internal class BookListAdapter(private val bookList: List<Book>) : RecyclerView.
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.title.text = bookList[position].title
-        holder.author.text = bookList[position].authors.joinToString(", ")
-        holder.cover.setImageResource(bookList[position].coverResId ?: R.mipmap.book_cover_default)
-
-        if (bookList[position].status.eVal != Book.STATUS.FINISHED) {
-            holder.status.setImageResource(
-                when (bookList[position].status.eVal) {
-                    Book.STATUS.NEW -> R.drawable.new_status_light
-                    Book.STATUS.READING -> R.drawable.reading_status_light
-                    else -> 0 // TODO: Needs enhancement
-                }
-            )
-        }
-    }
-
-    override fun getItemCount(): Int = bookList.size
-
-    enum class DATACHANGED {
-        INSERT,
-        REMOVE,
-        CHANGE
-    }
-
-    fun onBookListDataChange(type: DATACHANGED, atIdx: Int, size: Int) {
-        when (type) {
-            DATACHANGED.INSERT -> notifyItemRangeInserted(atIdx, size)
-            DATACHANGED.REMOVE -> notifyItemRangeRemoved(atIdx, size)
-            DATACHANGED.CHANGE -> notifyItemRangeChanged(atIdx, size)
-        }
+        holder.bind(getItem(position))
     }
 }
