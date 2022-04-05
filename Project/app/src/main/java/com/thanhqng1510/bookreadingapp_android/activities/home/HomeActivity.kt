@@ -1,3 +1,5 @@
+// TODO: refresh upon returning from another activity.
+// TODO: add effects when pressing something.
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
+import com.thanhqng1510.bookreadingapp_android.activities.add_books.AddBooksActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,6 +35,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var emptyBookListLayout: LinearLayout
     private lateinit var bookListScrollLayout: NestedScrollView
     private lateinit var settingsBtn: ImageButton
+    private lateinit var addBooksBtn: ImageButton
     private lateinit var bookCount: TextView
     private lateinit var refreshLayout: SwipeRefreshLayout
     private lateinit var searchBar: SearchView
@@ -59,6 +63,7 @@ class HomeActivity : AppCompatActivity() {
         emptyBookListLayout = findViewById(R.id.empty_book_list_layout)
         bookListScrollLayout = findViewById(R.id.book_list_scroll_layout)
         settingsBtn = findViewById(R.id.settings_btn)
+        addBooksBtn = findViewById(R.id.add_btn)
         bookCount = findViewById(R.id.book_count)
         refreshLayout = findViewById(R.id.refresh_layout)
         searchBar = findViewById(R.id.search_bar)
@@ -91,6 +96,10 @@ class HomeActivity : AppCompatActivity() {
     private fun setupCallbacks() {
         settingsBtn.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
+            startActivity(intent)
+        }
+        addBooksBtn.setOnClickListener {
+            val intent = Intent(this, AddBooksActivity::class.java)
             startActivity(intent)
         }
         refreshLayout.setOnRefreshListener {

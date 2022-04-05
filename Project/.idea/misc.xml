@@ -20,6 +20,7 @@
         <entry key="app/src/main/res/drawable/sharing_light.xml" value="0.165625" />
         <entry key="app/src/main/res/drawable/sort_light.xml" value="0.2535" />
         <entry key="app/src/main/res/drawable/tick_light.xml" value="0.1635" />
+        <entry key="app/src/main/res/layout/activity_add_books.xml" value="0.26811594202898553" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.18316802978515628" />
         <entry key="app/src/main/res/layout/activity_library.xml" value="0.2839083036801306" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.24008300313404857" />
