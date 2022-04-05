@@ -1,6 +1,8 @@
 package com.thanhqng1510.bookreadingapp_android.datamodels.daos
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookWrapper
 
@@ -8,6 +10,9 @@ import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookWrapper
 interface BookDao {
     @Query("SELECT rowid, * FROM books")
     fun getAll(): List<BookWrapper>
+
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(bookWrapper: BookWrapper)
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

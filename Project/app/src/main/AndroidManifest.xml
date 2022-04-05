@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thanhqng1510.bookreadingapp_android" >
+    package="com.thanhqng1510.bookreadingapp_android">
+
     <application
         android:name=".application.MainApplication"
         android:allowBackup="true"
@@ -11,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookReadingApp_Android">
         <activity
+            android:name=".activities.add_books.AddBooksActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.settings.SettingsActivity"
             android:exported="false" />
         <activity
@@ -19,8 +23,10 @@
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

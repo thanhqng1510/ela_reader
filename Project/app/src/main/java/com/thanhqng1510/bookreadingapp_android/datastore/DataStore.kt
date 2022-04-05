@@ -1,6 +1,8 @@
+// TODO: Add returning value for insertBook.
 package com.thanhqng1510.bookreadingapp_android.datastore
 
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
+import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookWrapper
 import com.thanhqng1510.bookreadingapp_android.datastore.localstore.LocalStore
 import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkStore
 import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
@@ -14,5 +16,9 @@ class DataStore @Inject constructor(
     private val sharedPrefHelper: SharedPrefHelper
 ) {
     fun getAllBooks(): List<Book> = localStore.bookDao().getAll().map { it.data }
+    fun insertBook(book: Book) {
+        val bookWrapper = BookWrapper(book)
+        localStore.bookDao().insert(bookWrapper)
+    }
     // suspend fun getAllBooks(): List<Book> = localStore.getAllBooks()
 }

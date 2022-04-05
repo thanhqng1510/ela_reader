@@ -12,4 +12,5 @@
     <string name="sharing_btn_desc">Share with you</string>
     <string name="back_btn_desc">Back</string>
     <string name="book_status">Book status</string>
+    <string name="add_book_btn_desc">Add a book</string>
 </resources>

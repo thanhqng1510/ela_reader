@@ -4,7 +4,8 @@ import androidx.room.*
 
 @Fts4
 @Entity(tableName = "books")
-class BookWrapper(
-    @PrimaryKey @ColumnInfo(name = "rowid") val rowId: Int,
+data class BookWrapper(
     @TypeConverters(BookWrapperConverter::class) val data: Book
-)
+) {
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "rowid") var rowId: Int = 0
+}
