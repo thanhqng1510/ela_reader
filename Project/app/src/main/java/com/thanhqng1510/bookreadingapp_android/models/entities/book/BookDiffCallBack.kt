@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.datamodels.entities
+package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
 import androidx.recyclerview.widget.DiffUtil
 

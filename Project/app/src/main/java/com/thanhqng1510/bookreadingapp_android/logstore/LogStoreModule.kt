@@ -1,8 +1,8 @@
-package com.thanhqng1510.bookreadingapp_android.datastore.localstore
+package com.thanhqng1510.bookreadingapp_android.logstore
 
 import android.content.Context
 import androidx.room.Room
-import com.thanhqng1510.bookreadingapp_android.models.daos.BookDao
+import com.thanhqng1510.bookreadingapp_android.models.daos.LogEntryDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,14 +12,14 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object LocalStoreModule {
+object LogStoreModule {
     @Provides
     @Singleton
-    fun provideRoom(@ApplicationContext context: Context): LocalStore = Room.databaseBuilder(
-        context, LocalStore::class.java, "local-db"
+    fun provideRoom(@ApplicationContext context: Context): LogStore = Room.databaseBuilder(
+        context, LogStore::class.java, "local-logdb"
     ).build()
 
     @Provides
     @Singleton
-    fun provideBookDao(database: LocalStore): BookDao = database.bookDao()
+    fun provideLogEntryDao(database: LogStore): LogEntryDao = database.logEntryDao()
 }

@@ -7,7 +7,12 @@ import android.view.ViewGroup
 import android.widget.*
 import com.thanhqng1510.bookreadingapp_android.R
 
-internal class SortOptionSpinnerAdapter(private val master: Spinner, private val resource: Int, private val items: List<String>, context: Context) :
+internal class SortOptionSpinnerAdapter(
+    private val master: Spinner,
+    private val resource: Int,
+    private val items: List<String>,
+    context: Context
+) :
     ArrayAdapter<String>(context, resource, items) {
     enum class SORTBY(val dispString: String) {
         LAST_READ("Last read"),
@@ -28,7 +33,8 @@ internal class SortOptionSpinnerAdapter(private val master: Spinner, private val
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        val view = convertView ?: LayoutInflater.from(context).inflate(dropdownResource, parent, false)
+        val view =
+            convertView ?: LayoutInflater.from(context).inflate(dropdownResource, parent, false)
         (view.findViewById(R.id.text1) as CheckedTextView).text = getItem(position)
 
         if (master.selectedItemPosition == position)

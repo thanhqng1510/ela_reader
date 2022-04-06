@@ -1,99 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:foregroundTint="#00FFFFFF"
-    tools:context=".activities.home.HomeActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:foregroundTint="#00FFFFFF"
+    android:orientation="vertical"
+    tools:context=".activities.home.HomeActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="@dimen/globalSpacing"
-        android:layout_marginTop="@dimen/globalSpacing">
+        android:layout_marginTop="@dimen/globalSpacing"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/library"
-            android:textSize="@dimen/heading1Text"/>
+            android:textSize="@dimen/heading1Text" />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1" />
+
         <ImageButton
             android:id="@+id/add_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#00FFFFFF"
-            app:srcCompat="@drawable/add_light"
-            android:contentDescription="@string/add_btn_desc" />
+            android:contentDescription="@string/add_btn_desc"
+            app:srcCompat="@drawable/add_light" />
+
         <ImageButton
             android:id="@+id/settings_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="#00FFFFFF"
-            app:srcCompat="@drawable/settings_light"
-            android:contentDescription="@string/settings_btn_desc" />
+            android:contentDescription="@string/settings_btn_desc"
+            app:srcCompat="@drawable/settings_light" />
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:elevation="2dp"
         android:layout_marginTop="@dimen/componentSpacing"
-        android:background="@drawable/shadow_down_light" />
+        android:background="@drawable/shadow_down_light"
+        android:elevation="2dp" />
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <androidx.core.widget.NestedScrollView
                 android:id="@+id/book_list_scroll_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fillViewport="true">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <androidx.appcompat.widget.SearchView
                         android:id="@+id/search_bar"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/globalSpacing"
                         android:layout_marginTop="@dimen/componentSpacing"
-                        app:iconifiedByDefault="false"
                         android:background="@drawable/custom_searchview"
+                        app:iconifiedByDefault="false"
                         app:queryBackground="@null"
                         app:queryHint="Search Here"
-                        app:submitBackground="@null"
-                        android:layout_marginHorizontal="@dimen/globalSpacing" />
+                        app:submitBackground="@null" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/globalSpacing"
                         android:layout_marginTop="@dimen/componentSpacing"
-                        android:orientation="horizontal"
                         android:gravity="center"
-                        android:layout_marginHorizontal="@dimen/globalSpacing">
+                        android:orientation="horizontal">
+
                         <TextView
                             android:id="@+id/book_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/num_books"
-                            android:textSize="@dimen/bodyText"/>
+                            android:textSize="@dimen/bodyText" />
+
                         <Space
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
+
                         <FrameLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
+
                             <ImageView
                                 android:id="@+id/sort_books_img"
                                 android:layout_width="match_parent"
@@ -101,14 +116,16 @@
                                 android:backgroundTint="#00FFFFFF"
                                 app:srcCompat="@drawable/sort_light"
                                 tools:ignore="ContentDescription" />
+
                             <Spinner
                                 android:id="@+id/sort_option_spinner"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:background="@color/transparent"
-                                android:contentDescription="@string/sort_books_btn_desc"/>
+                                android:contentDescription="@string/sort_books_btn_desc" />
                         </FrameLayout>
                     </LinearLayout>
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/book_list"
                         android:layout_width="match_parent"
@@ -116,11 +133,13 @@
                         android:layout_weight="1" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
+
             <LinearLayout
                 android:id="@+id/empty_book_list_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -129,72 +148,82 @@
             </LinearLayout>
         </LinearLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:background="@drawable/shadow_up_light" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginHorizontal="@dimen/globalSpacing"
         android:layout_marginBottom="@dimen/componentSpacing"
-        android:baselineAligned="false">
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <ImageButton
                 android:id="@+id/books"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/book_light"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/books_btn_desc" />
+                android:contentDescription="@string/books_btn_desc"
+                app:srcCompat="@drawable/book_light" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <ImageButton
                 android:id="@+id/sharing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/sharing_light"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/sharing_btn_desc" />
+                android:contentDescription="@string/sharing_btn_desc"
+                app:srcCompat="@drawable/sharing_light" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <ImageButton
                 android:id="@+id/imageButton10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/note_light"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/notes_btn_desc" />
+                android:contentDescription="@string/notes_btn_desc"
+                app:srcCompat="@drawable/note_light" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="vertical">
+
             <ImageButton
                 android:id="@+id/imageButton11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:srcCompat="@drawable/bookmark_collection_light"
                 android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/bookmarks_btn_desc"/>
+                android:contentDescription="@string/bookmarks_btn_desc"
+                app:srcCompat="@drawable/bookmark_collection_light" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

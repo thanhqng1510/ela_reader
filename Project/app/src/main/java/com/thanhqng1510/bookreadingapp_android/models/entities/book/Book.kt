@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.datamodels.entities
+package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -35,7 +35,9 @@ class Book(
 
     abstract class BookStatus(val master: Book, lastRead: LocalDate?, currentPage: Int) {
         open var lastRead: LocalDate? = lastRead
-            set(value) { value?.run { field = value } }
+            set(value) {
+                value?.run { field = value }
+            }
 
         open var currentPage: Int = currentPage.coerceIn(1, master.numPages)
             @RequiresApi(Build.VERSION_CODES.O)
@@ -86,7 +88,8 @@ class Book(
             get() = STATUS.NEW
     }
 
-    class ReadingStatus(master: Book, lastRead: LocalDate, currentPage: Int) : BookStatus(master, lastRead, currentPage) {
+    class ReadingStatus(master: Book, lastRead: LocalDate, currentPage: Int) :
+        BookStatus(master, lastRead, currentPage) {
         override var currentPage: Int
             get() = super.currentPage
             @RequiresApi(Build.VERSION_CODES.O)
@@ -100,7 +103,8 @@ class Book(
             get() = STATUS.READING
     }
 
-    class FinishStatus(master: Book, lastRead: LocalDate, currentPage: Int) : BookStatus(master, lastRead, currentPage) {
+    class FinishStatus(master: Book, lastRead: LocalDate, currentPage: Int) :
+        BookStatus(master, lastRead, currentPage) {
         override var lastRead: LocalDate?
             get() = super.lastRead
             set(value) {

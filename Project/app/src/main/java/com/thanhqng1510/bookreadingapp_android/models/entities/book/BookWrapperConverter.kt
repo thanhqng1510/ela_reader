@@ -1,7 +1,5 @@
-package com.thanhqng1510.bookreadingapp_android.datamodels.entities
+package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
 import java.time.LocalDate
 import java.util.*
@@ -25,24 +23,28 @@ class BookWrapperConverter {
 
     @TypeConverter
     fun bookToStringHelper(book: Book): String {
-        return listOf(book.title,
-                      authorsToStringHelper(book.authors),
-                      book.coverResId?.toString() ?: "",
-                      book.numPages.toString(),
-                      book.sharingSessionId?.toString() ?: "",
-                      bookStatusToStringHelper(book.status)).joinToString(separator = "-bookToStringHelper-")
+        return listOf(
+            book.title,
+            authorsToStringHelper(book.authors),
+            book.coverResId?.toString() ?: "",
+            book.numPages.toString(),
+            book.sharingSessionId?.toString() ?: "",
+            bookStatusToStringHelper(book.status)
+        ).joinToString(separator = "-bookToStringHelper-")
     }
 
-    private fun stringToAuthorsHelper(string: String): Set<String> = string.split("-authorsToStringHelper-").toSet()
+    private fun stringToAuthorsHelper(string: String): Set<String> =
+        string.split("-authorsToStringHelper-").toSet()
 
-    private fun authorsToStringHelper(authors: Set<String>): String = authors.joinToString(separator = "-authorsToStringHelper-")
+    private fun authorsToStringHelper(authors: Set<String>): String =
+        authors.joinToString(separator = "-authorsToStringHelper-")
 
     private fun stringToBookStatusHelper(master: Book, string: String): Book.BookStatus {
         val tokens = string.split("-bookStatusToStringHelper-")
         val lastRead: LocalDate? = tokens[0].let { if (it.isEmpty()) null else LocalDate.parse(it) }
         val currentPage = tokens[1].toInt()
 
-        return when(Book.STATUS.valueOf(tokens[2])) {
+        return when (Book.STATUS.valueOf(tokens[2])) {
             Book.STATUS.NEW -> Book.NewStatus(master)
             Book.STATUS.READING -> Book.ReadingStatus(master, lastRead!!, currentPage)
             Book.STATUS.FINISHED -> Book.FinishStatus(master, lastRead!!, currentPage)
@@ -50,8 +52,10 @@ class BookWrapperConverter {
     }
 
     private fun bookStatusToStringHelper(bookStatus: Book.BookStatus): String {
-        return listOf(bookStatus.lastRead?.toString() ?: "",
-                      bookStatus.currentPage.toString(),
-                      bookStatus.eVal.name).joinToString(separator = "-bookStatusToStringHelper-")
+        return listOf(
+            bookStatus.lastRead?.toString() ?: "",
+            bookStatus.currentPage.toString(),
+            bookStatus.eVal.name
+        ).joinToString(separator = "-bookStatusToStringHelper-")
     }
 }

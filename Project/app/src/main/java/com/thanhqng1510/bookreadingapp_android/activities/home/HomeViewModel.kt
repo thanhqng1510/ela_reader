@@ -14,7 +14,11 @@ class HomeViewModel @Inject constructor(private val dataStore: DataStore) : View
     // All data loaded from DB
     val bookListData = reloadTrigger.switchMap { dataStore.getAllBooks() }
 
-    fun refreshBookListData() { reloadTrigger.value = true }
+    fun refreshBookListData() {
+        reloadTrigger.value = true
+    }
 
-    init { refreshBookListData() }
+    init {
+        refreshBookListData()
+    }
 }

@@ -2,12 +2,10 @@
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
@@ -19,7 +17,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
-import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import kotlin.streams.toList
@@ -67,11 +65,17 @@ class HomeActivity : AppCompatActivity() {
         searchBar = findViewById(R.id.search_bar)
 
         sortOptionSpinner = findViewById(R.id.sort_option_spinner)
-        sortSpinnerAdapter = SortOptionSpinnerAdapter.SORTBY.values().map { it.dispString }.let { sortOptionList ->
-            SortOptionSpinnerAdapter(sortOptionSpinner, android.R.layout.simple_spinner_item, sortOptionList, this).also {
-                it.setDropDownViewResource(R.layout.sort_spinner_dropdown_layout)
+        sortSpinnerAdapter =
+            SortOptionSpinnerAdapter.SORTBY.values().map { it.dispString }.let { sortOptionList ->
+                SortOptionSpinnerAdapter(
+                    sortOptionSpinner,
+                    android.R.layout.simple_spinner_item,
+                    sortOptionList,
+                    this
+                ).also {
+                    it.setDropDownViewResource(R.layout.sort_spinner_dropdown_layout)
+                }
             }
-        }
         sortOptionSpinner.adapter = sortSpinnerAdapter
 
         bookListAdapter = BookListAdapter()
@@ -101,28 +105,31 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
         refreshLayout.setOnRefreshListener {
-            viewModel.bookListData.observe(this, object: Observer<List<Book>> {
+            viewModel.bookListData.observe(this, object : Observer<List<Book>> {
                 override fun onChanged(data: List<Book>) {
                     refreshLayout.isRefreshing = false
                     viewModel.bookListData.removeObserver(this)
                 }
             }).also { viewModel.refreshBookListData() }
         }
-        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+        searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(query: String?): Boolean {
-                viewModel.bookListData.value?.let { bookListDisplayData.value = sortBookList(filterBookList(query, it)) }
+                viewModel.bookListData.value?.let {
+                    bookListDisplayData.value = sortBookList(filterBookList(query, it))
+                }
                 return false
             }
         })
-        sortOptionSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+        sortOptionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 bookListDisplayData.value?.let { bookListDisplayData.value = sortBookList(it) }
                 // TODO: Needs to query again while apply sorting
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) = sortOptionSpinner.setSelection(0)
+            override fun onNothingSelected(parent: AdapterView<*>) =
+                sortOptionSpinner.setSelection(0)
         }
     }
 
@@ -140,7 +147,12 @@ class HomeActivity : AppCompatActivity() {
         val filterResult = (query ?: "").let { safeQuery ->
             if (safeQuery.isEmpty() || list.isEmpty()) list.toList()
             else list.stream().filter { book ->
-                book.title.contains(safeQuery, ignoreCase=true) || book.authors.any { it.contains(safeQuery, ignoreCase=true) }
+                book.title.contains(safeQuery, ignoreCase = true) || book.authors.any {
+                    it.contains(
+                        safeQuery,
+                        ignoreCase = true
+                    )
+                }
             }.toList()
         }
         return filterResult
@@ -152,15 +164,27 @@ class HomeActivity : AppCompatActivity() {
 
         fun SortOptionSpinnerAdapter.SORTBY.getComparable(): (Book) -> Comparable<*> {
             return when (this) {
-                SortOptionSpinnerAdapter.SORTBY.LAST_READ -> { book -> book.status.lastRead ?: LocalDate.MIN }
+                SortOptionSpinnerAdapter.SORTBY.LAST_READ -> { book ->
+                    book.status.lastRead ?: LocalDate.MIN
+                }
                 SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> { book -> book.title }
                 SortOptionSpinnerAdapter.SORTBY.TITLE -> { book -> book.title }
             }
         }
 
-        val userComparable = SortOptionSpinnerAdapter.SORTBY.forIndex(sortOptionSpinner.selectedItemPosition).getComparable()
-        val defaultComparables = SortOptionSpinnerAdapter.SORTBY.values().map { it.getComparable() }.toTypedArray()
+        val userComparable =
+            SortOptionSpinnerAdapter.SORTBY.forIndex(sortOptionSpinner.selectedItemPosition)
+                .getComparable()
+        val defaultComparables =
+            SortOptionSpinnerAdapter.SORTBY.values().map { it.getComparable() }.toTypedArray()
 
-        return list.sortedWith { b1, b2 -> compareValuesBy(b1, b2, userComparable, *defaultComparables) }
+        return list.sortedWith { b1, b2 ->
+            compareValuesBy(
+                b1,
+                b2,
+                userComparable,
+                *defaultComparables
+            )
+        }
     }
 }

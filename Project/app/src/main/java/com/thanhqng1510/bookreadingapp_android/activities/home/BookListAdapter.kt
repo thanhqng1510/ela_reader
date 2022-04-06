@@ -9,13 +9,15 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
-import com.thanhqng1510.bookreadingapp_android.datamodels.entities.BookDiffCallBack
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookDiffCallBack
 
-internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(AsyncDifferConfig.Builder(
-    BookDiffCallBack()
-).build()) {
-    class ViewHolder(view: View): RecyclerView.ViewHolder(view) {
+internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
+    AsyncDifferConfig.Builder(
+        BookDiffCallBack()
+    ).build()
+) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val title: TextView = view.findViewById(R.id.title)
         private val author: TextView = view.findViewById(R.id.author)
         private val cover: ImageView = view.findViewById(R.id.cover)
@@ -39,7 +41,8 @@ internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(A
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(viewGroup.context).inflate(R.layout.book_list_row_layout, viewGroup, false)
+        val view = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.book_list_row_layout, viewGroup, false)
         return ViewHolder(view)
     }
 

@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.random.Random
 
 @AndroidEntryPoint
 class AddBookActivity : AppCompatActivity() {
-    @Inject lateinit var dataStore: DataStore
+    @Inject
+    lateinit var dataStore: DataStore
 
     private lateinit var backBtn: ImageButton
     private lateinit var addBookBtn: ImageButton
@@ -42,7 +44,12 @@ class AddBookActivity : AppCompatActivity() {
     }
 
     private fun addMockBook(): Job { // TODO: Should we wait for this func to complete ?
-        val book = Book("title", setOf("author1", "author2"), null, 200, null)
+        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
+        val randomTitle = (1..10).map { allowedChars.random() }.joinToString("")
+        val randomAuthor1 = (1..5).map { allowedChars.random() }.joinToString("")
+        val randomAuthor2 = (1..5).map { allowedChars.random() }.joinToString("")
+
+        val book = Book(randomTitle, setOf(randomAuthor1, randomAuthor2), null, 200, null)
 
         return CoroutineScope(Dispatchers.IO).launch {
             dataStore.insertBook(book)
