@@ -12,7 +12,7 @@ interface BookDao {
     @Query("SELECT rowid, * FROM books")
     fun getAll(): LiveData<List<BookWrapper>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict=OnConflictStrategy.IGNORE)
     fun insert(bookWrapper: BookWrapper)
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
