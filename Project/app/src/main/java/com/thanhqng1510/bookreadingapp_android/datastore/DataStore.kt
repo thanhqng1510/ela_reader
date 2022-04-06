@@ -1,4 +1,3 @@
-// TODO: Add returning value for insertBook.
 package com.thanhqng1510.bookreadingapp_android.datastore
 
 import androidx.lifecycle.LiveData
@@ -19,9 +18,6 @@ class DataStore @Inject constructor(
 ) {
     fun getAllBooks(): LiveData<List<Book>> = localStore.bookDao().getAll().map { it.map { b -> b.data } }
 
-    fun insertBook(book: Book) {
-        val bookWrapper = BookWrapper(book)
-        localStore.bookDao().insert(bookWrapper)
-    }
-    // suspend fun getAllBooks(): List<Book> = localStore.getAllBooks()
+    // TODO: Add returning value for insertBook
+    fun insertBook(book: Book) = localStore.bookDao().insert(BookWrapper(book))
 }

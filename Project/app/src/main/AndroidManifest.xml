@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookReadingApp_Android">
         <activity
-            android:name=".activities.add_books.AddBooksActivity"
+            android:name=".activities.addbook.AddBookActivity"
             android:exported="false" />
         <activity
             android:name=".activities.settings.SettingsActivity"

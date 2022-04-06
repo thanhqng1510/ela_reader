@@ -1,4 +1,3 @@
-// TODO: refresh upon returning from another activity.
 // TODO: add effects when pressing something.
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
@@ -18,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.add_books.AddBooksActivity
+import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.datamodels.entities.Book
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,7 +47,6 @@ class HomeActivity : AppCompatActivity() {
     // Portion of bookListData to render on screen only
     private val bookListDisplayData = MutableLiveData<List<Book>>()
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -81,11 +79,11 @@ class HomeActivity : AppCompatActivity() {
         bookList.layoutManager = LinearLayoutManager(this)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun setupObservers() {
         viewModel.bookListData.observe(this) {
             if (it.isEmpty()) showEmptyListView() else showPopulatedListView()
-            bookListDisplayData.value = sortBookList(it) // TODO: Needs to sort when query
+            bookListDisplayData.value = sortBookList(filterBookList(searchBar.query.toString(), it))
+            // TODO: Filter and sort when query
         }
         bookListDisplayData.observe(this) {
             bookListAdapter.submitList(it)
@@ -99,7 +97,7 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
         addBooksBtn.setOnClickListener {
-            val intent = Intent(this, AddBooksActivity::class.java)
+            val intent = Intent(this, AddBookActivity::class.java)
             startActivity(intent)
         }
         refreshLayout.setOnRefreshListener {
@@ -110,24 +108,22 @@ class HomeActivity : AppCompatActivity() {
                 }
             }).also { viewModel.refreshBookListData() }
         }
+        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean = false
+
+            override fun onQueryTextChange(query: String?): Boolean {
+                viewModel.bookListData.value?.let { bookListDisplayData.value = sortBookList(filterBookList(query, it)) }
+                return false
+            }
+        })
         sortOptionSpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-            @RequiresApi(Build.VERSION_CODES.O)
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                viewModel.bookListData.value?.let { bookListDisplayData.value = sortBookList(it) }
+                bookListDisplayData.value?.let { bookListDisplayData.value = sortBookList(it) }
                 // TODO: Needs to query again while apply sorting
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) = sortOptionSpinner.setSelection(0)
         }
-        searchBar.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-            override fun onQueryTextSubmit(query: String?): Boolean = false
-
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onQueryTextChange(query: String?): Boolean {
-                viewModel.bookListData.value?.let { bookListDisplayData.value = filterBookList(query, it) }
-                return false
-            }
-        })
     }
 
     private fun showEmptyListView() {
@@ -140,7 +136,6 @@ class HomeActivity : AppCompatActivity() {
         emptyBookListLayout.visibility = View.GONE
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun filterBookList(query: String?, list: List<Book>): List<Book> {
         val filterResult = (query ?: "").let { safeQuery ->
             if (safeQuery.isEmpty() || list.isEmpty()) list.toList()
@@ -151,7 +146,6 @@ class HomeActivity : AppCompatActivity() {
         return filterResult
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun sortBookList(list: List<Book>): List<Book> {
         if (list.size <= 1) // No need to sort
             return list.toList()

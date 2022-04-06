@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.activities.add_books
+package com.thanhqng1510.bookreadingapp_android.activities.addbook
 
 import android.os.Bundle
 import android.widget.ImageButton
@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddBooksActivity : AppCompatActivity() {
+class AddBookActivity : AppCompatActivity() {
     @Inject lateinit var dataStore: DataStore
 
     private lateinit var backBtn: ImageButton
@@ -24,11 +24,11 @@ class AddBooksActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_books)
 
-        setupBindings()
+        init()
         setupCallbacks()
     }
 
-    private fun setupBindings() {
+    private fun init() {
         backBtn = findViewById(R.id.back_btn)
         addBookBtn = findViewById(R.id.add_book_btn)
     }
@@ -37,10 +37,11 @@ class AddBooksActivity : AppCompatActivity() {
         backBtn.setOnClickListener { finish() }
         addBookBtn.setOnClickListener {
             addMockBook()
+            finish()
         }
     }
 
-    private fun addMockBook(): Job {
+    private fun addMockBook(): Job { // TODO: Should we wait for this func to complete ?
         val book = Book("title", setOf("author1", "author2"), null, 200, null)
 
         return CoroutineScope(Dispatchers.IO).launch {

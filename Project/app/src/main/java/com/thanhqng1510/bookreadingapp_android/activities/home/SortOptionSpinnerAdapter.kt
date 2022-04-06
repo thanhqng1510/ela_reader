@@ -7,7 +7,8 @@ import android.view.ViewGroup
 import android.widget.*
 import com.thanhqng1510.bookreadingapp_android.R
 
-internal class SortOptionSpinnerAdapter(private val master: Spinner, private val resource: Int, private val items: List<String>, context: Context) : ArrayAdapter<String>(context, resource, items) {
+internal class SortOptionSpinnerAdapter(private val master: Spinner, private val resource: Int, private val items: List<String>, context: Context) :
+    ArrayAdapter<String>(context, resource, items) {
     enum class SORTBY(val dispString: String) {
         LAST_READ("Last read"),
         DATE_ADDED("Date added"),

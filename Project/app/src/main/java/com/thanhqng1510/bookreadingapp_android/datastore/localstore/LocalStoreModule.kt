@@ -10,14 +10,13 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
+@Module @InstallIn(SingletonComponent::class)
 object LocalStoreModule {
-    @Provides
-    @Singleton
-    fun provideRoom(@ApplicationContext context: Context): LocalStore = Room.databaseBuilder(context, LocalStore::class.java, "local-db").build()
+    @Provides @Singleton
+    fun provideRoom(@ApplicationContext context: Context): LocalStore = Room.databaseBuilder(
+        context, LocalStore::class.java, "local-db"
+    ).build()
 
-    @Provides
-    @Singleton
+    @Provides @Singleton
     fun provideBookDao(database: LocalStore): BookDao = database.bookDao()
 }

@@ -1,11 +1,13 @@
 package com.thanhqng1510.bookreadingapp_android.datamodels.entities
 
+import androidx.annotation.NonNull
 import androidx.room.*
 
-@Fts4
-@Entity(tableName="books")
+@Fts4 @Entity(tableName="books")
 data class BookWrapper(
-    @TypeConverters(BookWrapperConverter::class) val data: Book
-) {
-    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "rowid") var rowId: Int = 0
+    @TypeConverters(BookWrapperConverter::class) @NonNull
+    val data: Book
+    ) {
+    @PrimaryKey(autoGenerate=true) @ColumnInfo(name="rowid")
+    var rowId: Int = 0
 }
