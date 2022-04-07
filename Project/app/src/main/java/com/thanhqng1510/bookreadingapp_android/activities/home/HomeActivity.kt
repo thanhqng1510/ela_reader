@@ -167,7 +167,7 @@ class HomeActivity : AppCompatActivity() {
                 SortOptionSpinnerAdapter.SORTBY.LAST_READ -> { book ->
                     book.status.lastRead ?: LocalDate.MIN
                 }
-                SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> { book -> book.title }
+                SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> { book -> book.dateAdded }
                 SortOptionSpinnerAdapter.SORTBY.TITLE -> { book -> book.title }
             }
         }

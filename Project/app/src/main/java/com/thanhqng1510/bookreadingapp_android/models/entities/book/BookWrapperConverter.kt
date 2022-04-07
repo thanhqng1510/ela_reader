@@ -13,10 +13,11 @@ class BookWrapperConverter {
         val authors = stringToAuthorsHelper(tokens[1])
         val coverResId = tokens[2].let { if (it.isEmpty()) null else it.toInt() }
         val numPages = tokens[3].toInt()
-        val sharingSessionId = tokens[4].let { if (it.isEmpty()) null else UUID.fromString(it) }
+        val dateAdded = LocalDate.parse(tokens[4])
+        val sharingSessionId = tokens[5].let { if (it.isEmpty()) null else UUID.fromString(it) }
 
-        val book = Book(title, authors, coverResId, numPages, sharingSessionId)
-        val bookStatus = stringToBookStatusHelper(book, tokens[5])
+        val book = Book(title, authors, coverResId, numPages, dateAdded, sharingSessionId)
+        val bookStatus = stringToBookStatusHelper(book, tokens[6])
         book.status = bookStatus
         return book
     }
@@ -28,6 +29,7 @@ class BookWrapperConverter {
             authorsToStringHelper(book.authors),
             book.coverResId?.toString() ?: "",
             book.numPages.toString(),
+            book.dateAdded.toString(),
             book.sharingSessionId?.toString() ?: "",
             bookStatusToStringHelper(book.status)
         ).joinToString(separator = "-bookToStringHelper-")

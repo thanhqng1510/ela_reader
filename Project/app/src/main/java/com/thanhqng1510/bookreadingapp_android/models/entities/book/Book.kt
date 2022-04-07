@@ -10,6 +10,7 @@ class Book(
     val authors: Set<String>,
     val coverResId: Int?,
     val numPages: Int,
+    val dateAdded: LocalDate,
     val sharingSessionId: UUID?,
 ) {
     enum class STATUS {
@@ -23,8 +24,7 @@ class Book(
         if (javaClass != other?.javaClass) return false
 
         other as Book
-
-        return title == other.title && authors != other.authors
+        return title == other.title && authors == other.authors
     }
 
     override fun hashCode(): Int {
