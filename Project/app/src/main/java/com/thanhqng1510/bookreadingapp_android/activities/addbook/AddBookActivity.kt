@@ -5,12 +5,13 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
+import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -18,6 +19,9 @@ import javax.inject.Inject
 class AddBookActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStore: DataStore
+
+    @Inject
+    lateinit var logUtil: LogUtil
 
     private lateinit var backBtn: ImageButton
     private lateinit var addBookBtn: ImageButton
@@ -38,12 +42,18 @@ class AddBookActivity : AppCompatActivity() {
     private fun setupCallbacks() {
         backBtn.setOnClickListener { finish() }
         addBookBtn.setOnClickListener {
-            addMockBook()
-            finish()
+            CoroutineScope(Dispatchers.IO).launch {
+                // TODO: Add some kind of processing indicator
+                val bookId = addMockBook()
+                logUtil.info("Added book with ID: $bookId")
+                withContext(Dispatchers.Main) {
+                    finish()
+                }
+            }
         }
     }
 
-    private fun addMockBook(): Job { // TODO: Should we wait for this func to complete ?
+    private fun addMockBook(): Long {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         val randomTitle = (1..10).map { allowedChars.random() }.joinToString("")
         val randomAuthor1 = (1..5).map { allowedChars.random() }.joinToString("")
@@ -59,8 +69,6 @@ class AddBookActivity : AppCompatActivity() {
                 null
             )
 
-        return CoroutineScope(Dispatchers.IO).launch {
-            dataStore.insertBook(book)
-        }
+        return dataStore.insertBook(book)
     }
 }

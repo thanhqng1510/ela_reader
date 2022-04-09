@@ -30,7 +30,6 @@ class LogUtil @Inject constructor(
         log(LOGLEVEL.ERROR, message, includeStackTrace)
 
     private fun log(level: LOGLEVEL, message: String, includeThreadInfo: Boolean) {
-        // TODO: Add returning value
         logStore.logEntryDao().insert(
             LogEntry(
                 level, LocalDateTime.now(),

@@ -1,5 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.models.entities.logentry
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
@@ -18,6 +19,7 @@ data class LogEntry(
     val stackTraceStr: String?
 ) {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "rowid")
     var id: Int = 0
 
     override fun equals(other: Any?): Boolean {

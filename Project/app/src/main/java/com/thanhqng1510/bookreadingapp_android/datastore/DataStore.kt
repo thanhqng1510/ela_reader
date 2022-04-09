@@ -16,6 +16,5 @@ class DataStore @Inject constructor(
 ) {
     fun getAllBooks(): LiveData<List<Book>> = localStore.bookDao().getAll()
 
-    // TODO: Add returning value for insertBook
-    fun insertBook(book: Book) = localStore.bookDao().insert(book)
+    fun insertBook(book: Book): Long = localStore.bookDao().insert(book)
 }

@@ -9,11 +9,11 @@ import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 
 @Dao
 interface BookDao {
-    @Query("SELECT rowid, * FROM books")
+    @Query("SELECT * FROM books")
     fun getAll(): LiveData<List<Book>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(bookWrapper: Book)
+    fun insert(book: Book): Long
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

@@ -1,9 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
-import androidx.room.Entity
-import androidx.room.Index
-import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
+import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
 import java.time.LocalDateTime
 import java.util.*
@@ -28,6 +25,7 @@ data class Book(
     }
 
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "rowid")
     var id: Int = 0
 
     var lastRead: LocalDateTime? = null
