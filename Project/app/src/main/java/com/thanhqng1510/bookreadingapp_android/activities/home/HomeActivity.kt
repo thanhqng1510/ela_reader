@@ -165,7 +165,7 @@ class HomeActivity : AppCompatActivity() {
         fun SortOptionSpinnerAdapter.SORTBY.getComparable(): (Book) -> Comparable<*> {
             return when (this) {
                 SortOptionSpinnerAdapter.SORTBY.LAST_READ -> { book ->
-                    book.status.lastRead ?: LocalDate.MIN
+                    book.lastRead ?: LocalDate.MIN
                 }
                 SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> { book -> book.dateAdded }
                 SortOptionSpinnerAdapter.SORTBY.TITLE -> { book -> book.title }

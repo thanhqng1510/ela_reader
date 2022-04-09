@@ -5,10 +5,7 @@ import androidx.recyclerview.widget.DiffUtil
 class BookDiffCallBack : DiffUtil.ItemCallback<Book>() {
     override fun areItemsTheSame(oldItem: Book, newItem: Book): Boolean = oldItem == newItem
 
-    override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean {
-        return oldItem.title == newItem.title &&
-                oldItem.authors == newItem.authors &&
-                oldItem.coverResId == newItem.coverResId &&
-                oldItem.status == newItem.status
-    }
+    // We only care about var members
+    override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean =
+        oldItem.lastRead == newItem.lastRead && oldItem.currentPage == newItem.currentPage
 }

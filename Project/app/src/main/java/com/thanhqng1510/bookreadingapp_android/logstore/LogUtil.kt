@@ -1,11 +1,9 @@
 package com.thanhqng1510.bookreadingapp_android.logstore
 
 import com.thanhqng1510.bookreadingapp_android.models.entities.logentry.LogEntry
-import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class LogUtil @Inject constructor(
     private val logStore: LogStore,
 ) {
@@ -35,7 +33,7 @@ class LogUtil @Inject constructor(
         // TODO: Add returning value
         logStore.logEntryDao().insert(
             LogEntry(
-                level, LocalDate.now(),
+                level, LocalDateTime.now(),
                 Thread.currentThread().id, Thread.currentThread().name, message,
                 if (includeThreadInfo) Thread.currentThread().stackTrace.contentDeepToString() else null
             )

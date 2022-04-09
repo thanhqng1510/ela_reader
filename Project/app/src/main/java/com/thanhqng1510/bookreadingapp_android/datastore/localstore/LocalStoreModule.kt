@@ -16,7 +16,7 @@ object LocalStoreModule {
     @Provides
     @Singleton
     fun provideRoom(@ApplicationContext context: Context): LocalStore = Room.databaseBuilder(
-        context, LocalStore::class.java, "local-db"
+        context, LocalStore::class.java, "local-datadb"
     ).build()
 
     @Provides

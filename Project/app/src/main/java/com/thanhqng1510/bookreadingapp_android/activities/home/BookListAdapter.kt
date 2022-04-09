@@ -28,9 +28,9 @@ internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
             author.text = book.authors.joinToString(", ")
             cover.setImageResource(book.coverResId ?: R.mipmap.book_cover_default)
 
-            if (book.status.eVal != Book.STATUS.FINISHED) {
+            if (book.status != Book.STATUS.FINISHED) {
                 status.setImageResource(
-                    when (book.status.eVal) {
+                    when (book.status) {
                         Book.STATUS.NEW -> R.drawable.new_status_light
                         Book.STATUS.READING -> R.drawable.reading_status_light
                         else -> 0 // TODO: Remove this redundant case

@@ -1,31 +1,20 @@
 package com.thanhqng1510.bookreadingapp_android.models.entities.logentry
 
-import androidx.annotation.NonNull
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
-import java.time.LocalDate
+import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
+import java.time.LocalDateTime
 
 @Entity(tableName = "logentries")
+@TypeConverters(SharedConverters::class, LogEntryConverter::class)
 data class LogEntry(
-    @TypeConverters(LogEntryConverter::class)
-    @NonNull
     val level: LogUtil.LOGLEVEL,
-
-    @TypeConverters(LogEntryConverter::class)
-    @NonNull
-    val timeStamp: LocalDate,
-
-    @NonNull
+    val timeStamp: LocalDateTime,
     val threadId: Long,
-
-    @NonNull
     val threadName: String,
-
-    @NonNull
     val message: String,
-
     val stackTraceStr: String?
 ) {
     @PrimaryKey(autoGenerate = true)

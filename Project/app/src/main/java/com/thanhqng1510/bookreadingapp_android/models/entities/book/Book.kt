@@ -1,11 +1,20 @@
 package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
-import android.os.Build
-import androidx.annotation.RequiresApi
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
 import java.time.LocalDateTime
 import java.util.*
 
-class Book(
+@Entity(
+    tableName = "books",
+    indices = [Index(value = ["title"], unique = true)],
+    // ignoredColumns = ["logUtil"] TODO: Find way to use LogUtil in Book
+)
+@TypeConverters(SharedConverters::class, BookConverter::class)
+data class Book(
     val title: String,
     val authors: Set<String>,
     val coverResId: Int?,
@@ -13,115 +22,34 @@ class Book(
     val dateAdded: LocalDateTime,
     val sharingSessionId: UUID?,
 ) {
+
     enum class STATUS {
         NEW, READING, FINISHED
     }
 
-    var status: BookStatus = NewStatus(this)
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as Book
-        return title == other.title && authors == other.authors
-    }
-
-    override fun hashCode(): Int {
-        var result = title.hashCode()
-        result = 31 * result + authors.hashCode()
-        return result
-    }
-
-    abstract class BookStatus(val master: Book, lastRead: LocalDateTime?, currentPage: Int) {
-        open var lastRead: LocalDateTime? = lastRead
-            set(value) {
-                value?.run { field = value }
-            }
-
-        open var currentPage: Int = currentPage.coerceIn(1, master.numPages)
-            @RequiresApi(Build.VERSION_CODES.O)
-            set(value) {
-                field = value.coerceIn(1, master.numPages)
-                lastRead = LocalDateTime.now()
-            }
-
-        abstract val eVal: STATUS
-
-        override fun equals(other: Any?): Boolean {
-            if (this === other) return true
-            if (other !is BookStatus) return false
-
-            if (lastRead != other.lastRead) return false
-            if (currentPage != other.currentPage) return false
-            if (eVal != other.eVal) return false
-
-            return true
+    var lastRead: LocalDateTime? = null
+        set(value) {
+            value?.run {
+                field = value
+            } // ?: logUtil.warn("Attempt to set lastRead to null", true)
         }
 
-        override fun hashCode(): Int {
-            var result = lastRead?.hashCode() ?: 0
-            result = 31 * result + currentPage
-            result = 31 * result + eVal.hashCode()
-            return result
+    var currentPage: Int = 1
+        set(value) {
+            // if (value < 1 || value > numPages)
+            // logUtil.warn("Attempt to set currentPage to out-of-bound value", true)
+            field = value.coerceIn(1, numPages)
         }
-    }
 
-    class NewStatus(master: Book) : BookStatus(master, null, 1) {
-        override var lastRead: LocalDateTime?
-            get() = super.lastRead
-            set(value) {
-                super.lastRead = value
-                lastRead?.run { master.status = ReadingStatus(master, lastRead!!, currentPage) }
-            }
-
-        override var currentPage: Int
-            get() = super.currentPage
-            @RequiresApi(Build.VERSION_CODES.O)
-            set(value) {
-                super.currentPage = value
-                if (currentPage > 1)
-                    master.status = ReadingStatus(master, lastRead!!, currentPage)
-            }
-
-        override val eVal: STATUS
-            get() = STATUS.NEW
-    }
-
-    class ReadingStatus(master: Book, lastRead: LocalDateTime, currentPage: Int) :
-        BookStatus(master, lastRead, currentPage) {
-        override var currentPage: Int
-            get() = super.currentPage
-            @RequiresApi(Build.VERSION_CODES.O)
-            set(value) {
-                super.currentPage = value
-                if (currentPage == master.numPages)
-                    master.status = FinishStatus(master, lastRead!!, currentPage)
-            }
-
-        override val eVal: STATUS
-            get() = STATUS.READING
-    }
-
-    class FinishStatus(master: Book, lastRead: LocalDateTime, currentPage: Int) :
-        BookStatus(master, lastRead, currentPage) {
-        override var lastRead: LocalDateTime?
-            get() = super.lastRead
-            set(value) {
-                super.lastRead = value
-                lastRead?.run { master.status = ReadingStatus(master, lastRead!!, currentPage) }
-            }
-
-        override var currentPage: Int
-            get() = super.currentPage
-            @RequiresApi(Build.VERSION_CODES.O)
-            set(value) {
-                super.currentPage = value
-                if (currentPage != master.numPages)
-                    master.status = ReadingStatus(master, lastRead!!, currentPage)
-            }
-
-        override val eVal: STATUS
-            get() = STATUS.FINISHED
-    }
+    val status: STATUS
+        get() {
+            if (lastRead == null)
+                return STATUS.NEW
+            if (currentPage == numPages)
+                return STATUS.FINISHED
+            return STATUS.READING
+        }
 }
