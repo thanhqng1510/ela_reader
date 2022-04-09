@@ -1,7 +1,7 @@
 package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
 import androidx.room.TypeConverter
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class BookWrapperConverter {
@@ -13,7 +13,7 @@ class BookWrapperConverter {
         val authors = stringToAuthorsHelper(tokens[1])
         val coverResId = tokens[2].let { if (it.isEmpty()) null else it.toInt() }
         val numPages = tokens[3].toInt()
-        val dateAdded = LocalDate.parse(tokens[4])
+        val dateAdded = LocalDateTime.parse(tokens[4])
         val sharingSessionId = tokens[5].let { if (it.isEmpty()) null else UUID.fromString(it) }
 
         val book = Book(title, authors, coverResId, numPages, dateAdded, sharingSessionId)
@@ -43,7 +43,8 @@ class BookWrapperConverter {
 
     private fun stringToBookStatusHelper(master: Book, string: String): Book.BookStatus {
         val tokens = string.split("-bookStatusToStringHelper-")
-        val lastRead: LocalDate? = tokens[0].let { if (it.isEmpty()) null else LocalDate.parse(it) }
+        val lastRead: LocalDateTime? =
+            tokens[0].let { if (it.isEmpty()) null else LocalDateTime.parse(it) }
         val currentPage = tokens[1].toInt()
 
         return when (Book.STATUS.valueOf(tokens[2])) {

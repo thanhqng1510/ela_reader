@@ -11,7 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -50,7 +50,14 @@ class AddBookActivity : AppCompatActivity() {
         val randomAuthor2 = (1..5).map { allowedChars.random() }.joinToString("")
 
         val book =
-            Book(randomTitle, setOf(randomAuthor1, randomAuthor2), null, 200, LocalDate.now(), null)
+            Book(
+                randomTitle,
+                setOf(randomAuthor1, randomAuthor2),
+                null,
+                200,
+                LocalDateTime.now(),
+                null
+            )
 
         return CoroutineScope(Dispatchers.IO).launch {
             dataStore.insertBook(book)

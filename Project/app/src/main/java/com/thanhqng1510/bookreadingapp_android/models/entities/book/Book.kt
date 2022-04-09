@@ -2,7 +2,7 @@ package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class Book(
@@ -10,7 +10,7 @@ class Book(
     val authors: Set<String>,
     val coverResId: Int?,
     val numPages: Int,
-    val dateAdded: LocalDate,
+    val dateAdded: LocalDateTime,
     val sharingSessionId: UUID?,
 ) {
     enum class STATUS {
@@ -33,8 +33,8 @@ class Book(
         return result
     }
 
-    abstract class BookStatus(val master: Book, lastRead: LocalDate?, currentPage: Int) {
-        open var lastRead: LocalDate? = lastRead
+    abstract class BookStatus(val master: Book, lastRead: LocalDateTime?, currentPage: Int) {
+        open var lastRead: LocalDateTime? = lastRead
             set(value) {
                 value?.run { field = value }
             }
@@ -43,7 +43,7 @@ class Book(
             @RequiresApi(Build.VERSION_CODES.O)
             set(value) {
                 field = value.coerceIn(1, master.numPages)
-                lastRead = LocalDate.now()
+                lastRead = LocalDateTime.now()
             }
 
         abstract val eVal: STATUS
@@ -68,7 +68,7 @@ class Book(
     }
 
     class NewStatus(master: Book) : BookStatus(master, null, 1) {
-        override var lastRead: LocalDate?
+        override var lastRead: LocalDateTime?
             get() = super.lastRead
             set(value) {
                 super.lastRead = value
@@ -88,7 +88,7 @@ class Book(
             get() = STATUS.NEW
     }
 
-    class ReadingStatus(master: Book, lastRead: LocalDate, currentPage: Int) :
+    class ReadingStatus(master: Book, lastRead: LocalDateTime, currentPage: Int) :
         BookStatus(master, lastRead, currentPage) {
         override var currentPage: Int
             get() = super.currentPage
@@ -103,9 +103,9 @@ class Book(
             get() = STATUS.READING
     }
 
-    class FinishStatus(master: Book, lastRead: LocalDate, currentPage: Int) :
+    class FinishStatus(master: Book, lastRead: LocalDateTime, currentPage: Int) :
         BookStatus(master, lastRead, currentPage) {
-        override var lastRead: LocalDate?
+        override var lastRead: LocalDateTime?
             get() = super.lastRead
             set(value) {
                 super.lastRead = value
