@@ -1,19 +1,24 @@
 package com.thanhqng1510.bookreadingapp_android.models.daos
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookDao {
+    /*
+    * SQLite considers NULL values to be smaller than any other values for sorting purposes.
+    * Hence, NULLs naturally appear at the beginning of an ASC order-by and at the end of a DESC order-by.
+    * This can be changed using the "ASC NULLS LAST" or "DESC NULLS FIRST" syntax.
+    * */
     @Query("SELECT * FROM books")
-    fun getAll(): LiveData<List<Book>>
+    fun getAll(): Flow<List<Book>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(book: Book): Long
+    suspend fun insert(book: Book): Long
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

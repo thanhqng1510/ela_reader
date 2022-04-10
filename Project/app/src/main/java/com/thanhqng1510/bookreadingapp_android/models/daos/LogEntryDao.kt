@@ -8,5 +8,5 @@ import com.thanhqng1510.bookreadingapp_android.models.entities.logentry.LogEntry
 @Dao
 interface LogEntryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(logEntry: LogEntry)
+    suspend fun insert(logEntry: LogEntry): Long
 }

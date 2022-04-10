@@ -9,18 +9,18 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
-import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
-import java.time.LocalDate
-import kotlin.streams.toList
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -42,15 +42,12 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bookListAdapter: BookListAdapter
     private lateinit var sortSpinnerAdapter: SortOptionSpinnerAdapter
 
-    // Portion of bookListData to render on screen only
-    private val bookListDisplayData = MutableLiveData<List<Book>>()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
 
         init()
-        setupObservers()
+        setupCollectors()
         setupCallbacks()
     }
 
@@ -83,15 +80,22 @@ class HomeActivity : AppCompatActivity() {
         bookList.layoutManager = LinearLayoutManager(this)
     }
 
-    private fun setupObservers() {
-        viewModel.bookListData.observe(this) {
-            if (it.isEmpty()) showEmptyListView() else showPopulatedListView()
-            bookListDisplayData.value = sortBookList(filterBookList(searchBar.query.toString(), it))
-            // TODO: Filter and sort when query
-        }
-        bookListDisplayData.observe(this) {
-            bookListAdapter.submitList(it)
-            bookCount.text = getString(R.string.num_books, it.size)
+    private fun setupCollectors() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.bookListData.collectLatest {
+                        if (it.isEmpty()) showEmptyListView()
+                        else showPopulatedListView()
+                    }
+                }
+                launch {
+                    viewModel.bookListDisplayData.collectLatest {
+                        bookListAdapter.submitList(it)
+                        bookCount.text = getString(R.string.num_books, it.size)
+                    }
+                }
+            }
         }
     }
 
@@ -105,27 +109,20 @@ class HomeActivity : AppCompatActivity() {
             startActivity(intent)
         }
         refreshLayout.setOnRefreshListener {
-            viewModel.bookListData.observe(this, object : Observer<List<Book>> {
-                override fun onChanged(data: List<Book>) {
-                    refreshLayout.isRefreshing = false
-                    viewModel.bookListData.removeObserver(this)
-                }
-            }).also { viewModel.refreshBookListData() }
+            // viewModel.refresh() TODO: Implement refresh
+            refreshLayout.isRefreshing = false
         }
         searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false
 
             override fun onQueryTextChange(query: String?): Boolean {
-                viewModel.bookListData.value?.let {
-                    bookListDisplayData.value = sortBookList(filterBookList(query, it))
-                }
+                viewModel.setFilterString(query)
                 return false
             }
         })
         sortOptionSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
-                bookListDisplayData.value?.let { bookListDisplayData.value = sortBookList(it) }
-                // TODO: Needs to query again while apply sorting
+                viewModel.setSortOption(pos)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) =
@@ -141,50 +138,5 @@ class HomeActivity : AppCompatActivity() {
     private fun showPopulatedListView() {
         bookListScrollLayout.visibility = View.VISIBLE
         emptyBookListLayout.visibility = View.GONE
-    }
-
-    private fun filterBookList(query: String?, list: List<Book>): List<Book> {
-        val filterResult = (query ?: "").let { safeQuery ->
-            if (safeQuery.isEmpty() || list.isEmpty()) list.toList()
-            else list.stream().filter { book ->
-                book.title.contains(safeQuery, ignoreCase = true) || book.authors.any {
-                    it.contains(
-                        safeQuery,
-                        ignoreCase = true
-                    )
-                }
-            }.toList()
-        }
-        return filterResult
-    }
-
-    private fun sortBookList(list: List<Book>): List<Book> {
-        if (list.size <= 1) // No need to sort
-            return list.toList()
-
-        fun SortOptionSpinnerAdapter.SORTBY.getComparable(): (Book) -> Comparable<*> {
-            return when (this) {
-                SortOptionSpinnerAdapter.SORTBY.LAST_READ -> { book ->
-                    book.lastRead ?: LocalDate.MIN
-                }
-                SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> { book -> book.dateAdded }
-                SortOptionSpinnerAdapter.SORTBY.TITLE -> { book -> book.title }
-            }
-        }
-
-        val userComparable =
-            SortOptionSpinnerAdapter.SORTBY.forIndex(sortOptionSpinner.selectedItemPosition)
-                .getComparable()
-        val defaultComparables =
-            SortOptionSpinnerAdapter.SORTBY.values().map { it.getComparable() }.toTypedArray()
-
-        return list.sortedWith { b1, b2 ->
-            compareValuesBy(
-                b1,
-                b2,
-                userComparable,
-                *defaultComparables
-            )
-        }
     }
 }

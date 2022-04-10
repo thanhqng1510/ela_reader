@@ -5,18 +5,18 @@ import java.util.*
 
 class BookConverter {
     @TypeConverter
-    fun setToStringHelper(authors: Set<String>): String =
+    fun setToString(authors: Set<String>): String =
         authors.joinToString(separator = "-authorsToStringHelper-")
 
     @TypeConverter
-    fun stringToSetHelper(string: String): Set<String> =
+    fun stringToSet(string: String): Set<String> =
         string.split("-authorsToStringHelper-").toSet()
 
     @TypeConverter
-    fun uuidToStringHelper(sharingSessionId: UUID?): String =
+    fun nullableUuidToString(sharingSessionId: UUID?): String =
         sharingSessionId?.toString() ?: ""
 
     @TypeConverter
-    fun stringToUuidHelper(string: String): UUID? =
+    fun stringToNullableUuid(string: String): UUID? =
         if (string.isEmpty()) null else UUID.fromString(string)
 }

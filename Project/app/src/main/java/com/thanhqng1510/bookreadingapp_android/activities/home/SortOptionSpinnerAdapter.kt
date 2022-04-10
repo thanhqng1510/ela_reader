@@ -21,6 +21,8 @@ internal class SortOptionSpinnerAdapter(
 
         companion object {
             fun forIndex(idx: Int): SORTBY = values().run { this[idx.coerceIn(0, this.size - 1)] }
+
+            fun default(): SORTBY = LAST_READ
         }
     }
 

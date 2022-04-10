@@ -1,12 +1,17 @@
 package com.thanhqng1510.bookreadingapp_android.logstore
 
 import com.thanhqng1510.bookreadingapp_android.models.entities.logentry.LogEntry
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 class LogUtil @Inject constructor(
     private val logStore: LogStore,
 ) {
+    private val scope = CoroutineScope(Dispatchers.Default)
+
     enum class LOGLEVEL(val tag: String) {
         INFO("Info"),
         WARN("Warn"),
@@ -30,12 +35,14 @@ class LogUtil @Inject constructor(
         log(LOGLEVEL.ERROR, message, includeStackTrace)
 
     private fun log(level: LOGLEVEL, message: String, includeThreadInfo: Boolean) {
-        logStore.logEntryDao().insert(
-            LogEntry(
-                level, LocalDateTime.now(),
-                Thread.currentThread().id, Thread.currentThread().name, message,
-                if (includeThreadInfo) Thread.currentThread().stackTrace.contentDeepToString() else null
+        scope.launch {
+            logStore.logEntryDao().insert(
+                LogEntry(
+                    level, LocalDateTime.now(),
+                    Thread.currentThread().id, Thread.currentThread().name, message,
+                    if (includeThreadInfo) Thread.currentThread().stackTrace.contentDeepToString() else null
+                )
             )
-        )
+        }
     }
 }

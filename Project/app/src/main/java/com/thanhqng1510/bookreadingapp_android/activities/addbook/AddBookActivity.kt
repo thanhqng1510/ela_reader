@@ -5,13 +5,8 @@ import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
-import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -19,9 +14,6 @@ import javax.inject.Inject
 class AddBookActivity : AppCompatActivity() {
     @Inject
     lateinit var dataStore: DataStore
-
-    @Inject
-    lateinit var logUtil: LogUtil
 
     private lateinit var backBtn: ImageButton
     private lateinit var addBookBtn: ImageButton
@@ -42,33 +34,26 @@ class AddBookActivity : AppCompatActivity() {
     private fun setupCallbacks() {
         backBtn.setOnClickListener { finish() }
         addBookBtn.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                // TODO: Add some kind of processing indicator
-                val bookId = addMockBook()
-                logUtil.info("Added book with ID: $bookId")
-                withContext(Dispatchers.Main) {
-                    finish()
-                }
-            }
+            addMockBook()
+            finish()
         }
     }
 
-    private fun addMockBook(): Long {
+    private fun addMockBook() {
         val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
         val randomTitle = (1..10).map { allowedChars.random() }.joinToString("")
         val randomAuthor1 = (1..5).map { allowedChars.random() }.joinToString("")
         val randomAuthor2 = (1..5).map { allowedChars.random() }.joinToString("")
 
-        val book =
-            Book(
-                randomTitle,
-                setOf(randomAuthor1, randomAuthor2),
-                null,
-                200,
-                LocalDateTime.now(),
-                null
-            )
+        val book = Book(
+            randomTitle,
+            setOf(randomAuthor1, randomAuthor2),
+            null,
+            200,
+            LocalDateTime.now(),
+            null
+        )
 
-        return dataStore.insertBook(book)
+        dataStore.insertBookAsync(book)
     }
 }

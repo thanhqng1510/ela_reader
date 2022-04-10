@@ -5,9 +5,10 @@ import java.time.LocalDateTime
 
 class SharedConverters {
     @TypeConverter
-    fun stringToLocalDateTime(string: String): LocalDateTime? =
+    fun stringToNullableLocalDateTime(string: String): LocalDateTime? =
         if (string.isEmpty()) null else LocalDateTime.parse(string)
 
     @TypeConverter
-    fun localDateTimeToString(timeStamp: LocalDateTime?): String = timeStamp?.toString() ?: ""
+    fun nullableLocalDateTimeToString(timeStamp: LocalDateTime?): String =
+        timeStamp?.toString() ?: ""
 }
