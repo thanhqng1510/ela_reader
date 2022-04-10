@@ -1,10 +1,7 @@
 package com.thanhqng1510.bookreadingapp_android.models.daos
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookWrapper
 
 @Dao
@@ -14,6 +11,9 @@ interface BookDao {
 
     @Insert(onConflict=OnConflictStrategy.IGNORE)
     fun insert(bookWrapper: BookWrapper)
+
+    @Delete
+    fun delete(bookWrapper: BookWrapper)
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

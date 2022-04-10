@@ -21,4 +21,9 @@ class DataStore @Inject constructor(
 
     // TODO: Add returning value for insertBook
     fun insertBook(book: Book) = localStore.bookDao().insert(BookWrapper(book))
+
+    // TODO: Add returning value for deleteBook
+    fun deleteBook(book: Book) {
+        localStore.bookDao().delete(BookWrapper(book))
+    }
 }
