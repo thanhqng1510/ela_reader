@@ -3,6 +3,8 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
@@ -18,12 +20,20 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
+import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
+    @Inject
+    lateinit var dataStore: DataStore
+
     // View model
     private val viewModel: HomeViewModel by viewModels()
 
@@ -49,6 +59,26 @@ class HomeActivity : AppCompatActivity() {
         init()
         setupCollectors()
         setupCallbacks()
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        if (v.id == R.id.book_list) {
+            val inflater = menuInflater
+            inflater.inflate(R.menu.book_list_menu, menu)
+        }
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.delete_book -> {
+                bookListDisplayData.value?.get(bookListAdapter.position)?.let {
+                    deleteBook(it)
+                }
+                false
+            }
+            else -> super.onContextItemSelected(item)
+        }
     }
 
     private fun init() {
@@ -78,6 +108,8 @@ class HomeActivity : AppCompatActivity() {
         bookListAdapter = BookListAdapter()
         bookList.adapter = bookListAdapter
         bookList.layoutManager = LinearLayoutManager(this)
+        registerForContextMenu(bookList)
+
     }
 
     private fun setupCollectors() {
@@ -138,5 +170,11 @@ class HomeActivity : AppCompatActivity() {
     private fun showPopulatedListView() {
         bookListScrollLayout.visibility = View.VISIBLE
         emptyBookListLayout.visibility = View.GONE
+    }
+
+    private fun deleteBook(book: Book): Job {
+        return CoroutineScope(Dispatchers.IO).launch {
+            dataStore.deleteBook(book)
+        }
     }
 }

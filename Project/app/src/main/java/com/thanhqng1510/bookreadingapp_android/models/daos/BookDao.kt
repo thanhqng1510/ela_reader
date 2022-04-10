@@ -1,9 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.models.daos
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import kotlinx.coroutines.flow.Flow
 
@@ -19,6 +16,9 @@ interface BookDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(book: Book): Long
+
+    @Delete
+    fun delete(bookWrapper: BookWrapper)
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>
