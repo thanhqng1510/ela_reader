@@ -5,7 +5,6 @@ import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkSto
 import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
-import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookWrapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -20,7 +19,7 @@ class DataStore @Inject constructor(
     private val sharedPrefHelper: SharedPrefHelper,
     private val logUtil: LogUtil
 ) {
-    private val scope = CoroutineScope(Dispatchers.Main)
+    private val scope = CoroutineScope(Dispatchers.IO)
 
     fun getAllBooks(): Flow<List<Book>> = localStore.bookDao().getAll()
 
@@ -29,8 +28,7 @@ class DataStore @Inject constructor(
         logUtil.info("Added book with ID: $bookId")
     }
 
-    // TODO: Add returning value for deleteBook
-    fun deleteBook(book: Book) {
-        localStore.bookDao().delete(BookWrapper(book))
+    fun deleteBookAsync(book: Book) = scope.launch {
+        localStore.bookDao().delete(book)
     }
 }

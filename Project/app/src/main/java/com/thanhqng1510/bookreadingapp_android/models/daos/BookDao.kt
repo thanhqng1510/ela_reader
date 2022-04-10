@@ -18,7 +18,7 @@ interface BookDao {
     suspend fun insert(book: Book): Long
 
     @Delete
-    fun delete(bookWrapper: BookWrapper)
+    fun delete(book: Book)
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

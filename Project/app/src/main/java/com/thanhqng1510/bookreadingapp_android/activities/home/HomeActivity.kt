@@ -23,11 +23,10 @@ import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActiv
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : AppCompatActivity() {
@@ -72,9 +71,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_book -> {
-                bookListDisplayData.value?.get(bookListAdapter.position)?.let {
-                    deleteBook(it)
-                }
+                deleteBook(viewModel.bookListData.value[bookListAdapter.position])
                 false
             }
             else -> super.onContextItemSelected(item)
@@ -172,9 +169,5 @@ class HomeActivity : AppCompatActivity() {
         emptyBookListLayout.visibility = View.GONE
     }
 
-    private fun deleteBook(book: Book): Job {
-        return CoroutineScope(Dispatchers.IO).launch {
-            dataStore.deleteBook(book)
-        }
-    }
+    private fun deleteBook(book: Book): Job = dataStore.deleteBookAsync(book)
 }
