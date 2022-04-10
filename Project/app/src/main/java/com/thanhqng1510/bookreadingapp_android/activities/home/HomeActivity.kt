@@ -21,9 +21,7 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
-import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -57,22 +55,27 @@ class HomeActivity : AppCompatActivity() {
 
         init()
         setupCollectors()
-        setupCallbacks()
+        setupListeners()
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
         super.onCreateContextMenu(menu, v, menuInfo)
         if (v.id == R.id.book_list) {
-            val inflater = menuInflater
-            inflater.inflate(R.menu.book_list_menu, menu)
+            menuInflater.inflate(R.menu.book_list_menu, menu)
         }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.delete_book -> {
-                deleteBook(viewModel.bookListData.value[bookListAdapter.position])
-                false
+                bookListAdapter.longClickedPos?.let {
+                    dataStore.deleteBook(viewModel.bookListDisplayData.value[it])
+                }
+                true
             }
             else -> super.onContextItemSelected(item)
         }
@@ -106,7 +109,6 @@ class HomeActivity : AppCompatActivity() {
         bookList.adapter = bookListAdapter
         bookList.layoutManager = LinearLayoutManager(this)
         registerForContextMenu(bookList)
-
     }
 
     private fun setupCollectors() {
@@ -128,7 +130,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupCallbacks() {
+    private fun setupListeners() {
         settingsBtn.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)
@@ -168,6 +170,4 @@ class HomeActivity : AppCompatActivity() {
         bookListScrollLayout.visibility = View.VISIBLE
         emptyBookListLayout.visibility = View.GONE
     }
-
-    private fun deleteBook(book: Book): Job = dataStore.deleteBookAsync(book)
 }

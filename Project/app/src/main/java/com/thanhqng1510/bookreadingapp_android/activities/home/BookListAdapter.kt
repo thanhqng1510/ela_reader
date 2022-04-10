@@ -17,7 +17,7 @@ internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
         BookDiffCallBack()
     ).build()
 ) {
-    var position: Int = 0
+    var longClickedPos: Int? = null
         private set
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -50,10 +50,10 @@ internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bind(getItem(position))
         holder.itemView.setOnLongClickListener {
-            this.position = holder.adapterPosition
+            this.longClickedPos = holder.adapterPosition
             false
         }
-        holder.bind(getItem(position))
     }
 }

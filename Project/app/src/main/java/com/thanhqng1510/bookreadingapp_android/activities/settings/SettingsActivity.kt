@@ -11,15 +11,16 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        setupBindings()
-        setupCallbacks()
+
+        init()
+        setupListeners()
     }
 
-    private fun setupBindings() {
+    private fun init() {
         backBtn = findViewById(R.id.back_btn)
     }
 
-    private fun setupCallbacks() {
+    private fun setupListeners() {
         backBtn.setOnClickListener { finish() }
     }
 }

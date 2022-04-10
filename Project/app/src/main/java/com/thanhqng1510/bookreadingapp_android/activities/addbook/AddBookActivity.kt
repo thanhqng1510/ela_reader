@@ -23,7 +23,7 @@ class AddBookActivity : AppCompatActivity() {
         setContentView(R.layout.activity_add_books)
 
         init()
-        setupCallbacks()
+        setupListeners()
     }
 
     private fun init() {
@@ -31,7 +31,7 @@ class AddBookActivity : AppCompatActivity() {
         addBookBtn = findViewById(R.id.add_book_btn)
     }
 
-    private fun setupCallbacks() {
+    private fun setupListeners() {
         backBtn.setOnClickListener { finish() }
         addBookBtn.setOnClickListener {
             addMockBook()
@@ -54,6 +54,6 @@ class AddBookActivity : AppCompatActivity() {
             null
         )
 
-        dataStore.insertBookAsync(book)
+        dataStore.insertBook(book)
     }
 }

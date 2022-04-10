@@ -6,11 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface BookDao {
-    /*
-    * SQLite considers NULL values to be smaller than any other values for sorting purposes.
-    * Hence, NULLs naturally appear at the beginning of an ASC order-by and at the end of a DESC order-by.
-    * This can be changed using the "ASC NULLS LAST" or "DESC NULLS FIRST" syntax.
-    * */
     @Query("SELECT * FROM books")
     fun getAll(): Flow<List<Book>>
 
@@ -18,7 +13,7 @@ interface BookDao {
     suspend fun insert(book: Book): Long
 
     @Delete
-    fun delete(book: Book)
+    suspend fun delete(book: Book): Int
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

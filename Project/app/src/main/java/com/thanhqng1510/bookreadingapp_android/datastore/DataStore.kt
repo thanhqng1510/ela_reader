@@ -23,12 +23,13 @@ class DataStore @Inject constructor(
 
     fun getAllBooks(): Flow<List<Book>> = localStore.bookDao().getAll()
 
-    fun insertBookAsync(book: Book) = scope.launch {
+    fun insertBook(book: Book) = scope.launch {
         val bookId = localStore.bookDao().insert(book)
         logUtil.info("Added book with ID: $bookId")
     }
 
-    fun deleteBookAsync(book: Book) = scope.launch {
-        localStore.bookDao().delete(book)
+    fun deleteBook(book: Book) = scope.launch {
+        val bookDeleted = localStore.bookDao().delete(book)
+        logUtil.info("Deleted $bookDeleted book(s) with ID: ${book.id}")
     }
 }

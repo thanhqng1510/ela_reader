@@ -12,7 +12,7 @@ import javax.inject.Inject
 import kotlin.streams.toList
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(private val dataStore: DataStore) : ViewModel() {
+class HomeViewModel @Inject constructor(dataStore: DataStore) : ViewModel() {
     // All data loaded from DB as flow
     val bookListData =
         dataStore.getAllBooks().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
@@ -27,7 +27,7 @@ class HomeViewModel @Inject constructor(private val dataStore: DataStore) : View
     init {
         viewModelScope.launch {
             bookListData.collectLatest {
-                _bookListDisplayData.value = sortedBookList(filterBookList(it))
+                _bookListDisplayData.value = sortedBookList(filteredBookList(it))
             }
         }
     }
@@ -35,11 +35,11 @@ class HomeViewModel @Inject constructor(private val dataStore: DataStore) : View
     fun setFilterString(str: String?) {
         filterStr = str ?: ""
         viewModelScope.launch {
-            _bookListDisplayData.value = filterBookList(bookListData.value)
+            _bookListDisplayData.value = sortedBookList(filteredBookList(bookListData.value))
         }
     }
 
-    private fun filterBookList(list: List<Book>): List<Book> {
+    private fun filteredBookList(list: List<Book>): List<Book> {
         val filterResult =
             if (filterStr.isEmpty() || list.isEmpty()) list
             else list.stream()
