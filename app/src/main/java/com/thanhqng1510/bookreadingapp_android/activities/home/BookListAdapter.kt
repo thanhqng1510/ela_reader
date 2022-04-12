@@ -52,7 +52,7 @@ internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
         holder.itemView.setOnLongClickListener {
-            this.longClickedPos = holder.adapterPosition
+            this.longClickedPos = holder.absoluteAdapterPosition
             false
         }
     }

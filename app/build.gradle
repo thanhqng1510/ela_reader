@@ -113,6 +113,16 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-web:3.4.0"
     androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:3.4.0"
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:3.4.0"
+
+    // PDF renderer
+    implementation "com.tom-roush:pdfbox-android:2.0.18.0"
+
+    // Ebook renderer
+    implementation "com.github.readium.kotlin-toolkit:readium-shared:$readium_version"
+    implementation "com.github.readium.kotlin-toolkit:readium-streamer:$readium_version"
+    implementation "com.github.readium.kotlin-toolkit:readium-navigator:$readium_version"
+    implementation "com.github.readium.kotlin-toolkit:readium-opds:$readium_version"
+    implementation "com.github.readium.kotlin-toolkit:readium-lcp:$readium_version"
 }
 
 // Allow references to generated code

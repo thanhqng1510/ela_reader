@@ -6,7 +6,7 @@ import android.widget.ImageButton
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 import androidx.lifecycle.lifecycleScope
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.BaseActivity
+import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book

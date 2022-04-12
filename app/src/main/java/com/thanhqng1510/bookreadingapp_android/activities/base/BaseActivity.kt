@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.activities
+package com.thanhqng1510.bookreadingapp_android.activities.base
 
 import android.os.Bundle
 import android.view.View
