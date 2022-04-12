@@ -14,7 +14,7 @@ internal class SortOptionSpinnerAdapter(
     context: Context
 ) :
     ArrayAdapter<String>(context, resource, items) {
-    enum class SORTBY(val dispString: String) {
+    enum class SORTBY(val displayStr: String) {
         LAST_READ("Last read"),
         DATE_ADDED("Date added"),
         TITLE("Title");

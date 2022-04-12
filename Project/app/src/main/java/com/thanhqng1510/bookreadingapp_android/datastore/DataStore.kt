@@ -1,14 +1,13 @@
 package com.thanhqng1510.bookreadingapp_android.datastore
 
+import android.net.Uri
 import com.thanhqng1510.bookreadingapp_android.datastore.localstore.LocalStore
 import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkStore
 import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,5 +30,13 @@ class DataStore @Inject constructor(
     fun deleteBook(book: Book) = scope.launch {
         val bookDeleted = localStore.bookDao().delete(book)
         logUtil.info("Deleted $bookDeleted book(s) with ID: ${book.id}")
+    }
+
+    fun countBookByUriAsync(uri: Uri): Deferred<Long> = scope.async {
+        return@async localStore.bookDao().countByUri(uri)
+    }
+
+    fun countBookByLikedTitleAsync(title: String): Deferred<Long> = scope.async {
+        return@async localStore.bookDao().countByLikedTitle(title)
     }
 }

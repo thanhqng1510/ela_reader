@@ -1,26 +1,21 @@
 package com.thanhqng1510.bookreadingapp_android.activities.settings
 
-import android.os.Bundle
 import android.widget.ImageButton
-import androidx.appcompat.app.AppCompatActivity
 import com.thanhqng1510.bookreadingapp_android.R
+import com.thanhqng1510.bookreadingapp_android.activities.BaseActivity
 
-class SettingsActivity : AppCompatActivity() {
+class SettingsActivity : BaseActivity() {
     private lateinit var backBtn: ImageButton
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun init() {
         setContentView(R.layout.activity_settings)
 
-        init()
-        setupListeners()
-    }
-
-    private fun init() {
         backBtn = findViewById(R.id.back_btn)
     }
 
-    private fun setupListeners() {
+    override fun setupCollectors() {}
+
+    override fun setupListeners() {
         backBtn.setOnClickListener { finish() }
     }
 }

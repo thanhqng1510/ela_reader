@@ -1,5 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
+import android.net.Uri
 import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
 import java.time.LocalDateTime
@@ -7,19 +8,19 @@ import java.util.*
 
 @Entity(
     tableName = "books",
-    indices = [Index(value = ["title"], unique = true)],
-    // ignoredColumns = ["logUtil"] TODO: Find way to use LogUtil in Book
+    indices = [Index(value = ["title"], unique = true), Index(value = ["uri"], unique = true)],
 )
 @TypeConverters(SharedConverters::class, BookConverter::class)
 data class Book(
     val title: String,
     val authors: Set<String>,
     val coverResId: Int?,
-    val numPages: Int,
+    val numPages: Int, // TODO: Can this be modified ?
     val dateAdded: LocalDateTime,
-    val sharingSessionId: UUID?,
+    val fileType: String,
+    var uri: Uri,
+    var sharingSessionId: UUID?,
 ) {
-
     enum class STATUS {
         NEW, READING, FINISHED
     }
@@ -32,13 +33,11 @@ data class Book(
         set(value) {
             value?.run {
                 field = value
-            } // ?: logUtil.warn("Attempt to set lastRead to null", true)
+            }
         }
 
     var currentPage: Int = 1
         set(value) {
-            // if (value < 1 || value > numPages)
-            // logUtil.warn("Attempt to set currentPage to out-of-bound value", true)
             field = value.coerceIn(1, numPages)
         }
 
@@ -50,4 +49,28 @@ data class Book(
                 return STATUS.FINISHED
             return STATUS.READING
         }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Book) return false
+
+        if (title != other.title) return false
+        if (authors != other.authors) return false
+        if (coverResId != other.coverResId) return false
+        if (numPages != other.numPages) return false
+        if (dateAdded != other.dateAdded) return false
+        if (fileType != other.fileType) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = title.hashCode()
+        result = 31 * result + authors.hashCode()
+        result = 31 * result + coverResId.hashCode()
+        result = 31 * result + numPages.hashCode()
+        result = 31 * result + dateAdded.hashCode()
+        result = 31 * result + fileType.hashCode()
+        return result
+    }
 }

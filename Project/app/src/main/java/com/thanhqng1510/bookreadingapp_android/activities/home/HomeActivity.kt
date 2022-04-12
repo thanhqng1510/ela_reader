@@ -2,13 +2,11 @@
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.widget.NestedScrollView
 import androidx.lifecycle.Lifecycle
@@ -18,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.thanhqng1510.bookreadingapp_android.R
+import com.thanhqng1510.bookreadingapp_android.activities.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
@@ -27,7 +26,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
     @Inject
     lateinit var dataStore: DataStore
 
@@ -49,15 +48,6 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var bookListAdapter: BookListAdapter
     private lateinit var sortSpinnerAdapter: SortOptionSpinnerAdapter
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-
-        init()
-        setupCollectors()
-        setupListeners()
-    }
-
     override fun onCreateContextMenu(
         menu: ContextMenu,
         v: View,
@@ -73,7 +63,16 @@ class HomeActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.delete_book -> {
                 bookListAdapter.longClickedPos?.let {
-                    dataStore.deleteBook(viewModel.bookListDisplayData.value[it])
+                    lifecycleScope.launch {
+                        showLoadingOverlay()
+                        dataStore.deleteBook(viewModel.bookListDisplayData.value[it]).join()
+                        hideLoadingOverlay()
+
+                        showSnackbar(
+                            findViewById(R.id.coordinator_layout),
+                            "Book removed from your library"
+                        )
+                    }
                 }
                 true
             }
@@ -81,7 +80,9 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun init() {
+    override fun init() {
+        setContentView(R.layout.activity_home)
+
         bookList = findViewById(R.id.book_list)
         emptyBookListLayout = findViewById(R.id.empty_book_list_layout)
         bookListScrollLayout = findViewById(R.id.book_list_scroll_layout)
@@ -93,7 +94,7 @@ class HomeActivity : AppCompatActivity() {
 
         sortOptionSpinner = findViewById(R.id.sort_option_spinner)
         sortSpinnerAdapter =
-            SortOptionSpinnerAdapter.SORTBY.values().map { it.dispString }.let { sortOptionList ->
+            SortOptionSpinnerAdapter.SORTBY.values().map { it.displayStr }.let { sortOptionList ->
                 SortOptionSpinnerAdapter(
                     sortOptionSpinner,
                     android.R.layout.simple_spinner_item,
@@ -111,7 +112,7 @@ class HomeActivity : AppCompatActivity() {
         registerForContextMenu(bookList)
     }
 
-    private fun setupCollectors() {
+    override fun setupCollectors() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
@@ -130,7 +131,7 @@ class HomeActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupListeners() {
+    override fun setupListeners() {
         settingsBtn.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
             startActivity(intent)

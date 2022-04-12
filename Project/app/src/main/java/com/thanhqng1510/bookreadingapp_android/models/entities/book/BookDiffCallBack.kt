@@ -7,5 +7,8 @@ class BookDiffCallBack : DiffUtil.ItemCallback<Book>() {
 
     // We only care about var members
     override fun areContentsTheSame(oldItem: Book, newItem: Book): Boolean =
-        oldItem.lastRead == newItem.lastRead && oldItem.currentPage == newItem.currentPage
+        oldItem.lastRead == newItem.lastRead &&
+                oldItem.currentPage == newItem.currentPage &&
+                oldItem.uri == newItem.uri &&
+                oldItem.sharingSessionId == newItem.sharingSessionId
 }

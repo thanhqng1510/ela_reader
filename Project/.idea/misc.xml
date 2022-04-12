@@ -6,6 +6,8 @@
         <entry key="../../../../../../../../../layout/custom_preview.xml" value="0.30885416666666665" />
         <entry key="../../../../../../Android/sdk/platforms/android-32/data/res/layout/simple_spinner_dropdown_item.xml" value="0.26811594202898553" />
         <entry key="../../../../../../Android/sdk/platforms/android-32/data/res/layout/simple_spinner_item.xml" value="0.26811594202898553" />
+        <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/activity_add_books.xml" value="0.3625" />
+        <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/activity_home.xml" value="0.3625" />
         <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/activity_library.xml" value="0.33" />
         <entry key="..\:/Users/thanh.nguyen/Desktop/BookReadingApp_Android/Project/app/src/main/res/layout/sort_spinner_dropdown_layout.xml" value="0.18541666666666667" />
         <entry key="app/src/main/res/drawable/add_light.xml" value="0.2984375" />
@@ -28,12 +30,10 @@
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.21105072463768115" />
         <entry key="app/src/main/res/layout/activity_sort_option_spinner_adapter.xml" value="0.26222826086956524" />
         <entry key="app/src/main/res/layout/book_list_header.xml" value="0.2418478260869565" />
-        <entry key="app/src/main/res/layout/book_list_menu.xml" value="0.26811594202898553" />
         <entry key="app/src/main/res/layout/book_list_row_layout.xml" value="0.23115577889447236" />
         <entry key="app/src/main/res/layout/custom_searchview.xml" value="0.213768115942029" />
         <entry key="app/src/main/res/layout/sort_option_spinner_layout.xml" value="0.2869986934938293" />
         <entry key="app/src/main/res/layout/sort_spinner_dropdown_layout.xml" value="0.26755852842809363" />
-        <entry key="app/src/main/res/menu/book_list_menu.xml" value="0.28229166666666666" />
       </map>
     </option>
   </component>

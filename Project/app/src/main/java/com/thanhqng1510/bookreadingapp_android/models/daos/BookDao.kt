@@ -1,10 +1,14 @@
 package com.thanhqng1510.bookreadingapp_android.models.daos
 
+import android.net.Uri
 import androidx.room.*
+import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookConverter
 import kotlinx.coroutines.flow.Flow
 
 @Dao
+@TypeConverters(SharedConverters::class, BookConverter::class)
 interface BookDao {
     @Query("SELECT * FROM books")
     fun getAll(): Flow<List<Book>>
@@ -15,18 +19,17 @@ interface BookDao {
     @Delete
     suspend fun delete(book: Book): Int
 
+    @Query("SELECT COUNT(*) FROM books WHERE uri = :uri")
+    suspend fun countByUri(uri: Uri): Long
+
+    @Query("SELECT COUNT(*) FROM books WHERE title GLOB :title")
+    suspend fun countByLikedTitle(title: String): Long
+
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>
 //
-//    @Query("SELECT * FROM user WHERE first_name LIKE :first AND " +
-//            "last_name LIKE :last LIMIT 1")
-//    fun findByName(first: String, last: String): Book
-//
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
 //    fun insertAll(vararg users: Book)
-//
-//    @Delete
-//    fun delete(user: Book)
 //
 //    @MapInfo(keyColumn = "userName", valueColumn = "bookName")
 //    @Query(
