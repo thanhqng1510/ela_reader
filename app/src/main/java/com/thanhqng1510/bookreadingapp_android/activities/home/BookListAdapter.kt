@@ -12,11 +12,12 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookDiffCallBack
 
-internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
-    AsyncDifferConfig.Builder(
-        BookDiffCallBack()
-    ).build()
-) {
+internal class BookListAdapter(val onItemClick: (View, Int) -> Unit) :
+    ListAdapter<Book, BookListAdapter.ViewHolder>(
+        AsyncDifferConfig.Builder(
+            BookDiffCallBack()
+        ).build()
+    ) {
     var longClickedPos: Int? = null
         private set
 
@@ -51,8 +52,9 @@ internal class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(getItem(position))
+        holder.itemView.setOnClickListener { onItemClick(it, holder.adapterPosition) }
         holder.itemView.setOnLongClickListener {
-            this.longClickedPos = holder.absoluteAdapterPosition
+            this.longClickedPos = holder.adapterPosition
             false
         }
     }

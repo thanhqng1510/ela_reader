@@ -5,17 +5,22 @@ import android.animation.AnimatorListenerAdapter
 import android.view.View
 import java.util.*
 
-
-fun String.formatForFileName(): String {
-    return this.substringBeforeLast(".").trim().replace("""\s+""".toRegex(), " ").split(" ")
-        .joinToString(separator = " ") {
-            it.replaceFirstChar { c ->
-                if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
+object FileUtils {
+    fun getFileDisplayName(filePath: String): String {
+        return getFileName(filePath).replace("""\s+""".toRegex(), " ").split(" ")
+            .joinToString(separator = " ") {
+                it.replaceFirstChar { c ->
+                    if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
+                }
             }
-        }
+    }
+
+    fun getFileName(filePath: String): String = filePath.substringBeforeLast(".").trim()
+
+    fun getFileExtension(filePath: String): String = filePath.substringAfterLast(".").trim()
 }
 
-object AndroidUtils {
+object ActivityUtils {
     fun animateVisibility(view: View, destVisibility: Int, destAlpha: Float, durationMillis: Long) {
         val toShow = destVisibility == View.VISIBLE
         if (toShow) {

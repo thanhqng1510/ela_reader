@@ -13,6 +13,9 @@ interface BookDao {
     @Query("SELECT * FROM books")
     fun getAll(): Flow<List<Book>>
 
+    @Query("SELECT * FROM books WHERE rowid = :id")
+    suspend fun getById(id: Long): Book?
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(book: Book): Long
 
@@ -21,9 +24,6 @@ interface BookDao {
 
     @Query("SELECT COUNT(*) FROM books WHERE uri = :uri")
     suspend fun countByUri(uri: Uri): Long
-
-    @Query("SELECT COUNT(*) FROM books WHERE title GLOB :title")
-    suspend fun countByLikedTitle(title: String): Long
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

@@ -21,8 +21,12 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+
+        debug {
+            debuggable true
         }
     }
 
@@ -115,14 +119,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-idling-resource:3.4.0"
 
     // PDF renderer
-    implementation "com.tom-roush:pdfbox-android:2.0.18.0"
-
-    // Ebook renderer
-    implementation "com.github.readium.kotlin-toolkit:readium-shared:$readium_version"
-    implementation "com.github.readium.kotlin-toolkit:readium-streamer:$readium_version"
-    implementation "com.github.readium.kotlin-toolkit:readium-navigator:$readium_version"
-    implementation "com.github.readium.kotlin-toolkit:readium-opds:$readium_version"
-    implementation "com.github.readium.kotlin-toolkit:readium-lcp:$readium_version"
+    // implementation "com.tom-roush:pdfbox-android:2.0.18.0"
+    implementation 'com.github.afreakyelf:Pdf-Viewer:1.0.7'
 }
 
 // Allow references to generated code

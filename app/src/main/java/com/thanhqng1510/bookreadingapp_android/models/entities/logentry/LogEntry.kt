@@ -20,7 +20,7 @@ data class LogEntry(
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")
-    var id: Int = 0
+    var id: Long = 0L
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

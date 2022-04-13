@@ -22,6 +22,10 @@ class DataStore @Inject constructor(
 
     fun getAllBooks(): Flow<List<Book>> = localStore.bookDao().getAll()
 
+    fun getBookByIdAsync(id: Long): Deferred<Book?> = scope.async {
+        return@async localStore.bookDao().getById(id)
+    }
+
     fun insertBook(book: Book) = scope.launch {
         val bookId = localStore.bookDao().insert(book)
         logUtil.info("Added book with ID: $bookId")
@@ -34,9 +38,5 @@ class DataStore @Inject constructor(
 
     fun countBookByUriAsync(uri: Uri): Deferred<Long> = scope.async {
         return@async localStore.bookDao().countByUri(uri)
-    }
-
-    fun countBookByLikedTitleAsync(title: String): Deferred<Long> = scope.async {
-        return@async localStore.bookDao().countByLikedTitle(title)
     }
 }

@@ -8,7 +8,7 @@ import java.util.*
 
 @Entity(
     tableName = "books",
-    indices = [Index(value = ["title"], unique = true), Index(value = ["uri"], unique = true)],
+    indices = [Index(value = ["uri"], unique = true)],
 )
 @TypeConverters(SharedConverters::class, BookConverter::class)
 data class Book(
@@ -27,7 +27,7 @@ data class Book(
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")
-    var id: Int = 0
+    var id: Long = 0L
 
     var lastRead: LocalDateTime? = null
         set(value) {
