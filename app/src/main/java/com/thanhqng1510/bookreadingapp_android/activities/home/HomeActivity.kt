@@ -20,17 +20,12 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
-import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
-    @Inject
-    lateinit var dataStore: DataStore
-
     // View model
     private val viewModel: HomeViewModel by viewModels()
 
@@ -64,15 +59,9 @@ class HomeActivity : BaseActivity() {
         return when (item.itemId) {
             R.id.delete_book -> {
                 bookListAdapter.longClickedPos?.let {
-                    lifecycleScope.launch {
-                        showLoadingOverlay()
-                        dataStore.deleteBook(viewModel.bookListDisplayData.value[it]).join()
-                        hideLoadingOverlay()
-
-                        showSnackbar(
-                            findViewById(R.id.coordinator_layout),
-                            "Book removed from your library"
-                        )
+                    runJobShowProcessingOverlay {
+                        viewModel.deleteBookAtIndex(it).join()
+                        return@runJobShowProcessingOverlay "Book removed from your library"
                     }
                 }
                 true
@@ -84,6 +73,7 @@ class HomeActivity : BaseActivity() {
     override fun init() {
         setContentView(R.layout.activity_home)
 
+        globalCoordinatorLayout = findViewById(R.id.coordinator_layout)
         bookList = findViewById(R.id.book_list)
         emptyBookListLayout = findViewById(R.id.empty_book_list_layout)
         bookListScrollLayout = findViewById(R.id.book_list_scroll_layout)
@@ -169,8 +159,10 @@ class HomeActivity : BaseActivity() {
                 viewModel.setSortOption(pos)
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>) =
+            override fun onNothingSelected(parent: AdapterView<*>) {
                 sortOptionSpinner.setSelection(0)
+                viewModel.setSortOption(0)
+            }
         }
     }
 

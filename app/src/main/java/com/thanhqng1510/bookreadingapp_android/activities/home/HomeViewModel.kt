@@ -3,7 +3,6 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
-import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -15,7 +14,6 @@ import kotlin.streams.toList
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val dataStore: DataStore,
-    private val logUtil: LogUtil
 ) : ViewModel() {
     // All data loaded from DB as flow
     val bookListData =
@@ -34,6 +32,10 @@ class HomeViewModel @Inject constructor(
                 _bookListDisplayData.value = sortedBookList(filteredBookList(it))
             }
         }
+    }
+
+    fun deleteBookAtIndex(idx: Int) = viewModelScope.launch {
+        dataStore.deleteBook(bookListDisplayData.value[idx]).join()
     }
 
     fun setFilterString(str: String?) {

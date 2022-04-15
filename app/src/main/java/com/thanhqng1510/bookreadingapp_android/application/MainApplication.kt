@@ -5,7 +5,10 @@ import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
 class MainApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
+    companion object {
+        const val booksExternalDir = "books/"
+
+        const val contentSchemeUri = "content"
+        const val fileSchemeUri = "file"
     }
 }

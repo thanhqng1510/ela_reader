@@ -10,6 +10,7 @@ class SettingsActivity : BaseActivity() {
     override fun init() {
         setContentView(R.layout.activity_settings)
 
+        globalCoordinatorLayout = findViewById(R.id.coordinator_layout)
         backBtn = findViewById(R.id.back_btn)
     }
 
