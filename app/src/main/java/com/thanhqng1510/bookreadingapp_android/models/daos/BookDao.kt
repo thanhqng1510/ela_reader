@@ -22,8 +22,8 @@ interface BookDao {
     @Delete
     suspend fun delete(book: Book): Int
 
-    @Query("SELECT COUNT(*) FROM books WHERE uri = :uri")
-    suspend fun countByUri(uri: Uri): Long
+    @Query("SELECT COUNT(*) FROM books WHERE fileUri = :fileUri")
+    suspend fun countByFileUri(fileUri: Uri): Long
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

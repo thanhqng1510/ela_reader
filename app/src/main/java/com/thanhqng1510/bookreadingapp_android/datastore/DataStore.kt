@@ -36,7 +36,7 @@ class DataStore @Inject constructor(
         logUtil.info("Deleted $bookDeleted book(s) with ID: ${book.id}")
     }
 
-    fun countBookByUriAsync(uri: Uri): Deferred<Long> = scope.async {
-        return@async localStore.bookDao().countByUri(uri)
+    fun countBookByFileUriAsync(fileUri: Uri): Deferred<Long> = scope.async {
+        return@async localStore.bookDao().countByFileUri(fileUri)
     }
 }

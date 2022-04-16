@@ -4,6 +4,8 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../layout/custom_preview.xml" value="0.33645833333333336" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.19972826086956522" />
+        <entry key="app/src/main/res/layout/book_list_row_layout.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/layout/progress_overlay.xml" value="0.20199275362318841" />
       </map>
     </option>

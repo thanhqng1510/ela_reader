@@ -3,46 +3,50 @@ package com.thanhqng1510.bookreadingapp_android.models.entities.book
 import android.net.Uri
 import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
+import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity(
     tableName = "books",
-    indices = [Index(value = ["uri"], unique = true)],
+    indices = [Index(value = ["fileUri"], unique = true),
+        Index(value = ["thumbnailUri"], unique = true)],
 )
 @TypeConverters(SharedConverters::class, BookConverter::class)
 data class Book(
     val title: String,
     val authors: Set<String>,
-    val coverResId: Int?,
-    val numPages: Int, // TODO: Can this be modified ?
+    val thumbnailUri: Uri,
+    val numPages: Int,
     val dateAdded: LocalDateTime,
     val fileType: String,
-    var uri: Uri,
+    var fileUri: Uri,
     var sharingSessionId: UUID?,
 ) {
     enum class STATUS {
-        NEW, READING, FINISHED
+        NEW, READING, FINISHED, ERROR
     }
 
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "rowid")
     var id: Long = 0L
 
-    var lastRead: LocalDateTime? = null
+    var lastRead: LocalDateTime? = null // TODO: Update this
         set(value) {
             value?.run {
                 field = value
             }
         }
 
-    var currentPage: Int = 1
+    var currentPage: Int = 1 // TODO: Update this
         set(value) {
             field = value.coerceIn(1, numPages)
         }
 
     val status: STATUS
         get() {
+            if (!FileUtils.isExistingUri(fileUri))
+                return STATUS.ERROR
             if (lastRead == null)
                 return STATUS.NEW
             if (currentPage == numPages)
@@ -56,10 +60,11 @@ data class Book(
 
         if (title != other.title) return false
         if (authors != other.authors) return false
-        if (coverResId != other.coverResId) return false
+        if (thumbnailUri != other.thumbnailUri) return false
         if (numPages != other.numPages) return false
         if (dateAdded != other.dateAdded) return false
         if (fileType != other.fileType) return false
+        if (fileUri != other.fileUri) return false
 
         return true
     }
@@ -67,10 +72,11 @@ data class Book(
     override fun hashCode(): Int {
         var result = title.hashCode()
         result = 31 * result + authors.hashCode()
-        result = 31 * result + coverResId.hashCode()
+        result = 31 * result + thumbnailUri.hashCode()
         result = 31 * result + numPages.hashCode()
         result = 31 * result + dateAdded.hashCode()
         result = 31 * result + fileType.hashCode()
+        result = 31 * result + fileUri.hashCode()
         return result
     }
 }

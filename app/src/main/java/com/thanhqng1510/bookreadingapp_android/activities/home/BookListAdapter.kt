@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookDiffCallBack
+import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 
 internal class BookListAdapter(val onItemClick: (View, Int) -> Unit) :
     ListAdapter<Book, BookListAdapter.ViewHolder>(
@@ -22,26 +23,10 @@ internal class BookListAdapter(val onItemClick: (View, Int) -> Unit) :
         private set
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        private val title: TextView = view.findViewById(R.id.title)
-        private val author: TextView = view.findViewById(R.id.author)
-        private val cover: ImageView = view.findViewById(R.id.cover)
-        private val status: ImageView = view.findViewById(R.id.book_status)
-
-        fun bind(book: Book) {
-            title.text = book.title
-            author.text = book.authors.joinToString(", ")
-            cover.setImageResource(book.coverResId ?: R.mipmap.book_cover_default)
-
-            if (book.status != Book.STATUS.FINISHED) {
-                status.setImageResource(
-                    when (book.status) {
-                        Book.STATUS.NEW -> R.drawable.new_status_light
-                        Book.STATUS.READING -> R.drawable.reading_status_light
-                        else -> 0 // TODO: Remove this redundant case
-                    }
-                )
-            }
-        }
+        val title: TextView = view.findViewById(R.id.title)
+        val author: TextView = view.findViewById(R.id.author)
+        val cover: ImageView = view.findViewById(R.id.cover)
+        val status: ImageView = view.findViewById(R.id.book_status)
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
@@ -51,11 +36,38 @@ internal class BookListAdapter(val onItemClick: (View, Int) -> Unit) :
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
-        holder.itemView.setOnClickListener { onItemClick(it, holder.adapterPosition) }
-        holder.itemView.setOnLongClickListener {
-            this.longClickedPos = holder.adapterPosition
-            false
+        val book = getItem(position)
+
+        holder.run {
+            title.text = book.title
+            author.text = book.authors.joinToString(", ")
+
+            book.thumbnailUri.let {
+                if (FileUtils.isExistingUri(it))
+                    cover.setImageURI(it)
+                else
+                    cover.setImageResource(R.mipmap.book_cover_default)
+            }
+
+            if (book.status != Book.STATUS.FINISHED) {
+                status.setImageResource(
+                    when (book.status) {
+                        Book.STATUS.NEW -> R.drawable.new_status_light
+                        Book.STATUS.READING -> R.drawable.reading_status_light
+                        Book.STATUS.ERROR -> R.drawable.reading_status_light
+                        else -> 0 // TODO: Remove this redundant case
+                    }
+                )
+            }
+
+            if (book.status == Book.STATUS.ERROR)
+                itemView.setBackgroundResource(R.color.disabled_grey)
+
+            itemView.setOnClickListener { onItemClick(it, holder.adapterPosition) }
+            itemView.setOnLongClickListener {
+                longClickedPos = adapterPosition
+                false
+            }
         }
     }
 }

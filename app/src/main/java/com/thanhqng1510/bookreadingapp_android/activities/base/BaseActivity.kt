@@ -19,24 +19,24 @@ abstract class BaseActivity : AppCompatActivity() {
         setupListeners()
     }
 
-    abstract fun init()
+    protected abstract fun init()
 
-    abstract fun setupCollectors()
+    protected abstract fun setupCollectors()
 
-    abstract fun setupListeners()
+    protected abstract fun setupListeners()
 
     // Derived activity must wrap its main layout with a coordinator layout
     // and set this variable to the coordinator layout's view id, preferably in init() method
-    lateinit var globalCoordinatorLayout: CoordinatorLayout
+    protected lateinit var globalCoordinatorLayout: CoordinatorLayout
 
-    fun showSnackbar(message: String) {
+    open fun showSnackbar(message: String) {
         Snackbar.make(globalCoordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 
     // TODO: Can we use background job ?
     // Derived activity must include the progress_overlay layout in its main layout
     // Job may return a result string that will be shown on snackbar after complete
-    fun runJobShowProcessingOverlay(job: suspend () -> String?) = lifecycleScope.launch {
+    open fun runJobShowProcessingOverlay(job: suspend () -> String?) = lifecycleScope.launch {
         whenStarted {
             showProcessingOverlay()
             val res = job()

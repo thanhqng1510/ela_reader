@@ -1,22 +1,21 @@
 package com.thanhqng1510.bookreadingapp_android.activities.settings
 
-import android.widget.ImageButton
-import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
+import com.thanhqng1510.bookreadingapp_android.databinding.ActivitySettingsBinding
 
 class SettingsActivity : BaseActivity() {
-    private lateinit var backBtn: ImageButton
+    private lateinit var bindings: ActivitySettingsBinding
 
     override fun init() {
-        setContentView(R.layout.activity_settings)
+        bindings = ActivitySettingsBinding.inflate(layoutInflater)
+        setContentView(bindings.root)
 
-        globalCoordinatorLayout = findViewById(R.id.coordinator_layout)
-        backBtn = findViewById(R.id.back_btn)
+        globalCoordinatorLayout = bindings.coordinatorLayout
     }
 
     override fun setupCollectors() {}
 
     override fun setupListeners() {
-        backBtn.setOnClickListener { finish() }
+        bindings.backBtn.setOnClickListener { finish() }
     }
 }

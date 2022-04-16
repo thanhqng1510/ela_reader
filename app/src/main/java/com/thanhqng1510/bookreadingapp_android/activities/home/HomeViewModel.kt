@@ -3,8 +3,12 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
+import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -14,6 +18,7 @@ import kotlin.streams.toList
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val dataStore: DataStore,
+    private val logUtil: LogUtil
 ) : ViewModel() {
     // All data loaded from DB as flow
     val bookListData =
@@ -34,8 +39,24 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun deleteBookAtIndex(idx: Int) = viewModelScope.launch {
-        dataStore.deleteBook(bookListDisplayData.value[idx]).join()
+    fun refresh() = viewModelScope.launch {
+        // Fake new data to trigger UI observe -> book list adapter will handle the changes
+        _bookListDisplayData.value = emptyList()
+        delay(1000) // Need to since UI collect with collectLatest ->
+        _bookListDisplayData.value = sortedBookList(filteredBookList(bookListData.value))
+    }
+
+    fun deleteBookAtIndexAsync(idx: Int) = viewModelScope.async {
+        return@async bookListDisplayData.value[idx].let withBook@{ book ->
+            return@withBook book.fileUri.path?.let {
+                FileUtils.deleteAtPathAsync(it, viewModelScope).join()
+                dataStore.deleteBook(bookListDisplayData.value[idx]).join()
+                return@let "Book removed from your library"
+            } ?: run {
+                logUtil.error("Failed to retrieve path from book Uri", true)
+                return@run "An error occurred while deleting book"
+            }
+        }
     }
 
     fun setFilterString(str: String?) {
