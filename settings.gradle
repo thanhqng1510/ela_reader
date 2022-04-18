@@ -1,2 +1,3 @@
-rootProject.name = "BookReadingApp_Android"
+include ':pdfviewer'
 include ':app'
+rootProject.name = "BookReadingApp_Android"

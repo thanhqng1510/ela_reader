@@ -74,7 +74,7 @@ object FileUtils {
         val renderer = PdfRenderer(fileDescriptor)
         val page = renderer.openPage(0)
 
-        val thumbnailBitmap = Bitmap.createBitmap(12, 12, Bitmap.Config.ARGB_8888)
+        val thumbnailBitmap = Bitmap.createBitmap(page.width, page.height, Bitmap.Config.ARGB_8888)
         page.render(thumbnailBitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY)
 
         page.close()

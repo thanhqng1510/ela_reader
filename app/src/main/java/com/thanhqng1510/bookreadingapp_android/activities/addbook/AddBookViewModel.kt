@@ -12,7 +12,6 @@ import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import java.io.File
@@ -35,9 +34,10 @@ class AddBookViewModel @Inject constructor(
 
             fileUri.path?.let { filePath ->
                 val thumbnailUri = async(Dispatchers.IO) thumbnail@{
-                    val booksDir =
-                        "${getApplication<Application>().getExternalFilesDir(null)}/${MainApplication.booksExternalDir}"
-                    val thumbnailFile = File(booksDir, "$fileNameWithExt.bm")
+                    val thumbnailFile = File(
+                        getApplication<MainApplication>().externalBooksDir,
+                        "$fileNameWithExt.bm"
+                    )
 
                     FileOutputStream(thumbnailFile).use { out ->
                         FileUtils.getPdfThumbnail(filePath)
@@ -66,19 +66,16 @@ class AddBookViewModel @Inject constructor(
             }
         }
 
-    fun copyBookToAppDirAsync(fileNameWithExt: String, uri: Uri): Deferred<Uri?> {
-        val booksDir =
-            "${getApplication<Application>().getExternalFilesDir(null)}/${MainApplication.booksExternalDir}"
-
-        return viewModelScope.async(Dispatchers.IO) {
-            val newFile = File(booksDir, fileNameWithExt)
+    fun copyBookToAppDirAsync(fileNameWithExt: String, uri: Uri) =
+        viewModelScope.async(Dispatchers.IO) {
+            val newFile = File(getApplication<MainApplication>().externalBooksDir, fileNameWithExt)
             if (newFile.exists()) {
                 logUtil.error("Book already existed in app-specific-dir", false)
                 return@async null
             }
 
             val outputStream = FileOutputStream(newFile)
-            getApplication<Application>().contentResolver.openInputStream(uri)
+            getApplication<MainApplication>().contentResolver.openInputStream(uri)
                 ?.let { inputStream ->
                     FileUtils.copyTo(inputStream, outputStream, viewModelScope).join()
                     return@async newFile.toUri()
@@ -87,5 +84,4 @@ class AddBookViewModel @Inject constructor(
                 return@async null
             }
         }
-    }
 }

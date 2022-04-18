@@ -14,12 +14,12 @@ import kotlinx.coroutines.launch
 abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
+        setupBindings(savedInstanceState)
         setupCollectors()
         setupListeners()
     }
 
-    protected abstract fun init()
+    protected abstract fun setupBindings(savedInstanceState: Bundle?)
 
     protected abstract fun setupCollectors()
 

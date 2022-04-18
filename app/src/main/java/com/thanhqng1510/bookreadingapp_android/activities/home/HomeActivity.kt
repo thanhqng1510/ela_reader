@@ -2,6 +2,7 @@
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
@@ -13,10 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.rajat.pdfviewer.PdfViewerActivity
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
+import com.thanhqng1510.bookreadingapp_android.activities.reader.ReaderActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -60,7 +61,7 @@ class HomeActivity : BaseActivity() {
         }
     }
 
-    override fun init() {
+    override fun setupBindings(savedInstanceState: Bundle?) {
         bindings = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
@@ -81,15 +82,9 @@ class HomeActivity : BaseActivity() {
 
         bookListAdapter = BookListAdapter { _, pos ->
             val bookData = viewModel.bookListDisplayData.value[pos]
-            startActivity(
-                PdfViewerActivity.launchPdfFromPath(
-                    this,
-                    bookData.fileUri.path,
-                    bookData.title,
-                    null,
-                    enableDownload = false
-                )
-            )
+            val intent = Intent(this, ReaderActivity::class.java)
+            intent.putExtra(ReaderActivity.bookIdExtra, bookData.id)
+            startActivity(intent)
         }
         bindings.bookList.adapter = bookListAdapter
         bindings.bookList.layoutManager = LinearLayoutManager(this)

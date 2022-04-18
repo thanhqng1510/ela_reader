@@ -4,6 +4,7 @@ import android.net.Uri
 import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
+import java.io.Serializable
 import java.time.LocalDateTime
 import java.util.*
 
@@ -21,8 +22,8 @@ data class Book(
     val dateAdded: LocalDateTime,
     val fileType: String,
     var fileUri: Uri,
-    var sharingSessionId: UUID?,
-) {
+    var sharingSessionId: UUID?
+) : Serializable {
     enum class STATUS {
         NEW, READING, FINISHED, ERROR
     }

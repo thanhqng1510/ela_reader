@@ -20,7 +20,7 @@ class DataStore @Inject constructor(
 ) {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun getAllBooks(): Flow<List<Book>> = localStore.bookDao().getAll()
+    fun getAllBooksAsFlow(): Flow<List<Book>> = localStore.bookDao().getAllAsFlow()
 
     fun getBookByIdAsync(id: Long): Deferred<Book?> = scope.async {
         return@async localStore.bookDao().getById(id)
@@ -33,7 +33,10 @@ class DataStore @Inject constructor(
 
     fun deleteBook(book: Book) = scope.launch {
         val bookDeleted = localStore.bookDao().delete(book)
-        logUtil.info("Deleted $bookDeleted book(s) with ID: ${book.id}")
+        if (bookDeleted == 0)
+            logUtil.info("Failed to delete book with ID: ${book.id}")
+        else
+            logUtil.info("Deleted book with ID: ${book.id}")
     }
 
     fun countBookByFileUriAsync(fileUri: Uri): Deferred<Long> = scope.async {

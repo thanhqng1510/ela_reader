@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @TypeConverters(SharedConverters::class, BookConverter::class)
 interface BookDao {
     @Query("SELECT * FROM books")
-    fun getAll(): Flow<List<Book>>
+    fun getAllAsFlow(): Flow<List<Book>>
 
     @Query("SELECT * FROM books WHERE rowid = :id")
     suspend fun getById(id: Long): Book?

@@ -6,6 +6,7 @@ import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
+import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -22,7 +23,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     // All data loaded from DB as flow
     val bookListData =
-        dataStore.getAllBooks().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        dataStore.getAllBooksAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
 
     // Portion of bookListData to render on screen only
     private val _bookListDisplayData = MutableStateFlow<List<Book>>(emptyList())
@@ -48,13 +49,16 @@ class HomeViewModel @Inject constructor(
 
     fun deleteBookAtIndexAsync(idx: Int) = viewModelScope.async {
         return@async bookListDisplayData.value[idx].let withBook@{ book ->
-            return@withBook book.fileUri.path?.let {
-                FileUtils.deleteAtPathAsync(it, viewModelScope).join()
-                dataStore.deleteBook(bookListDisplayData.value[idx]).join()
-                return@let "Book removed from your library"
+            return@withBook book.fileUri.path?.let withFilePath@{ filePath ->
+                FileUtils.deleteAtPathAsync(filePath, viewModelScope).join()
+                return@withFilePath book.thumbnailUri.path?.let { thumbnailPath ->
+                    FileUtils.deleteAtPathAsync(thumbnailPath, viewModelScope).join()
+                    dataStore.deleteBook(bookListDisplayData.value[idx]).join()
+                    return@let MessageUtils.bookDeletedFriendly
+                }
             } ?: run {
-                logUtil.error("Failed to retrieve path from book Uri", true)
-                return@run "An error occurred while deleting book"
+                logUtil.error("Failed to retrieve path from Uri", true)
+                return@run MessageUtils.bookDeleteFailedFriendly
             }
         }
     }

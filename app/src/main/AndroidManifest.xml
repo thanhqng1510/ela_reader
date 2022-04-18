@@ -23,6 +23,9 @@
             android:name=".activities.settings.SettingsActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.reader.ReaderActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.home.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">

@@ -7,19 +7,20 @@ import java.io.File
 @HiltAndroidApp
 class MainApplication : Application() {
     companion object {
-        const val booksExternalDir = "books/"
+        const val externalBooksFolder = "books/"
     }
+
+    lateinit var externalBooksDir: String
 
     override fun onCreate() {
         super.onCreate()
+        externalBooksDir = "${getExternalFilesDir(null)}/${externalBooksFolder}"
         initExternalFilesDir()
     }
 
     private fun initExternalFilesDir() {
-        val booksDir =
-            "${getExternalFilesDir(null)}/${booksExternalDir}"
-
-        with(File(booksDir)) {
+        externalBooksDir = "${getExternalFilesDir(null)}/${externalBooksFolder}"
+        with(File(externalBooksDir)) {
             if (!exists())
                 mkdir()
         }

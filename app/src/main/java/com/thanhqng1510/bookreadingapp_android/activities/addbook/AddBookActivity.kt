@@ -3,6 +3,7 @@ package com.thanhqng1510.bookreadingapp_android.activities.addbook
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Bundle
 import android.provider.OpenableColumns
 import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
 import androidx.activity.viewModels
@@ -10,6 +11,7 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityAddBooksBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
+import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -38,12 +40,12 @@ class AddBookActivity : BaseActivity() {
                 }
             } ?: run {
                 logUtil.error("Failed to get file info when add book", true)
-                showSnackbar("An error occurred while adding book")
+                showSnackbar(MessageUtils.bookAddFailedFriendly)
             }
         }
     }
 
-    override fun init() {
+    override fun setupBindings(savedInstanceState: Bundle?) {
         bindings = ActivityAddBooksBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
@@ -73,12 +75,12 @@ class AddBookActivity : BaseActivity() {
                         .await()
                 if (!result) {
                     logUtil.error("Failed to add book", true)
-                    return@let "An error occurred while adding book"
+                    return@let MessageUtils.bookAddFailedFriendly
                 }
-                return@let "Book added successfully"
+                return@let MessageUtils.bookAddedFriendly
             } ?: run {
             logUtil.error("Failed to copy file to app-specific-dir", true)
-            return@run "An error occurred while adding book"
+            return@run MessageUtils.bookAddFailedFriendly
         }
     }
 }
