@@ -36,7 +36,7 @@ class AddBookActivity : BaseActivity() {
                     cursor.moveToFirst()
                     cursor.getString(nameIndex)
                 }?.let { fileName ->
-                    runJobShowProcessingOverlay { addBook(fileName, fileType, uri) }
+                    waitJobShowProcessingOverlay { addBook(fileName, fileType, uri) }
                 }
             } ?: run {
                 logUtil.error("Failed to get file info when add book", true)

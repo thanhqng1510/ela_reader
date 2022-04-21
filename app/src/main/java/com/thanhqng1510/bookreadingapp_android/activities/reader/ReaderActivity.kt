@@ -5,6 +5,7 @@ import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.danjdt.pdfviewer.PdfViewer
+import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
 import com.danjdt.pdfviewer.utils.PdfPageQuality
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
@@ -12,12 +13,14 @@ import com.thanhqng1510.bookreadingapp_android.databinding.ActivityReaderBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class ReaderActivity : BaseActivity() {
     companion object {
         const val bookIdExtra = "bookIdExtra"
+        const val showBookResultExtra = "showBookResultExtra"
     }
 
     @Inject
@@ -32,6 +35,11 @@ class ReaderActivity : BaseActivity() {
 
         val bookId = intent.getSerializableExtra(bookIdExtra) as Long
         showBook(bookId)
+    }
+
+    override fun onPause() {
+        viewModel.closeBook()
+        super.onPause()
     }
 
     override fun setupBindings(savedInstanceState: Bundle?) {
@@ -49,26 +57,23 @@ class ReaderActivity : BaseActivity() {
 
     private fun showBook(bookId: Long) = lifecycleScope.launch {
         whenStarted {
-            runJobShowProcessingOverlay {
-                val errMsg = viewModel.getBookByIdAsync(bookId).await()
-                if (errMsg != null) {
-                    return@runJobShowProcessingOverlay errMsg
-                }
-                PdfViewer.Builder(bindings.root)
-                    // .view(bindings.bookList)
+            val errMsg = viewModel.getBookByIdAsync(bookId).await()
+
+            if (errMsg.isNotEmpty())
+                finishWithResult(RESULT_OK, mapOf(Pair(showBookResultExtra, errMsg)))
+            else {
+                PdfViewer.Builder(bindings.mainBody)
                     .quality(PdfPageQuality.QUALITY_1080)
                     .setZoomEnabled(true)
                     .setMaxZoom(5f)
+                    .setOnPageChangedListener(object : OnPageChangedListener {
+                        override fun onPageChanged(page: Int, total: Int) {
+                            viewModel.bookData.currentPage = page
+                        }
+                    })
                     .build()
-                    .load(viewModel.bookData!!.fileUri)
-                null
+                    .load(viewModel.bookData.fileUri)
             }
         }
-//            PdfViewer.Builder(rootView)
-//                .view(view)
-//                .setOnPageChangedListener(onPageChangedListener)
-//                .setOnErrorListener(onErrorListener)
-//                .build()
-//                .load(file)
     }
 }

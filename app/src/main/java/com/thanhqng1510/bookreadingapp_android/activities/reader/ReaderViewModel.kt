@@ -8,6 +8,8 @@ import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -15,14 +17,22 @@ class ReaderViewModel @Inject constructor(
     private val dataStore: DataStore,
     private val logUtil: LogUtil
 ) : ViewModel() {
-    var bookData: Book? = null
+    lateinit var bookData: Book
 
     fun getBookByIdAsync(id: Long) = viewModelScope.async {
-        bookData = dataStore.getBookByIdAsync(id).await()
-        if (bookData == null) {
+        return@async dataStore.getBookByIdAsync(id).await()?.let {
+            bookData = it
+            return@let ""
+        } ?: run {
             logUtil.error("Failed to fetch book with id: $id", true)
-            return@async MessageUtils.bookFetchFailedFriendly
+            return@run MessageUtils.bookFetchFailedFriendly
         }
-        return@async null
+    }
+
+    // Do not launch coroutine here as this method is call in onStop -> coroutine will be cancel
+    // Update with database lifecycle scope instead
+    fun closeBook() {
+        bookData.lastRead = LocalDateTime.now()
+        dataStore.updateBook(bookData)
     }
 }

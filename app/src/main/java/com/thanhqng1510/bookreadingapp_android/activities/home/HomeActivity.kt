@@ -1,18 +1,19 @@
 // TODO: add effects when pressing something.
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
@@ -20,6 +21,8 @@ import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.activities.reader.ReaderActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -36,6 +39,15 @@ class HomeActivity : BaseActivity() {
     private lateinit var bookListAdapter: BookListAdapter
     private lateinit var sortSpinnerAdapter: SortOptionSpinnerAdapter
 
+    private var openBookLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.getStringExtra(ReaderActivity.showBookResultExtra)?.let {
+                    showSnackbar(it)
+                }
+            }
+        }
+
     override fun onCreateContextMenu(
         menu: ContextMenu,
         v: View,
@@ -51,7 +63,7 @@ class HomeActivity : BaseActivity() {
         return when (item.itemId) {
             R.id.delete_book -> {
                 bookListAdapter.longClickedPos?.let {
-                    runJobShowProcessingOverlay {
+                    waitJobShowProcessingOverlay {
                         viewModel.deleteBookAtIndexAsync(it).await()
                     }
                 }
@@ -82,9 +94,15 @@ class HomeActivity : BaseActivity() {
 
         bookListAdapter = BookListAdapter { _, pos ->
             val bookData = viewModel.bookListDisplayData.value[pos]
+
+            if (bookData.status == Book.STATUS.ERROR) {
+                showSnackbar(MessageUtils.bookFetchFailedFriendly)
+                return@BookListAdapter
+            }
+
             val intent = Intent(this, ReaderActivity::class.java)
             intent.putExtra(ReaderActivity.bookIdExtra, bookData.id)
-            startActivity(intent)
+            openBookLauncher.launch(intent)
         }
         bindings.bookList.adapter = bookListAdapter
         bindings.bookList.layoutManager = LinearLayoutManager(this)
@@ -120,12 +138,8 @@ class HomeActivity : BaseActivity() {
             startActivity(intent)
         }
         bindings.refreshLayout.setOnRefreshListener {
-            lifecycleScope.launch {
-                whenStarted {
-                    viewModel.refresh().join()
-                    bindings.refreshLayout.isRefreshing = false
-                }
-            }
+            viewModel.refresh()
+            bindings.refreshLayout.isRefreshing = false
         }
         bindings.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = false

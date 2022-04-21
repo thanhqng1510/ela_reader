@@ -22,6 +22,9 @@ interface BookDao {
     @Delete
     suspend fun delete(book: Book): Int
 
+    @Update
+    suspend fun update(book: Book): Int
+
     @Query("SELECT COUNT(*) FROM books WHERE fileUri = :fileUri")
     suspend fun countByFileUri(fileUri: Uri): Long
 

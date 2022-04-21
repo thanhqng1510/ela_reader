@@ -39,6 +39,14 @@ class DataStore @Inject constructor(
             logUtil.info("Deleted book with ID: ${book.id}")
     }
 
+    fun updateBook(book: Book) = scope.launch {
+        val bookUpdated = localStore.bookDao().update(book)
+        if (bookUpdated == 0)
+            logUtil.info("Failed to update book with ID: ${book.id}")
+        else
+            logUtil.info("Updated book with ID: ${book.id}")
+    }
+
     fun countBookByFileUriAsync(fileUri: Uri): Deferred<Long> = scope.async {
         return@async localStore.bookDao().countByFileUri(fileUri)
     }

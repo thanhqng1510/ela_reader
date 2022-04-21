@@ -8,8 +8,8 @@ import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
@@ -22,8 +22,8 @@ class HomeViewModel @Inject constructor(
     private val logUtil: LogUtil
 ) : ViewModel() {
     // All data loaded from DB as flow
-    val bookListData =
-        dataStore.getAllBooksAsFlow().stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+    lateinit var bookListData: StateFlow<List<Book>>
+    private var flowCollectJob: Job
 
     // Portion of bookListData to render on screen only
     private val _bookListDisplayData = MutableStateFlow<List<Book>>(emptyList())
@@ -33,18 +33,12 @@ class HomeViewModel @Inject constructor(
     private var sortOpt = SortOptionSpinnerAdapter.SORTBY.default()
 
     init {
-        viewModelScope.launch {
-            bookListData.collectLatest {
-                _bookListDisplayData.value = sortedBookList(filteredBookList(it))
-            }
-        }
+        flowCollectJob = collectFlow()
     }
 
-    fun refresh() = viewModelScope.launch {
-        // Fake new data to trigger UI observe -> book list adapter will handle the changes
-        _bookListDisplayData.value = emptyList()
-        delay(1000) // Need to since UI collect with collectLatest ->
-        _bookListDisplayData.value = sortedBookList(filteredBookList(bookListData.value))
+    fun refresh() {
+        flowCollectJob.cancel()
+        flowCollectJob = collectFlow()
     }
 
     fun deleteBookAtIndexAsync(idx: Int) = viewModelScope.async {
@@ -103,6 +97,16 @@ class HomeViewModel @Inject constructor(
             }
             SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> list.sortedByDescending { it.dateAdded }
             SortOptionSpinnerAdapter.SORTBY.TITLE -> list.sortedBy { it.title }
+        }
+    }
+
+    private fun collectFlow(): Job {
+        bookListData = dataStore.getAllBooksAsFlow()
+            .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+        return viewModelScope.launch {
+            bookListData.collectLatest {
+                _bookListDisplayData.value = sortedBookList(filteredBookList(it))
+            }
         }
     }
 }

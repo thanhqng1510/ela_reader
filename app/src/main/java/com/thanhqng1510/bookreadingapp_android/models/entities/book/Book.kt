@@ -66,6 +66,10 @@ data class Book(
         if (dateAdded != other.dateAdded) return false
         if (fileType != other.fileType) return false
         if (fileUri != other.fileUri) return false
+        if (sharingSessionId != other.sharingSessionId) return false
+        if (id != other.id) return false
+        if (lastRead != other.lastRead) return false
+        if (currentPage != other.currentPage) return false
 
         return true
     }
@@ -78,6 +82,10 @@ data class Book(
         result = 31 * result + dateAdded.hashCode()
         result = 31 * result + fileType.hashCode()
         result = 31 * result + fileUri.hashCode()
+        result = 31 * result + sharingSessionId.hashCode()
+        result = 31 * result + id.hashCode()
+        result = 31 * result + lastRead.hashCode()
+        result = 31 * result + currentPage.hashCode()
         return result
     }
 }
