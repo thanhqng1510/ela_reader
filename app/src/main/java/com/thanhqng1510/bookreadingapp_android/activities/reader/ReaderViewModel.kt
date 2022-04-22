@@ -7,8 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
 import com.thanhqng1510.bookreadingapp_android.utils.AudioUtils
-import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
+import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
@@ -38,7 +39,7 @@ class ReaderViewModel @Inject constructor(
             return@let ""
         } ?: run {
             logUtil.error("Failed to fetch book with id: $id", true)
-            return@run MessageUtils.bookFetchFailedFriendly
+            return@run ConstantUtils.bookFetchFailedFriendly
         }
     }
 
@@ -75,4 +76,12 @@ class ReaderViewModel @Inject constructor(
         ambientPlayer?.release()
         ambientPlayer = null
     }
+
+    fun addBookMark() = dataStore.insertBookmarkAsync(
+        Bookmark(
+            bookData.currentPage,
+            bookData.id,
+            LocalDateTime.now()
+        )
+    )
 }

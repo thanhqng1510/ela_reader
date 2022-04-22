@@ -7,8 +7,9 @@ import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkSto
 import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
 import com.thanhqng1510.bookreadingapp_android.utils.AudioUtils
-import com.thanhqng1510.bookreadingapp_android.utils.Constants
+import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -54,17 +55,50 @@ class DataStore @Inject constructor(
         return@async localStore.bookDao().countByFileUri(fileUri)
     }
 
+    fun getAllBookmarksAsFlow(): Flow<List<Bookmark>> = localStore.bookmarkDao().getAllAsFlow()
+
+    fun getBookmarkByIdAsync(id: Long): Deferred<Bookmark?> = scope.async {
+        return@async localStore.bookmarkDao().getById(id)
+    }
+
+    fun insertBookmarkAsync(bookmark: Bookmark) = scope.launch {
+        val id = localStore.bookmarkDao().insert(bookmark)
+        logUtil.info("Added bookmark with ID: $id")
+    }
+
+    fun deleteBookmarkAsync(bookmark: Bookmark) = scope.launch {
+        val bookmarkDeleted = localStore.bookmarkDao().delete(bookmark)
+        if (bookmarkDeleted == 0)
+            logUtil.info("Failed to delete bookmark with ID: ${bookmark.id}")
+        else
+            logUtil.info("Deleted book with ID: ${bookmark.id}")
+    }
+
+    fun updateBookmarkAsync(bookmark: Bookmark) = scope.launch {
+        val bookmarkUpdated = localStore.bookmarkDao().update(bookmark)
+        if (bookmarkUpdated == 0)
+            logUtil.info("Failed to update bookmark with ID: ${bookmark.id}")
+        else
+            logUtil.info("Updated bookmark with ID: ${bookmark.id}")
+    }
+
+    fun getAllBooksWithBookmarksAsFlow(): Flow<List<Book.BookWithBookmarks>> =
+        localStore.bookDao().getAllWithBookmarksAsFlow()
+
+    fun getAllBookmarksWithBookAsFlow(): Flow<List<Bookmark.BookmarkWithBook>> =
+        localStore.bookmarkDao().getAllWithBookAsFlow()
+
     fun getSelectedAmbientSoundAsync(context: Context): Deferred<AudioUtils.AMBIENT?> =
         scope.async {
             return@async sharedPrefHelper.sharedPref(context)
-                .getString(Constants.ambientSoundSharedPreferenceKey, null)
+                .getString(ConstantUtils.ambientSoundSharedPreferenceKey, null)
                 ?.let { return@let AudioUtils.AMBIENT.fromStr(it) }
                 ?: AudioUtils.AMBIENT.RELAXING // TODO: Default as this sound for now
         }
 
     fun setSelectedAmbientSoundAsync(context: Context, ambient: AudioUtils.AMBIENT) = scope.launch {
         with(sharedPrefHelper.sharedPref(context).edit()) {
-            putString(Constants.ambientSoundSharedPreferenceKey, ambient.displayStr)
+            putString(ConstantUtils.ambientSoundSharedPreferenceKey, ambient.displayStr)
             apply()
             logUtil.info("Saved selected ambient sound: ${ambient.displayStr}")
         }

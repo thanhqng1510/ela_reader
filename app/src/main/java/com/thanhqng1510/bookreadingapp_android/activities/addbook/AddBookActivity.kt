@@ -11,7 +11,7 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityAddBooksBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
-import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
+import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -44,7 +44,7 @@ class AddBookActivity : BaseActivity() {
                 }
             } ?: run {
                 logUtil.error("Failed to get file info when add book", true)
-                showSnackbar(MessageUtils.bookAddFailedFriendly)
+                showSnackbar(ConstantUtils.bookAddFailedFriendly)
             }
         }
     }
@@ -84,12 +84,12 @@ class AddBookActivity : BaseActivity() {
                         .await()
                 if (!result) {
                     logUtil.error("Failed to add book", true)
-                    return@let MessageUtils.bookAddFailedFriendly
+                    return@let ConstantUtils.bookAddFailedFriendly
                 }
-                return@let MessageUtils.bookAddedFriendly
+                return@let ConstantUtils.bookAddedFriendly
             } ?: run {
             logUtil.error("Failed to copy file to app-specific-dir", true)
-            return@run MessageUtils.bookAddFailedFriendly
+            return@run ConstantUtils.bookAddFailedFriendly
         }
     }
 }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.*
 import com.thanhqng1510.bookreadingapp_android.R
 
-internal class SortOptionSpinnerAdapter(
+internal class BookListSortOptionSpinnerAdapter(
     private val master: Spinner,
     private val resource: Int,
     private val items: List<String>,
@@ -37,7 +37,7 @@ internal class SortOptionSpinnerAdapter(
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View? {
         val view =
             convertView ?: LayoutInflater.from(context).inflate(dropdownResource, parent, false)
-        (view.findViewById(R.id.text1) as CheckedTextView).text = getItem(position)
+        (view.findViewById(R.id.text) as CheckedTextView).text = getItem(position)
 
         if (master.selectedItemPosition == position)
             (view.findViewById(R.id.tick) as ImageView).imageAlpha = 255 // Make tick image visible

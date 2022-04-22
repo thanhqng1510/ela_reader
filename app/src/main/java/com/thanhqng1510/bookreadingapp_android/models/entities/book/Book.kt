@@ -3,6 +3,7 @@ package com.thanhqng1510.bookreadingapp_android.models.entities.book
 import android.net.Uri
 import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
+import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 import java.io.Serializable
 import java.time.LocalDateTime
@@ -90,4 +91,13 @@ data class Book(
         result = 31 * result + status.hashCode()
         return result
     }
+
+    data class BookWithBookmarks(
+        @Embedded val book: Book,
+        @Relation(
+            parentColumn = "rowid",
+            entityColumn = "bookId"
+        )
+        val bookmarks: List<Bookmark>
+    )
 }

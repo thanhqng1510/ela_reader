@@ -10,6 +10,7 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityReaderBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
+import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class ReaderActivity : BaseActivity() {
     companion object {
         const val bookIdExtra = "bookIdExtra"
+        const val bookPageExtra = "bookPageExtra"
         const val showBookResultExtra = "showBookResultExtra"
     }
 
@@ -31,9 +33,17 @@ class ReaderActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val bookId = intent.getSerializableExtra(bookIdExtra) as Long
-        showBookAsync(bookId)
+        val bookId = intent.getLongExtra(bookIdExtra, -1)
+        val bookPage = intent.getIntExtra(bookPageExtra, -1) // This is optional
 
+        if (bookId == -1L) {
+            finishWithResult(
+                RESULT_OK,
+                mapOf(Pair(showBookResultExtra, ConstantUtils.bookFetchFailedFriendly))
+            )
+        }
+
+        showBookAsync(bookId, bookPage)
         viewModel.playAmbientSoundAsync()
     }
 
@@ -54,26 +64,34 @@ class ReaderActivity : BaseActivity() {
 
     override fun setupListeners() {
         bindings.backBtn.setOnClickListener { finish() }
+        bindings.bookmarkBtn.setOnClickListener {
+            waitJobShowProcessingOverlayAsync {
+                viewModel.addBookMark()
+                return@waitJobShowProcessingOverlayAsync ConstantUtils.bookmarkAddedFriendly
+            }
+        }
     }
 
-    private fun showBookAsync(bookId: Long) = lifecycleScope.launch {
+    private fun showBookAsync(bookId: Long, bookPage: Int) = lifecycleScope.launch {
         whenStarted {
             val errMsg = viewModel.getBookByIdAsync(bookId).await()
 
             if (errMsg.isNotEmpty())
                 finishWithResult(RESULT_OK, mapOf(Pair(showBookResultExtra, errMsg)))
-            else {
-                PdfViewer.ConfigBuilder(bindings.mainBody)
-                    .setZoomEnabled(true)
-                    .setMaxZoom(5f)
-                    .setOnPageChangedListener(object : OnPageChangedListener {
-                        override fun onPageChanged(page: Int, total: Int) {
-                            viewModel.bookData.currentPage = page
-                        }
-                    })
-                    .build()
-                    .load(viewModel.bookData.fileUri, viewModel.bookData.currentPage)
-            }
+
+            PdfViewer.ConfigBuilder(bindings.mainBody)
+                .setZoomEnabled(true)
+                .setMaxZoom(5f)
+                .setOnPageChangedListener(object : OnPageChangedListener {
+                    override fun onPageChanged(page: Int, total: Int) {
+                        viewModel.bookData.currentPage = page
+                    }
+                })
+                .build()
+                .load(
+                    viewModel.bookData.fileUri,
+                    if (bookPage != -1) bookPage else viewModel.bookData.currentPage
+                )
         }
     }
 }

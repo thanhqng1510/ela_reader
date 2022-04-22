@@ -28,21 +28,7 @@ interface BookDao {
     @Query("SELECT COUNT(*) FROM books WHERE fileUri = :fileUri")
     suspend fun countByFileUri(fileUri: Uri): Long
 
-//    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
-//    fun loadAllByIds(userIds: IntArray): List<Book>
-//
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insertAll(vararg users: Book)
-//
-//    @MapInfo(keyColumn = "userName", valueColumn = "bookName")
-//    @Query(
-//        "SELECT user.name AS username, book.name AS bookname FROM user" +
-//                "JOIN book ON user.id = book.user_id"
-//    )
-//    fun loadUserAndBookNames(): Map<String, List<String>>
+    @Transaction
+    @Query("SELECT * FROM books")
+    fun getAllWithBookmarksAsFlow(): Flow<List<Book.BookWithBookmarks>>
 }
-
-//data class NameTuple(
-//    @ColumnInfo(name = "first_name") val firstName: String?,
-//    @ColumnInfo(name = "last_name") val lastName: String?
-//)

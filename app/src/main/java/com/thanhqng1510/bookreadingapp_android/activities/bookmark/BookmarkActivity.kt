@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.activities.home
+package com.thanhqng1510.bookreadingapp_android.activities.bookmark
 
 import android.app.Activity
 import android.content.Intent
@@ -15,12 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
-import com.thanhqng1510.bookreadingapp_android.activities.bookmark.BookmarkActivity
+import com.thanhqng1510.bookreadingapp_android.activities.home.HomeActivity
 import com.thanhqng1510.bookreadingapp_android.activities.reader.ReaderActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
-import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
+import com.thanhqng1510.bookreadingapp_android.databinding.ActivityBookmarkBinding
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,17 +28,17 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeActivity : BaseActivity() {
+class BookmarkActivity : BaseActivity() {
     // View model
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: BookmarkViewModel by viewModels()
     private lateinit var collectViewModelDataJob: Job
 
     // Bindings
-    private lateinit var bindings: ActivityHomeBinding
+    private lateinit var bindings: ActivityBookmarkBinding
 
     // Adapters
-    private lateinit var bookListAdapter: BookListAdapter
-    private lateinit var sortSpinnerAdapter: BookListSortOptionSpinnerAdapter
+    private lateinit var bookmarkListAdapter: BookmarkListAdapter
+    private lateinit var sortSpinnerAdapter: BookmarkListSortOptionSpinnerAdapter
 
     private var openBookLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -56,17 +55,17 @@ class HomeActivity : BaseActivity() {
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        if (v.id == R.id.book_list) {
-            menuInflater.inflate(R.menu.book_list_menu, menu)
+        if (v.id == R.id.bookmark_list) {
+            menuInflater.inflate(R.menu.bookmark_list_menu, menu)
         }
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.delete_book -> {
-                bookListAdapter.longClickedPos?.let {
+            R.id.delete_bookmark -> {
+                bookmarkListAdapter.longClickedPos?.let {
                     waitJobShowProcessingOverlayAsync {
-                        viewModel.deleteBookAtIndexAsync(it).await()
+                        viewModel.deleteBookmarkAtIndexAsync(it).await()
                     }
                 }
                 true
@@ -76,58 +75,59 @@ class HomeActivity : BaseActivity() {
     }
 
     override fun setupBindings(savedInstanceState: Bundle?) {
-        bindings = ActivityHomeBinding.inflate(layoutInflater)
+        bindings = ActivityBookmarkBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
         globalCoordinatorLayout = bindings.coordinatorLayout
         progressOverlay = findViewById(R.id.progress_overlay)
 
         sortSpinnerAdapter =
-            BookListSortOptionSpinnerAdapter.SORTBY.values().map { it.displayStr }
+            BookmarkListSortOptionSpinnerAdapter.SORTBY.values().map { it.displayStr }
                 .let { sortOptionList ->
-                    BookListSortOptionSpinnerAdapter(
+                    BookmarkListSortOptionSpinnerAdapter(
                         bindings.sortOptionSpinner,
                         android.R.layout.simple_spinner_item,
                         sortOptionList,
                         this
                     ).also {
-                        it.setDropDownViewResource(R.layout.book_list_sort_spinner_dropdown_layout)
+                        it.setDropDownViewResource(R.layout.bookmark_list_sort_spinner_dropdown_layout)
                     }
                 }
         bindings.sortOptionSpinner.adapter = sortSpinnerAdapter
 
-        bookListAdapter = BookListAdapter { _, pos ->
-            val bookData = viewModel.bookListDisplayData.value[pos]
+        bookmarkListAdapter = BookmarkListAdapter(this) { _, pos ->
+            val data = viewModel.bookmarkListDisplayData.value[pos]
 
-            if (bookData.status == Book.STATUS.ERROR) {
-                showSnackbar(ConstantUtils.bookFetchFailedFriendly)
-                return@BookListAdapter
+            if (data.book.status == Book.STATUS.ERROR) {
+                showSnackbar(ConstantUtils.bookmarkFetchFailedFriendly)
+                return@BookmarkListAdapter
             }
 
             val intent = Intent(this, ReaderActivity::class.java)
-            intent.putExtra(ReaderActivity.bookIdExtra, bookData.id)
+            intent.putExtra(ReaderActivity.bookIdExtra, data.book.id)
+            intent.putExtra(ReaderActivity.bookPageExtra, data.bookmark.page)
             openBookLauncher.launch(intent)
         }
-        bindings.bookList.adapter = bookListAdapter
-        bindings.bookList.layoutManager = LinearLayoutManager(this)
-        registerForContextMenu(bindings.bookList)
+        bindings.bookmarkList.adapter = bookmarkListAdapter
+        bindings.bookmarkList.layoutManager = LinearLayoutManager(this)
+        registerForContextMenu(bindings.bookmarkList)
 
-        bindings.bottomNavigation.selectedItemId = R.id.books_page
+        bindings.bottomNavigation.selectedItemId = R.id.bookmarks_page
     }
 
     override fun setupCollectors() {
         collectViewModelDataJob = lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.bookListData.collectLatest {
+                    viewModel.bookmarkListData.collectLatest {
                         if (it.isEmpty()) showEmptyListView()
                         else showPopulatedListView()
                     }
                 }
                 launch {
-                    viewModel.bookListDisplayData.collectLatest {
-                        bookListAdapter.submitList(it)
-                        bindings.bookCount.text = getString(R.string.num_books, it.size)
+                    viewModel.bookmarkListDisplayData.collectLatest {
+                        bookmarkListAdapter.submitList(it)
+                        bindings.bookmarkCount.text = getString(R.string.num_bookmarks, it.size)
                     }
                 }
             }
@@ -137,10 +137,6 @@ class HomeActivity : BaseActivity() {
     override fun setupListeners() {
         bindings.settingsBtn.setOnClickListener {
             val intent = Intent(this, SettingsActivity::class.java)
-            startActivity(intent)
-        }
-        bindings.addBtn.setOnClickListener {
-            val intent = Intent(this, AddBookActivity::class.java)
             startActivity(intent)
         }
         bindings.refreshLayout.setOnRefreshListener {
@@ -175,24 +171,24 @@ class HomeActivity : BaseActivity() {
             }
         bindings.bottomNavigation.setOnItemSelectedListener { item ->
             return@setOnItemSelectedListener when (item.itemId) {
-                R.id.books_page -> true
-                R.id.bookmarks_page -> {
-                    val intent = Intent(this, BookmarkActivity::class.java)
+                R.id.books_page -> {
+                    val intent = Intent(this, HomeActivity::class.java)
                     startActivity(intent)
                     true
                 }
+                R.id.bookmarks_page -> true
                 else -> false
             }
         }
     }
 
     private fun showEmptyListView() {
-        bindings.bookListScrollLayout.visibility = View.GONE
-        bindings.emptyBookListLayout.visibility = View.VISIBLE
+        bindings.bookmarkListScrollLayout.visibility = View.GONE
+        bindings.emptyBookmarkListLayout.visibility = View.VISIBLE
     }
 
     private fun showPopulatedListView() {
-        bindings.bookListScrollLayout.visibility = View.VISIBLE
-        bindings.emptyBookListLayout.visibility = View.GONE
+        bindings.bookmarkListScrollLayout.visibility = View.VISIBLE
+        bindings.emptyBookmarkListLayout.visibility = View.GONE
     }
 }

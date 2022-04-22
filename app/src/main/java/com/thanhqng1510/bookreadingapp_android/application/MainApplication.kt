@@ -1,7 +1,7 @@
 package com.thanhqng1510.bookreadingapp_android.application
 
 import android.app.Application
-import com.thanhqng1510.bookreadingapp_android.utils.Constants
+import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import dagger.hilt.android.HiltAndroidApp
 import java.io.File
 import javax.inject.Inject
@@ -12,12 +12,12 @@ class MainApplication @Inject constructor() : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        externalBooksDir = "${getExternalFilesDir(null)}/${Constants.externalBooksFolder}"
+        externalBooksDir = "${getExternalFilesDir(null)}/${ConstantUtils.externalBooksFolder}"
         initExternalFilesDir()
     }
 
     private fun initExternalFilesDir() {
-        externalBooksDir = "${getExternalFilesDir(null)}/${Constants.externalBooksFolder}"
+        externalBooksDir = "${getExternalFilesDir(null)}/${ConstantUtils.externalBooksFolder}"
         with(File(externalBooksDir)) {
             if (!exists())
                 mkdir()

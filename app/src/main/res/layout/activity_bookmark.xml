@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:foregroundTint="#00FFFFFF"
-    tools:context=".activities.home.HomeActivity">
+    tools:context=".activities.bookmark.BookmarkActivity">
 
     <include layout="@layout/progress_overlay" />
 
@@ -26,22 +26,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/library_page_name"
+                android:text="@string/bookmarks_page_name"
                 android:textSize="@dimen/heading1Text" />
 
             <Space
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
-
-            <ImageButton
-                android:id="@+id/add_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:backgroundTint="#00FFFFFF"
-                android:contentDescription="@string/add_book_btn_desc"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:srcCompat="@drawable/add_light" />
 
             <ImageButton
                 android:id="@+id/settings_btn"
@@ -72,7 +63,7 @@
                 android:orientation="vertical">
 
                 <androidx.core.widget.NestedScrollView
-                    android:id="@+id/book_list_scroll_layout"
+                    android:id="@+id/bookmark_list_scroll_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:fillViewport="true">
@@ -103,10 +94,10 @@
                             android:orientation="horizontal">
 
                             <TextView
-                                android:id="@+id/book_count"
+                                android:id="@+id/bookmark_count"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/num_books"
+                                android:text="@string/num_bookmarks"
                                 android:textSize="@dimen/bodyText" />
 
                             <Space
@@ -119,7 +110,7 @@
                                 android:layout_height="wrap_content">
 
                                 <ImageView
-                                    android:id="@+id/sort_books_img"
+                                    android:id="@+id/sort_bookmarks_img"
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:backgroundTint="#00FFFFFF"
@@ -131,12 +122,12 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:background="@color/transparent"
-                                    android:contentDescription="@string/sort_books_btn_desc" />
+                                    android:contentDescription="@string/sort_bookmarks_btn_desc" />
                             </FrameLayout>
                         </LinearLayout>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/book_list"
+                            android:id="@+id/bookmark_list"
                             android:layout_width="match_parent"
                             android:layout_height="0dp"
                             android:layout_weight="1"
@@ -145,7 +136,7 @@
                 </androidx.core.widget.NestedScrollView>
 
                 <LinearLayout
-                    android:id="@+id/empty_book_list_layout"
+                    android:id="@+id/empty_bookmark_list_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:visibility="gone">
@@ -154,7 +145,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="@string/empty_book_list_desc"
+                        android:text="@string/empty_bookmark_list_desc"
                         android:textSize="@dimen/bodyText" />
                 </LinearLayout>
             </LinearLayout>

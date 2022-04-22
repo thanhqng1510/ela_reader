@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
-import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -30,7 +30,7 @@ class HomeViewModel @Inject constructor(
     val bookListDisplayData = _bookListDisplayData.asStateFlow()
 
     private var filterStr = ""
-    private var sortOpt = SortOptionSpinnerAdapter.SORTBY.default()
+    private var sortOpt = BookListSortOptionSpinnerAdapter.SORTBY.default()
 
     init {
         collectBookListDataJob = collectFlowAsync()
@@ -48,11 +48,11 @@ class HomeViewModel @Inject constructor(
                 return@withFilePath book.thumbnailUri.path?.let { thumbnailPath ->
                     FileUtils.deleteAtPathAsync(thumbnailPath, viewModelScope).join()
                     dataStore.deleteBookAsync(bookListDisplayData.value[idx]).join()
-                    return@let MessageUtils.bookDeletedFriendly
+                    return@let ConstantUtils.bookDeletedFriendly
                 }
             } ?: run {
                 logUtil.error("Failed to retrieve path from Uri", true)
-                return@run MessageUtils.bookDeleteFailedFriendly
+                return@run ConstantUtils.bookDeleteFailedFriendly
             }
         }
     }
@@ -78,7 +78,7 @@ class HomeViewModel @Inject constructor(
     }
 
     fun setSortOption(opt: Int) {
-        sortOpt = SortOptionSpinnerAdapter.SORTBY.forIndex(opt)
+        sortOpt = BookListSortOptionSpinnerAdapter.SORTBY.forIndex(opt)
         _bookListDisplayData.value = sortedBookList(_bookListDisplayData.value)
     }
 
@@ -88,11 +88,11 @@ class HomeViewModel @Inject constructor(
             return list
 
         return when (sortOpt) {
-            SortOptionSpinnerAdapter.SORTBY.LAST_READ -> list.sortedByDescending {
+            BookListSortOptionSpinnerAdapter.SORTBY.LAST_READ -> list.sortedByDescending {
                 it.lastRead ?: LocalDateTime.MIN
             }
-            SortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> list.sortedByDescending { it.dateAdded }
-            SortOptionSpinnerAdapter.SORTBY.TITLE -> list.sortedBy { it.title }
+            BookListSortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> list.sortedByDescending { it.dateAdded }
+            BookListSortOptionSpinnerAdapter.SORTBY.TITLE -> list.sortedBy { it.title }
         }
     }
 
