@@ -32,7 +32,9 @@ class ReaderActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         val bookId = intent.getSerializableExtra(bookIdExtra) as Long
-        showBook(bookId)
+        showBookAsync(bookId)
+
+        viewModel.playAmbientSoundAsync()
     }
 
     override fun onPause() {
@@ -54,7 +56,7 @@ class ReaderActivity : BaseActivity() {
         bindings.backBtn.setOnClickListener { finish() }
     }
 
-    private fun showBook(bookId: Long) = lifecycleScope.launch {
+    private fun showBookAsync(bookId: Long) = lifecycleScope.launch {
         whenStarted {
             val errMsg = viewModel.getBookByIdAsync(bookId).await()
 

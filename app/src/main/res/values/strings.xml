@@ -1,17 +1,20 @@
 <resources>
     <string name="app_name">BookReadingApp_Android</string>
-    <string name="library">Library</string>
+    <string name="library_tab_name">Library</string>
+
     <string name="settings_btn_desc">Settings</string>
     <string name="add_btn_desc">Add book</string>
-    <string name="num_books">%1$d books</string>
     <string name="sort_books_btn_desc">Sort books</string>
     <string name="books_btn_desc">Books</string>
     <string name="notes_btn_desc">Notes</string>
     <string name="bookmarks_btn_desc">Bookmarks</string>
     <string name="book_cover_desc">Book cover</string>
-    <string name="sharing_btn_desc">Share with you</string>
+    <string name="sharing_btn_desc">Sharing</string>
     <string name="back_btn_desc">Back</string>
-    <string name="book_status">Book status</string>
-    <string name="add_book_btn_desc">Add a book</string>
-    <string name="delete_book">Delete</string>
+    <string name="add_book_btn_desc">Add book</string>
+    <string name="book_status_img_desc">Book status</string>
+
+    <string name="delete_book_menu_title">Delete</string>
+
+    <string name="num_books">%1$d books</string>
 </resources>

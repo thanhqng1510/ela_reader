@@ -1,11 +1,14 @@
 package com.thanhqng1510.bookreadingapp_android.datastore
 
+import android.content.Context
 import android.net.Uri
 import com.thanhqng1510.bookreadingapp_android.datastore.localstore.LocalStore
 import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkStore
 import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.utils.AudioUtils
+import com.thanhqng1510.bookreadingapp_android.utils.Constants
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -49,5 +52,20 @@ class DataStore @Inject constructor(
 
     fun countBookByFileUriAsync(fileUri: Uri): Deferred<Long> = scope.async {
         return@async localStore.bookDao().countByFileUri(fileUri)
+    }
+
+    fun getSelectedAmbientSoundAsync(context: Context): Deferred<AudioUtils.AMBIENT?> =
+        scope.async {
+            return@async sharedPrefHelper.sharedPref(context)
+                .getString(Constants.ambientSoundSharedPreferenceKey, null)
+                ?.let { return@let AudioUtils.AMBIENT.fromStr(it) }
+        }
+
+    fun setSelectedAmbientSoundAsync(context: Context, ambient: AudioUtils.AMBIENT) = scope.launch {
+        with(sharedPrefHelper.sharedPref(context).edit()) {
+            putString(Constants.ambientSoundSharedPreferenceKey, ambient.displayStr)
+            apply()
+            logUtil.info("Saved selected ambient sound: ${ambient.displayStr}")
+        }
     }
 }

@@ -21,16 +21,20 @@ import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.activities.reader.ReaderActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
+import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
-import com.thanhqng1510.bookreadingapp_android.utils.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeActivity : BaseActivity() {
+    @Inject
+    lateinit var dataStore: DataStore
+
     // View model
     private val viewModel: HomeViewModel by viewModels()
     private lateinit var collectViewModelDataJob: Job
@@ -111,9 +115,6 @@ class HomeActivity : BaseActivity() {
         bindings.bookList.adapter = bookListAdapter
         bindings.bookList.layoutManager = LinearLayoutManager(this)
         registerForContextMenu(bindings.bookList)
-
-        ActivityUtils.playAudio(this, ActivityUtils.AMBIENT.fromStr("Rain").resid)
-        ActivityUtils.playAudio(this, ActivityUtils.AMBIENT.fromStr("Storm").resid)
     }
 
     override fun setupCollectors() {

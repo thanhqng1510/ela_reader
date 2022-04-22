@@ -40,9 +40,8 @@ abstract class BaseActivity : AppCompatActivity() {
         finish()
     }
 
-    open fun showSnackbar(message: String) {
-        Snackbar.make(globalCoordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
-    }
+    open fun showSnackbar(message: String) =
+        ActivityUtils.showSnackbar(globalCoordinatorLayout, message, Snackbar.LENGTH_SHORT)
 
     // TODO: Can we use background job ?
     // Job may return a result string that will be shown on snackbar after complete
@@ -55,11 +54,9 @@ abstract class BaseActivity : AppCompatActivity() {
         }
     }
 
-    private fun showProcessingOverlay() {
+    private fun showProcessingOverlay() =
         ActivityUtils.animateVisibility(progressOverlay, View.VISIBLE, 0.3f, 100)
-    }
 
-    private fun hideProcessingOverlay() {
+    private fun hideProcessingOverlay() =
         ActivityUtils.animateVisibility(progressOverlay, View.GONE, 0F, 100)
-    }
 }

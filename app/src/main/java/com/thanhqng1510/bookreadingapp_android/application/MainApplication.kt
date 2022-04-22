@@ -1,25 +1,23 @@
 package com.thanhqng1510.bookreadingapp_android.application
 
 import android.app.Application
+import com.thanhqng1510.bookreadingapp_android.utils.Constants
 import dagger.hilt.android.HiltAndroidApp
 import java.io.File
+import javax.inject.Inject
 
 @HiltAndroidApp
-class MainApplication : Application() {
-    companion object {
-        const val externalBooksFolder = "books/"
-    }
-
+class MainApplication @Inject constructor() : Application() {
     lateinit var externalBooksDir: String
 
     override fun onCreate() {
         super.onCreate()
-        externalBooksDir = "${getExternalFilesDir(null)}/${externalBooksFolder}"
+        externalBooksDir = "${getExternalFilesDir(null)}/${Constants.externalBooksFolder}"
         initExternalFilesDir()
     }
 
     private fun initExternalFilesDir() {
-        externalBooksDir = "${getExternalFilesDir(null)}/${externalBooksFolder}"
+        externalBooksDir = "${getExternalFilesDir(null)}/${Constants.externalBooksFolder}"
         with(File(externalBooksDir)) {
             if (!exists())
                 mkdir()

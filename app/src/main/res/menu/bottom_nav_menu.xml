@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/books_page"
+        android:enabled="true"
+        android:icon="@drawable/book_light"
+        android:title="@string/books_btn_desc"/>
+    <item
+        android:id="@+id/sharing_page"
+        android:enabled="true"
+        android:icon="@drawable/sharing_light"
+        android:title="@string/sharing_btn_desc"/>
+    <item
+        android:id="@+id/notes_page"
+        android:enabled="true"
+        android:icon="@drawable/note_light"
+        android:title="@string/notes_btn_desc"/>
+    <item
+        android:id="@+id/bookmarks_page"
+        android:enabled="true"
+        android:icon="@drawable/bookmark_collection_light"
+        android:title="@string/bookmarks_btn_desc"/>
+</menu>

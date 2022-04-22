@@ -14,6 +14,9 @@ class SettingsActivity : BaseActivity() {
 
         globalCoordinatorLayout = bindings.coordinatorLayout
         progressOverlay = findViewById(R.id.progress_overlay)
+
+        supportFragmentManager.beginTransaction().replace(bindings.mainBody.id, SettingsFragment())
+            .commit()
     }
 
     override fun setupCollectors() {}

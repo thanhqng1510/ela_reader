@@ -10,19 +10,48 @@
 
     <include layout="@layout/progress_overlay" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/globalSpacing">
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/back_btn"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#00FFFFFF"
-            android:contentDescription="@string/back_btn_desc"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/back_light" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:layout_marginHorizontal="@dimen/globalSpacing"
+            android:layout_marginTop="@dimen/globalSpacing"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/back_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="#00FFFFFF"
+                android:contentDescription="@string/back_btn_desc"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/back_light" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/componentSpacing"
+            android:background="@drawable/shadow_down_light"
+            android:elevation="2dp" />
+
+        <LinearLayout
+            android:id="@+id/main_body"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/componentSpacing"
+            android:orientation="vertical" />
+    </LinearLayout>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
