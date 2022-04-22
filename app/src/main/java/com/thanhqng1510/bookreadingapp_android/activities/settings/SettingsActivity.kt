@@ -1,6 +1,7 @@
 package com.thanhqng1510.bookreadingapp_android.activities.settings
 
 import android.os.Bundle
+import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivitySettingsBinding
 
@@ -12,6 +13,7 @@ class SettingsActivity : BaseActivity() {
         setContentView(bindings.root)
 
         globalCoordinatorLayout = bindings.coordinatorLayout
+        progressOverlay = findViewById(R.id.progress_overlay)
     }
 
     override fun setupCollectors() {}

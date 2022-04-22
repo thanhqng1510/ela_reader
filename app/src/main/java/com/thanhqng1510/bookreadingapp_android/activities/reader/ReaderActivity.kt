@@ -6,14 +6,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.danjdt.pdfviewer.PdfViewer
 import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
-import com.danjdt.pdfviewer.utils.PdfPageQuality
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityReaderBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,7 +44,8 @@ class ReaderActivity : BaseActivity() {
         bindings = ActivityReaderBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-        globalCoordinatorLayout = findViewById(R.id.coordinator_layout)
+        globalCoordinatorLayout = bindings.coordinatorLayout
+        progressOverlay = findViewById(R.id.progress_overlay)
     }
 
     override fun setupCollectors() {}
@@ -62,8 +61,7 @@ class ReaderActivity : BaseActivity() {
             if (errMsg.isNotEmpty())
                 finishWithResult(RESULT_OK, mapOf(Pair(showBookResultExtra, errMsg)))
             else {
-                PdfViewer.Builder(bindings.mainBody)
-                    .quality(PdfPageQuality.QUALITY_1080)
+                PdfViewer.ConfigBuilder(bindings.mainBody)
                     .setZoomEnabled(true)
                     .setMaxZoom(5f)
                     .setOnPageChangedListener(object : OnPageChangedListener {
@@ -72,7 +70,7 @@ class ReaderActivity : BaseActivity() {
                         }
                     })
                     .build()
-                    .load(viewModel.bookData.fileUri)
+                    .load(viewModel.bookData.fileUri, viewModel.bookData.currentPage)
             }
         }
     }

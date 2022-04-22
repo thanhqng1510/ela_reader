@@ -32,14 +32,14 @@ data class Book(
     @ColumnInfo(name = "rowid")
     var id: Long = 0L
 
-    var lastRead: LocalDateTime? = null // TODO: Update this
+    var lastRead: LocalDateTime? = null
         set(value) {
             value?.run {
                 field = value
             }
         }
 
-    var currentPage: Int = 1 // TODO: Update this
+    var currentPage: Int = 1
         set(value) {
             field = value.coerceIn(1, numPages)
         }
@@ -51,7 +51,7 @@ data class Book(
             if (lastRead == null)
                 return STATUS.NEW
             if (currentPage == numPages)
-                return STATUS.FINISHED
+                return STATUS.FINISHED // TODO: Status not updated on UI
             return STATUS.READING
         }
 
@@ -70,6 +70,7 @@ data class Book(
         if (id != other.id) return false
         if (lastRead != other.lastRead) return false
         if (currentPage != other.currentPage) return false
+        if (status != other.status) return false
 
         return true
     }
@@ -86,6 +87,7 @@ data class Book(
         result = 31 * result + id.hashCode()
         result = 31 * result + lastRead.hashCode()
         result = 31 * result + currentPage.hashCode()
+        result = 31 * result + status.hashCode()
         return result
     }
 }

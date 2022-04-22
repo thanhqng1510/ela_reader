@@ -1,3 +1,2 @@
-include ':pdfviewer'
-include ':app'
+include ':app', ':pdfviewer', ':shared'
 rootProject.name = "BookReadingApp_Android"

@@ -4,21 +4,21 @@ import android.app.Activity
 import android.content.Context
 import android.graphics.Canvas
 import android.os.Build
-
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
 import android.view.View
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.danjdt.pdfviewer.renderer.PdfRendererProxy
-import com.danjdt.pdfviewer.view.adapter.DefaultPdfPageAdapter
-import com.danjdt.pdfviewer.view.adapter.PdfPageAdapter
 import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
 import com.danjdt.pdfviewer.interfaces.PdfViewInterface
+import com.danjdt.pdfviewer.renderer.PdfRendererProxy
 import com.danjdt.pdfviewer.utils.Utils
+import com.danjdt.pdfviewer.view.adapter.DefaultPdfPageAdapter
+import com.danjdt.pdfviewer.view.adapter.PdfPageAdapter
 import java.io.File
-import java.lang.Exception
+
 
 /**
  * Created by daniel.teixeira on 10/01/19
@@ -80,7 +80,7 @@ class PdfViewerRecyclerView(context: Context) :
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mWidth = View.MeasureSpec.getSize(widthMeasureSpec).toFloat()
+        mWidth = MeasureSpec.getSize(widthMeasureSpec).toFloat()
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
     }
 

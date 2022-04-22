@@ -31,7 +31,7 @@ object FileUtils {
 
     fun isUriOfFile(uri: Uri): Boolean = uri.scheme == fileSchemeUri
 
-    fun copyTo(
+    fun copyToAsync(
         inputStream: InputStream,
         outputStream: OutputStream,
         scope: CoroutineScope

@@ -45,10 +45,7 @@ internal class BookListAdapter(val onItemClick: (View, Int) -> Unit) :
             when (book.status) {
                 Book.STATUS.NEW -> status.setImageResource(R.drawable.new_status_light)
                 Book.STATUS.READING -> status.setImageResource(R.drawable.reading_status_light)
-                Book.STATUS.ERROR -> {
-                    status.setImageResource(R.drawable.new_status_light)
-                    itemView.setBackgroundResource(R.color.disabled_grey)
-                }
+                Book.STATUS.ERROR -> status.setImageResource(R.drawable.error_status_light)
                 else -> {}
             }
 

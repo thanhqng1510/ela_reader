@@ -36,7 +36,7 @@ class AddBookActivity : BaseActivity() {
                     cursor.moveToFirst()
                     cursor.getString(nameIndex)
                 }?.let { fileName ->
-                    waitJobShowProcessingOverlay { addBook(fileName, fileType, uri) }
+                    waitJobShowProcessingOverlayAsync { addBook(fileName, fileType, uri) }
                 }
             } ?: run {
                 logUtil.error("Failed to get file info when add book", true)
@@ -49,7 +49,8 @@ class AddBookActivity : BaseActivity() {
         bindings = ActivityAddBooksBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-        globalCoordinatorLayout = findViewById(R.id.coordinator_layout)
+        globalCoordinatorLayout = bindings.coordinatorLayout
+        progressOverlay = findViewById(R.id.progress_overlay)
     }
 
     override fun setupCollectors() {}

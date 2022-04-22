@@ -8,14 +8,17 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.google.android.material.snackbar.Snackbar
-import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.utils.ActivityUtils
 import kotlinx.coroutines.launch
 
 abstract class BaseActivity : AppCompatActivity() {
     // Derived activity must wrap its main layout with a coordinator layout
-    // and set this variable to the coordinator layout's view id, preferably in init() method
+    // and set this variable to the coordinator layout's view id, preferably in setupBindings() method
     protected lateinit var globalCoordinatorLayout: CoordinatorLayout
+
+    // Derived activity must include the progress_overlay layout in its main layout
+    // and set this variable to R.id.progress_overlay, preferably in setupBindings() method
+    protected lateinit var progressOverlay: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +45,8 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     // TODO: Can we use background job ?
-    // Derived activity must include the progress_overlay layout in its main layout
     // Job may return a result string that will be shown on snackbar after complete
-    open fun waitJobShowProcessingOverlay(job: suspend () -> String?) = lifecycleScope.launch {
+    open fun waitJobShowProcessingOverlayAsync(job: suspend () -> String?) = lifecycleScope.launch {
         whenStarted {
             showProcessingOverlay()
             val res = job()
@@ -54,12 +56,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun showProcessingOverlay() {
-        val progressOverlay: View = findViewById(R.id.progress_overlay)
         ActivityUtils.animateVisibility(progressOverlay, View.VISIBLE, 0.3f, 100)
     }
 
     private fun hideProcessingOverlay() {
-        val progressOverlay: View = findViewById(R.id.progress_overlay)
         ActivityUtils.animateVisibility(progressOverlay, View.GONE, 0F, 100)
     }
 }

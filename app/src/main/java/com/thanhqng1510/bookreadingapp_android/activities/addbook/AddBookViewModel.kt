@@ -58,7 +58,7 @@ class AddBookViewModel @Inject constructor(
                     null
                 )
 
-                dataStore.insertBook(book).join()
+                dataStore.insertBookAsync(book).join()
                 return@async true
             } ?: run {
                 logUtil.error("Failed to get file path from Uri", true)
@@ -77,7 +77,7 @@ class AddBookViewModel @Inject constructor(
             val outputStream = FileOutputStream(newFile)
             getApplication<MainApplication>().contentResolver.openInputStream(uri)
                 ?.let { inputStream ->
-                    FileUtils.copyTo(inputStream, outputStream, viewModelScope).join()
+                    FileUtils.copyToAsync(inputStream, outputStream, viewModelScope).join()
                     return@async newFile.toUri()
                 } ?: run {
                 logUtil.error("Failed to get input stream from Uri", true)

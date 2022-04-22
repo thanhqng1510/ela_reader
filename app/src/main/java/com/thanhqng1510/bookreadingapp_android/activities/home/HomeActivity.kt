@@ -24,6 +24,7 @@ import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,7 @@ import kotlinx.coroutines.launch
 class HomeActivity : BaseActivity() {
     // View model
     private val viewModel: HomeViewModel by viewModels()
+    private lateinit var collectViewModelDataJob: Job
 
     // Bindings
     private lateinit var bindings: ActivityHomeBinding
@@ -63,7 +65,7 @@ class HomeActivity : BaseActivity() {
         return when (item.itemId) {
             R.id.delete_book -> {
                 bookListAdapter.longClickedPos?.let {
-                    waitJobShowProcessingOverlay {
+                    waitJobShowProcessingOverlayAsync {
                         viewModel.deleteBookAtIndexAsync(it).await()
                     }
                 }
@@ -77,7 +79,8 @@ class HomeActivity : BaseActivity() {
         bindings = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(bindings.root)
 
-        globalCoordinatorLayout = findViewById(R.id.coordinator_layout)
+        globalCoordinatorLayout = bindings.coordinatorLayout
+        progressOverlay = findViewById(R.id.progress_overlay)
 
         sortSpinnerAdapter =
             SortOptionSpinnerAdapter.SORTBY.values().map { it.displayStr }.let { sortOptionList ->
@@ -110,7 +113,7 @@ class HomeActivity : BaseActivity() {
     }
 
     override fun setupCollectors() {
-        lifecycleScope.launch {
+        collectViewModelDataJob = lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
                     viewModel.bookListData.collectLatest {
@@ -138,7 +141,9 @@ class HomeActivity : BaseActivity() {
             startActivity(intent)
         }
         bindings.refreshLayout.setOnRefreshListener {
+            collectViewModelDataJob.cancel()
             viewModel.refresh()
+            setupCollectors()
             bindings.refreshLayout.isRefreshing = false
         }
         bindings.searchBar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

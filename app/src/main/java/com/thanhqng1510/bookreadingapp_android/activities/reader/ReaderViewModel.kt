@@ -8,7 +8,6 @@ import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
-import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -33,6 +32,6 @@ class ReaderViewModel @Inject constructor(
     // Update with database lifecycle scope instead
     fun closeBook() {
         bookData.lastRead = LocalDateTime.now()
-        dataStore.updateBook(bookData)
+        dataStore.updateBookAsync(bookData)
     }
 }

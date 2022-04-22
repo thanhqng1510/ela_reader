@@ -26,12 +26,12 @@ class DataStore @Inject constructor(
         return@async localStore.bookDao().getById(id)
     }
 
-    fun insertBook(book: Book) = scope.launch {
+    fun insertBookAsync(book: Book) = scope.launch {
         val bookId = localStore.bookDao().insert(book)
         logUtil.info("Added book with ID: $bookId")
     }
 
-    fun deleteBook(book: Book) = scope.launch {
+    fun deleteBookAsync(book: Book) = scope.launch {
         val bookDeleted = localStore.bookDao().delete(book)
         if (bookDeleted == 0)
             logUtil.info("Failed to delete book with ID: ${book.id}")
@@ -39,7 +39,7 @@ class DataStore @Inject constructor(
             logUtil.info("Deleted book with ID: ${book.id}")
     }
 
-    fun updateBook(book: Book) = scope.launch {
+    fun updateBookAsync(book: Book) = scope.launch {
         val bookUpdated = localStore.bookDao().update(book)
         if (bookUpdated == 0)
             logUtil.info("Failed to update book with ID: ${book.id}")

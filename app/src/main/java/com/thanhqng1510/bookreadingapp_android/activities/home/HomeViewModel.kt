@@ -23,7 +23,7 @@ class HomeViewModel @Inject constructor(
 ) : ViewModel() {
     // All data loaded from DB as flow
     lateinit var bookListData: StateFlow<List<Book>>
-    private var flowCollectJob: Job
+    private var collectBookListDataJob: Job
 
     // Portion of bookListData to render on screen only
     private val _bookListDisplayData = MutableStateFlow<List<Book>>(emptyList())
@@ -33,12 +33,12 @@ class HomeViewModel @Inject constructor(
     private var sortOpt = SortOptionSpinnerAdapter.SORTBY.default()
 
     init {
-        flowCollectJob = collectFlow()
+        collectBookListDataJob = collectFlowAsync()
     }
 
     fun refresh() {
-        flowCollectJob.cancel()
-        flowCollectJob = collectFlow()
+        collectBookListDataJob.cancel()
+        collectBookListDataJob = collectFlowAsync()
     }
 
     fun deleteBookAtIndexAsync(idx: Int) = viewModelScope.async {
@@ -47,7 +47,7 @@ class HomeViewModel @Inject constructor(
                 FileUtils.deleteAtPathAsync(filePath, viewModelScope).join()
                 return@withFilePath book.thumbnailUri.path?.let { thumbnailPath ->
                     FileUtils.deleteAtPathAsync(thumbnailPath, viewModelScope).join()
-                    dataStore.deleteBook(bookListDisplayData.value[idx]).join()
+                    dataStore.deleteBookAsync(bookListDisplayData.value[idx]).join()
                     return@let MessageUtils.bookDeletedFriendly
                 }
             } ?: run {
@@ -59,9 +59,7 @@ class HomeViewModel @Inject constructor(
 
     fun setFilterString(str: String?) {
         filterStr = str ?: ""
-        viewModelScope.launch {
-            _bookListDisplayData.value = sortedBookList(filteredBookList(bookListData.value))
-        }
+        _bookListDisplayData.value = sortedBookList(filteredBookList(bookListData.value))
     }
 
     private fun filteredBookList(list: List<Book>): List<Book> {
@@ -81,9 +79,7 @@ class HomeViewModel @Inject constructor(
 
     fun setSortOption(opt: Int) {
         sortOpt = SortOptionSpinnerAdapter.SORTBY.forIndex(opt)
-        viewModelScope.launch {
-            _bookListDisplayData.value = sortedBookList(_bookListDisplayData.value)
-        }
+        _bookListDisplayData.value = sortedBookList(_bookListDisplayData.value)
     }
 
     private fun sortedBookList(list: List<Book>): List<Book> {
@@ -100,7 +96,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun collectFlow(): Job {
+    private fun collectFlowAsync(): Job {
         bookListData = dataStore.getAllBooksAsFlow()
             .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
         return viewModelScope.launch {

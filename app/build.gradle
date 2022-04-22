@@ -24,10 +24,12 @@ android {
     buildTypes {
         release {
             minifyEnabled true
+            debuggable false
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
 
         debug {
+            minifyEnabled false
             debuggable true
         }
     }
@@ -49,6 +51,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(":shared")
 
     implementation "androidx.core:core-ktx:1.7.0"
     implementation "androidx.appcompat:appcompat:1.4.1"
@@ -60,22 +63,21 @@ dependencies {
     implementation "androidx.collection:collection-ktx:1.2.0"
 
     // Hilt
-    implementation "com.google.dagger:hilt-android:2.38.1"
-    kapt "com.google.dagger:hilt-android-compiler:2.38.1"
+    implementation 'com.google.dagger:hilt-android:2.41'
+    kapt 'com.google.dagger:hilt-android-compiler:2.41'
 
     // Coroutine
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2"
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1-native-mt'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1-native-mt'
 
     // Room
-    def roomVersion = "2.4.2"
+    def roomVersion = "2.5.0-alpha01"
     implementation "androidx.room:room-common:$roomVersion"
     implementation "androidx.room:room-runtime:$roomVersion"
     annotationProcessor "androidx.room:room-compiler:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
-    // optional - Paging 3 Integration
-    implementation "androidx.room:room-paging:2.5.0-alpha01"
+    implementation "androidx.room:room-paging:$roomVersion"
 
     // Viewmodel - Livedata - Lifecycle
     def lifecycle_version = "2.4.1"
@@ -96,7 +98,7 @@ dependencies {
     // JUnit
     testImplementation "junit:junit:4.13.2"
     // Mockito framework
-    testImplementation "org.mockito:mockito-core:4.0.0"
+    testImplementation 'org.mockito:mockito-core:4.5.1'
     // Mockito-kotlin
     testImplementation "org.mockito.kotlin:mockito-kotlin:4.0.0"
     // Mockk framework
