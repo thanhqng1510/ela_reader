@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @TypeConverters(SharedConverters::class, BookConverter::class)
 interface BookDao {
     @Query("SELECT * FROM books")
-    fun getAll(): Flow<List<Book>>
+    fun getAllAsFlow(): Flow<List<Book>>
 
     @Query("SELECT * FROM books WHERE rowid = :id")
     suspend fun getById(id: Long): Book?
@@ -22,8 +22,11 @@ interface BookDao {
     @Delete
     suspend fun delete(book: Book): Int
 
-    @Query("SELECT COUNT(*) FROM books WHERE uri = :uri")
-    suspend fun countByUri(uri: Uri): Long
+    @Update
+    suspend fun update(book: Book): Int
+
+    @Query("SELECT COUNT(*) FROM books WHERE fileUri = :fileUri")
+    suspend fun countByFileUri(fileUri: Uri): Long
 
 //    @Query("SELECT * FROM user WHERE uid IN (:userIds)")
 //    fun loadAllByIds(userIds: IntArray): List<Book>

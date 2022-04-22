@@ -14,17 +14,12 @@
     <remote-repository>
       <option name="id" value="MavenLocal" />
       <option name="name" value="MavenLocal" />
-      <option name="url" value="file:/$PROJECT_DIR$/../.m2/repository" />
+      <option name="url" value="file:/$USER_HOME$/.m2/repository" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="MavenRepo" />
       <option name="name" value="MavenRepo" />
       <option name="url" value="https://repo.maven.apache.org/maven2/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="BintrayJCenter" />
-      <option name="name" value="BintrayJCenter" />
-      <option name="url" value="https://jcenter.bintray.com/" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="BintrayJCenter" />

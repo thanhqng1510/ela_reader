@@ -8,6 +8,8 @@
     android:foregroundTint="#00FFFFFF"
     tools:context=".activities.settings.SettingsActivity">
 
+    <include layout="@layout/progress_overlay" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"

@@ -1,5 +1,6 @@
 package com.thanhqng1510.bookreadingapp_android.activities.base
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
@@ -7,36 +8,45 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import com.google.android.material.snackbar.Snackbar
-import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.utils.ActivityUtils
 import kotlinx.coroutines.launch
 
 abstract class BaseActivity : AppCompatActivity() {
+    // Derived activity must wrap its main layout with a coordinator layout
+    // and set this variable to the coordinator layout's view id, preferably in setupBindings() method
+    protected lateinit var globalCoordinatorLayout: CoordinatorLayout
+
+    // Derived activity must include the progress_overlay layout in its main layout
+    // and set this variable to R.id.progress_overlay, preferably in setupBindings() method
+    protected lateinit var progressOverlay: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        init()
+        setupBindings(savedInstanceState)
         setupCollectors()
         setupListeners()
     }
 
-    abstract fun init()
+    protected abstract fun setupBindings(savedInstanceState: Bundle?)
 
-    abstract fun setupCollectors()
+    protected abstract fun setupCollectors()
 
-    abstract fun setupListeners()
+    protected abstract fun setupListeners()
 
-    // Derived activity must wrap its main layout with a coordinator layout
-    // and set this variable to the coordinator layout's view id, preferably in init() method
-    lateinit var globalCoordinatorLayout: CoordinatorLayout
+    open fun finishWithResult(resultCode: Int, data: Map<String, String>) {
+        val intent = Intent()
+        data.forEach { (k, v) -> intent.putExtra(k, v) }
+        setResult(resultCode, intent)
+        finish()
+    }
 
-    fun showSnackbar(message: String) {
+    open fun showSnackbar(message: String) {
         Snackbar.make(globalCoordinatorLayout, message, Snackbar.LENGTH_SHORT).show()
     }
 
     // TODO: Can we use background job ?
-    // Derived activity must include the progress_overlay layout in its main layout
     // Job may return a result string that will be shown on snackbar after complete
-    fun runJobShowProcessingOverlay(job: suspend () -> String?) = lifecycleScope.launch {
+    open fun waitJobShowProcessingOverlayAsync(job: suspend () -> String?) = lifecycleScope.launch {
         whenStarted {
             showProcessingOverlay()
             val res = job()
@@ -46,12 +56,10 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     private fun showProcessingOverlay() {
-        val progressOverlay: View = findViewById(R.id.progress_overlay)
         ActivityUtils.animateVisibility(progressOverlay, View.VISIBLE, 0.3f, 100)
     }
 
     private fun hideProcessingOverlay() {
-        val progressOverlay: View = findViewById(R.id.progress_overlay)
         ActivityUtils.animateVisibility(progressOverlay, View.GONE, 0F, 100)
     }
 }
