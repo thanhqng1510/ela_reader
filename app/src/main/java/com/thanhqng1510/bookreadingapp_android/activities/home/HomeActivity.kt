@@ -20,8 +20,7 @@ import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.base.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings.SettingsActivity
-import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
-import com.thanhqng1510.bookreadingapp_android.utils.AndroidUtils
+import com.thanhqng1510.bookreadingapp_android.utils.ActivityUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -115,7 +114,8 @@ class HomeActivity : BaseActivity() {
         bookList.layoutManager = LinearLayoutManager(this)
         registerForContextMenu(bookList)
 
-        AndroidUtils.playAudio(this, R.raw.sample_audio)
+        ActivityUtils.playAudio(this, ActivityUtils.AMBIENT.fromStr("Rain").resid)
+        ActivityUtils.playAudio(this, ActivityUtils.AMBIENT.fromStr("Storm").resid)
     }
 
     override fun setupCollectors() {

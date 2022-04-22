@@ -3,22 +3,31 @@ package com.thanhqng1510.bookreadingapp_android.utils
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.content.Context
-import android.media.MediaPlayer
-import android.net.Uri
+import android.media.SoundPool
 import android.view.View
+import com.thanhqng1510.bookreadingapp_android.R
 
 object ActivityUtils {
-fun String.formatForFileName(): String {
-    return this.substringBeforeLast(".").trim().replace("""\s+""".toRegex(), " ").split(" ")
-        .joinToString(separator = " ") {
-            it.replaceFirstChar { c ->
-                if (c.isLowerCase()) c.titlecase(Locale.getDefault()) else c.toString()
-            }
-        }
-}
+    enum class AMBIENT(val resid: Int, val displayStr: String) {
+        RANDOM(0, "Random"),
+        RAIN(R.raw.rain, "Rain"),
+        STORM(R.raw.storm, "Storm"),
+        WAVES(R.raw.waves, "Waves"),
+        RIVER(0, "River"),
+        COFFEE_SHOP(0, "Coffee shop"),
+        FIRE(0, "Fire"),
+        NIGHT(0, "Night"),
+        WIND(0, "Wind");
 
-object AndroidUtils {
-    private var audioPlayer: MediaPlayer? = null
+        companion object {
+            fun fromStr(string: String): AMBIENT =
+                values().find { ambient -> ambient.displayStr == string } ?: default()
+
+            fun default(): AMBIENT = RANDOM
+        }
+    }
+
+    private var ambientPlayer: SoundPool? = null
 
     fun animateVisibility(view: View, destVisibility: Int, destAlpha: Float, durationMillis: Long) {
         val toShow = destVisibility == View.VISIBLE
@@ -38,18 +47,19 @@ object AndroidUtils {
     }
 
     fun playAudio(context: Context, resid: Int) {
-        audioPlayer?.let { return }
+        if (ambientPlayer == null)
+            ambientPlayer = SoundPool.Builder().setMaxStreams(AMBIENT.values().size - 1).build()
 
-        audioPlayer = MediaPlayer()
-        audioPlayer?.setDataSource(context, Uri.parse(
-            "android.resource://" + context.packageName.toString() + "/" + resid))
-        audioPlayer?.isLooping = true
-        audioPlayer?.prepareAsync()
-        audioPlayer?.setOnPreparedListener { player -> player.start() }
+        ambientPlayer?.let { player ->
+            player.setOnLoadCompleteListener { player, sampleId, _ ->
+                player.play(sampleId, 1.0f, 1.0f, 1, -1, 1.0f)
+            }
+            player.load(context, resid, 1)
+        }
     }
 
     fun stopAudio() {
-        audioPlayer?.release()
-        audioPlayer = null
+        ambientPlayer?.release()
+        ambientPlayer = null
     }
 }
