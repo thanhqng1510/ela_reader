@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/back_btn_desc"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/back_light" />
 
             <Space

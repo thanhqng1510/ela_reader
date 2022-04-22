@@ -49,7 +49,7 @@ class AddBookViewModel @Inject constructor(
 
                 val book = Book(
                     FileUtils.getFileDisplayName(fileNameWithExt),
-                    setOf("abc", "def"), // TODO: Get authors
+                    setOf("Author"), // TODO: Get authors
                     thumbnailUri.await(),
                     FileUtils.getPdfPageCount(filePath),
                     LocalDateTime.now(),

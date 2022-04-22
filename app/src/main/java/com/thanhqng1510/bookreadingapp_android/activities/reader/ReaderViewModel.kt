@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.utils.AudioUtils
 import com.thanhqng1510.bookreadingapp_android.utils.MessageUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -22,8 +23,8 @@ class ReaderViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     lateinit var bookData: Book
 
-    // null => not currently playing
-    // not null => audio is playing
+    // Null => not currently playing
+    // Not null => audio is playing
     private var ambientPlayer: SoundPool? = null
 
     override fun onCleared() {
@@ -54,12 +55,13 @@ class ReaderViewModel @Inject constructor(
 
         viewModelScope.launch {
             dataStore.getSelectedAmbientSoundAsync(getApplication()).await()?.let { ambientSound ->
-                ambientPlayer = SoundPool.Builder().setMaxStreams(1).build()
+                if (ambientSound == AudioUtils.AMBIENT.NONE)
+                    return@let
 
+                ambientPlayer = SoundPool.Builder().setMaxStreams(1).build()
                 ambientPlayer?.setOnLoadCompleteListener { player, sampleId, _ ->
                     player.play(sampleId, 1.0f, 1.0f, 1, -1, 1.0f)
                 }
-
                 ambientPlayer?.load(
                     getApplication(),
                     ambientSound.resId,

@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/add_btn_desc"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/add_light" />
 
             <ImageButton
@@ -48,6 +49,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/settings_btn_desc"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/settings_light" />
         </LinearLayout>
 
@@ -152,7 +154,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="Hello" />
+                        android:textSize="@dimen/bodyText"
+                        android:text="@string/empty_book_list_desc" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

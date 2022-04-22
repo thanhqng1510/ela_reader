@@ -17,4 +17,5 @@
     <string name="delete_book_menu_title">Delete</string>
 
     <string name="num_books">%1$d books</string>
+    <string name="empty_book_list_desc">Your bookshelf is empty\nAdd a new book and start reading</string>
 </resources>

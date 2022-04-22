@@ -3,6 +3,7 @@
     <dimen name="dropdownListPreferredItemHeight">48dp</dimen>
     <dimen name="globalSpacing">20dp</dimen>
     <dimen name="componentSpacing">15dp</dimen>
+
     <dimen name="heading1Text">40sp</dimen>
     <dimen name="bodyText">20sp</dimen>
 

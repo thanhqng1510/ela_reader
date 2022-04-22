@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/back_btn_desc"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/back_light" />
 
             <Space
@@ -57,10 +58,7 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="#00FFFFFF"
                 android:contentDescription="@string/add_book_btn_desc"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
+                android:foreground="?android:attr/selectableItemBackground"
                 app:srcCompat="@drawable/add_light" />
         </LinearLayout>
     </LinearLayout>

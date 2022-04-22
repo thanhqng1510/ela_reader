@@ -36,7 +36,11 @@ class AddBookActivity : BaseActivity() {
                     cursor.moveToFirst()
                     cursor.getString(nameIndex)
                 }?.let { fileName ->
-                    waitJobShowProcessingOverlayAsync { addBook(fileName, fileType, uri) }
+                    waitJobShowProcessingOverlayAsync {
+                        val message = addBook(fileName, fileType, uri)
+                        finish()
+                        return@waitJobShowProcessingOverlayAsync message // TODO: Skip this screen for now
+                    }
                 }
             } ?: run {
                 logUtil.error("Failed to get file info when add book", true)
@@ -62,6 +66,10 @@ class AddBookActivity : BaseActivity() {
                 arrayOf("application/pdf") // TODO: Only support PDF for now
             )
         }
+
+        selectFileLauncher.launch(
+            arrayOf("application/pdf") // TODO: Skip this screen for now
+        )
     }
 
     private suspend fun addBook(
