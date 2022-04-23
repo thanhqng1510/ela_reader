@@ -66,98 +66,11 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <LinearLayout
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/page_fragment"
+                android:name="com.thanhqng1510.bookreadingapp_android.activities.home.library.LibraryFragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-                <androidx.core.widget.NestedScrollView
-                    android:id="@+id/book_list_scroll_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fillViewport="true">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <androidx.appcompat.widget.SearchView
-                            android:id="@+id/search_bar"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/globalSpacing"
-                            android:layout_marginTop="@dimen/componentSpacing"
-                            android:background="@drawable/custom_searchview"
-                            app:iconifiedByDefault="false"
-                            app:queryBackground="@null"
-                            app:queryHint="Search Here"
-                            app:submitBackground="@null" />
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/globalSpacing"
-                            android:layout_marginTop="@dimen/componentSpacing"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/book_count"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/num_books"
-                                android:textSize="@dimen/bodyText" />
-
-                            <Space
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <FrameLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content">
-
-                                <ImageView
-                                    android:id="@+id/sort_books_img"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:backgroundTint="#00FFFFFF"
-                                    app:srcCompat="@drawable/sort_light"
-                                    tools:ignore="ContentDescription" />
-
-                                <Spinner
-                                    android:id="@+id/sort_option_spinner"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="@color/transparent"
-                                    android:contentDescription="@string/sort_books_btn_desc" />
-                            </FrameLayout>
-                        </LinearLayout>
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/book_list"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1"
-                            android:paddingTop="@dimen/componentSpacing" />
-                    </LinearLayout>
-                </androidx.core.widget.NestedScrollView>
-
-                <LinearLayout
-                    android:id="@+id/empty_book_list_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/empty_book_list_desc"
-                        android:textSize="@dimen/bodyText" />
-                </LinearLayout>
-            </LinearLayout>
+                android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <View
@@ -169,6 +82,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.behavior.HideBottomViewOnScrollBehavior"
             app:menu="@menu/bottom_nav_menu" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

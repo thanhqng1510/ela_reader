@@ -1,7 +1,7 @@
 package com.thanhqng1510.bookreadingapp_android.application
 
 import android.app.Application
-import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
+import com.thanhqng1510.bookreadingapp_android.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.HiltAndroidApp
 import java.io.File
 import javax.inject.Inject

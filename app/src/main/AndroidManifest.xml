@@ -17,18 +17,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BookReadingApp_Android">
         <activity
-            android:name=".activities.addbook.AddBookActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.settings.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.reader.ReaderActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.bookmark.BookmarkActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.home.HomeActivity"
             android:exported="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
@@ -38,9 +26,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".activities.addbook_activity.AddBookActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.settings_activity.SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.reader_activity.ReaderActivity"
+            android:exported="false" />
 
         <service
-            android:name=".services.SoundService"
+            android:name=".services.AmbientSoundPlayerService"
             android:enabled="true" />
     </application>
 

@@ -68,6 +68,7 @@ dependencies {
 
     // Hilt
     implementation 'com.google.dagger:hilt-android:2.41'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
     kapt 'com.google.dagger:hilt-android-compiler:2.41'
 
     // Coroutine

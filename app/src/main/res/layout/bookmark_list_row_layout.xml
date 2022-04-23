@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/bookListRowHeight"
+    android:layout_height="@dimen/listRowHeight"
     android:background="?android:attr/selectableItemBackground"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -11,8 +11,8 @@
 
     <ImageView
         android:id="@+id/cover"
-        android:layout_width="@dimen/bookListRowCoverWidth"
-        android:layout_height="@dimen/bookListRowHeight"
+        android:layout_width="@dimen/listRowCoverWidth"
+        android:layout_height="@dimen/listRowHeight"
         android:contentDescription="@string/book_cover_desc"
         app:srcCompat="@mipmap/book_cover_default" />
 
@@ -26,12 +26,19 @@
         <TextView
             android:id="@+id/book_title"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/listRowTextMaxWidth"
+            android:maxLines="2"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/page"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxWidth="@dimen/listRowTextMaxWidth"
+            android:maxLines="2"
             android:text="@string/bookmark_page" />
 
     </LinearLayout>

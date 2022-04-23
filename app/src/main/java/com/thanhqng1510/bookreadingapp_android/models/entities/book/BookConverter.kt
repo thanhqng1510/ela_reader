@@ -6,23 +6,21 @@ import java.util.*
 
 class BookConverter {
     @TypeConverter
-    fun setToString(authors: Set<String>): String =
+    fun setToString(authors: Set<String>) =
         authors.joinToString(separator = "-authorsToStringHelper-")
 
     @TypeConverter
-    fun stringToSet(string: String): Set<String> =
-        string.split("-authorsToStringHelper-").toSet()
+    fun stringToSet(string: String) = string.split("-authorsToStringHelper-").toSet()
 
     @TypeConverter
-    fun nullableUuidToString(sharingSessionId: UUID?): String =
-        sharingSessionId?.toString() ?: ""
+    fun nullableUuidToString(sharingSessionId: UUID?) = sharingSessionId?.toString() ?: ""
 
     @TypeConverter
-    fun stringToNullableUuid(string: String): UUID? =
+    fun stringToNullableUuid(string: String) =
         if (string.isEmpty()) null else UUID.fromString(string)
 
     @TypeConverter
-    fun uriToString(uri: Uri): String = uri.toString()
+    fun uriToString(uri: Uri) = uri.toString()
 
     @TypeConverter
     fun stringToUri(string: String): Uri = Uri.parse(string)

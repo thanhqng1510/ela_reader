@@ -7,11 +7,13 @@ import com.thanhqng1510.bookreadingapp_android.datastore.networkstore.NetworkSto
 import com.thanhqng1510.bookreadingapp_android.datastore.sharedprefhelper.SharedPrefHelper
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
-import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
-import com.thanhqng1510.bookreadingapp_android.utils.AudioUtils
-import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.Flow
+import com.thanhqng1510.bookreadingapp_android.models.entities.bookmark.Bookmark
+import com.thanhqng1510.bookreadingapp_android.services.AmbientSoundPlayerService
+import com.thanhqng1510.bookreadingapp_android.utils.constant_utils.ConstantUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,9 +26,9 @@ class DataStore @Inject constructor(
 ) {
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    fun getAllBooksAsFlow(): Flow<List<Book>> = localStore.bookDao().getAllAsFlow()
+    fun getAllBooksAsFlow() = localStore.bookDao().getAllAsFlow()
 
-    fun getBookByIdAsync(id: Long): Deferred<Book?> = scope.async {
+    fun getBookByIdAsync(id: Long) = scope.async {
         return@async localStore.bookDao().getById(id)
     }
 
@@ -51,13 +53,13 @@ class DataStore @Inject constructor(
             logUtil.info("Updated book with ID: ${book.id}")
     }
 
-    fun countBookByFileUriAsync(fileUri: Uri): Deferred<Long> = scope.async {
+    fun countBookByFileUriAsync(fileUri: Uri) = scope.async {
         return@async localStore.bookDao().countByFileUri(fileUri)
     }
 
-    fun getAllBookmarksAsFlow(): Flow<List<Bookmark>> = localStore.bookmarkDao().getAllAsFlow()
+    fun getAllBookmarksAsFlow() = localStore.bookmarkDao().getAllAsFlow()
 
-    fun getBookmarkByIdAsync(id: Long): Deferred<Bookmark?> = scope.async {
+    fun getBookmarkByIdAsync(id: Long) = scope.async {
         return@async localStore.bookmarkDao().getById(id)
     }
 
@@ -82,25 +84,23 @@ class DataStore @Inject constructor(
             logUtil.info("Updated bookmark with ID: ${bookmark.id}")
     }
 
-    fun getAllBooksWithBookmarksAsFlow(): Flow<List<Book.BookWithBookmarks>> =
-        localStore.bookDao().getAllWithBookmarksAsFlow()
+    fun getAllBooksWithBookmarksAsFlow() = localStore.bookDao().getAllWithBookmarksAsFlow()
 
-    fun getAllBookmarksWithBookAsFlow(): Flow<List<Bookmark.BookmarkWithBook>> =
-        localStore.bookmarkDao().getAllWithBookAsFlow()
+    fun getAllBookmarksWithBookAsFlow() = localStore.bookmarkDao().getAllWithBookAsFlow()
 
-    fun getSelectedAmbientSoundAsync(context: Context): Deferred<AudioUtils.AMBIENT?> =
-        scope.async {
-            return@async sharedPrefHelper.sharedPref(context)
-                .getString(ConstantUtils.ambientSoundSharedPreferenceKey, null)
-                ?.let { return@let AudioUtils.AMBIENT.fromStr(it) }
-                ?: AudioUtils.AMBIENT.RELAXING // TODO: Default as this sound for now
-        }
-
-    fun setSelectedAmbientSoundAsync(context: Context, ambient: AudioUtils.AMBIENT) = scope.launch {
-        with(sharedPrefHelper.sharedPref(context).edit()) {
-            putString(ConstantUtils.ambientSoundSharedPreferenceKey, ambient.displayStr)
-            apply()
-            logUtil.info("Saved selected ambient sound: ${ambient.displayStr}")
-        }
+    fun getSelectedAmbientSoundAsync(context: Context) = scope.async {
+        return@async sharedPrefHelper.sharedPref(context)
+            .getString(ConstantUtils.ambientSoundSharedPreferenceKey, null)
+            ?.let { return@let AmbientSoundPlayerService.AMBIENT.fromStr(it) }
+            ?: AmbientSoundPlayerService.AMBIENT.RELAXING // TODO: Default as this sound for now
     }
+
+    fun setSelectedAmbientSoundAsync(context: Context, ambient: AmbientSoundPlayerService.AMBIENT) =
+        scope.launch {
+            with(sharedPrefHelper.sharedPref(context).edit()) {
+                putString(ConstantUtils.ambientSoundSharedPreferenceKey, ambient.displayStr)
+                apply()
+                logUtil.info("Saved selected ambient sound: ${ambient.displayStr}")
+            }
+        }
 }

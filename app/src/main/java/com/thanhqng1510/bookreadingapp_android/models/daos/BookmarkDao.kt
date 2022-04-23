@@ -1,7 +1,8 @@
 package com.thanhqng1510.bookreadingapp_android.models.daos
 
 import androidx.room.*
-import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
+import com.thanhqng1510.bookreadingapp_android.models.entities.bookmark.Bookmark
+import com.thanhqng1510.bookreadingapp_android.models.entities.bookmark.BookmarkWithBook
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -21,6 +22,7 @@ interface BookmarkDao {
     @Update
     suspend fun update(bookmark: Bookmark): Int
 
+    @Transaction
     @Query("SELECT * FROM bookmarks")
-    fun getAllWithBookAsFlow(): Flow<List<Bookmark.BookmarkWithBook>>
+    fun getAllWithBookAsFlow(): Flow<List<BookmarkWithBook>>
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/books_page"
+        android:id="@+id/library_page"
         android:enabled="true"
         android:icon="@drawable/book_light"
         android:title="@string/library_page_name" />

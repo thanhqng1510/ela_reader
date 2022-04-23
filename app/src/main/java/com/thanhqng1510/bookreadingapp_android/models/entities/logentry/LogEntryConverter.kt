@@ -5,8 +5,9 @@ import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 
 class LogEntryConverter {
     @TypeConverter
-    fun stringToLogLevel(string: String): LogUtil.LOGLEVEL = LogUtil.LOGLEVEL.forTag(string)
+    fun stringToLogLevel(string: String) =
+        LogUtil.LOGLEVEL.forTag(string) ?: throw IllegalArgumentException()
 
     @TypeConverter
-    fun logLevelToString(loglevel: LogUtil.LOGLEVEL): String = loglevel.tag
+    fun logLevelToString(loglevel: LogUtil.LOGLEVEL) = loglevel.tag
 }

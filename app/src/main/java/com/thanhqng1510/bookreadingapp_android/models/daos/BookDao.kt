@@ -5,6 +5,7 @@ import androidx.room.*
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookConverter
+import com.thanhqng1510.bookreadingapp_android.models.entities.book.BookWithBookmarks
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -30,5 +31,5 @@ interface BookDao {
 
     @Transaction
     @Query("SELECT * FROM books")
-    fun getAllWithBookmarksAsFlow(): Flow<List<Book.BookWithBookmarks>>
+    fun getAllWithBookmarksAsFlow(): Flow<List<BookWithBookmarks>>
 }

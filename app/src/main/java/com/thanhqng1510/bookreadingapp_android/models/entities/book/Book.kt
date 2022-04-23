@@ -2,10 +2,9 @@ package com.thanhqng1510.bookreadingapp_android.models.entities.book
 
 import android.net.Uri
 import androidx.room.*
+import com.thanhqng1510.bookreadingapp_android.models.UIModel
 import com.thanhqng1510.bookreadingapp_android.models.entities.SharedConverters
-import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
-import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
-import java.io.Serializable
+import com.thanhqng1510.bookreadingapp_android.utils.file_utils.FileUtils.isExist
 import java.time.LocalDateTime
 import java.util.*
 
@@ -24,7 +23,7 @@ data class Book(
     val fileType: String,
     var fileUri: Uri,
     var sharingSessionId: UUID?
-) : Serializable {
+) : UIModel<Book> {
     enum class STATUS {
         NEW, READING, FINISHED, ERROR
     }
@@ -47,14 +46,19 @@ data class Book(
 
     val status: STATUS
         get() {
-            if (!FileUtils.isExistingUri(fileUri))
+            if (!fileUri.isExist())
                 return STATUS.ERROR
             if (lastRead == null)
                 return STATUS.NEW
             if (currentPage == numPages)
-                return STATUS.FINISHED // TODO: Status not updated on UI
+                return STATUS.FINISHED
             return STATUS.READING
         }
+
+    override fun areItemsTheSame(other: Book) = id == other.id
+
+    override fun areContentsTheSame(other: Book) =
+        fileUri == other.fileUri && sharingSessionId == other.sharingSessionId && status == other.status
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -91,13 +95,4 @@ data class Book(
         result = 31 * result + status.hashCode()
         return result
     }
-
-    data class BookWithBookmarks(
-        @Embedded val book: Book,
-        @Relation(
-            parentColumn = "rowid",
-            entityColumn = "bookId"
-        )
-        val bookmarks: List<Bookmark>
-    )
 }

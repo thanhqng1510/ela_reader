@@ -16,35 +16,25 @@ class LogUtil @Inject constructor(
 
     enum class LOGLEVEL(val tag: String) {
         INFO("Info"),
-        WARN("Warn"),
-        CRITICAL("Critical"),
         ERROR("Error");
 
         companion object {
-            fun forTag(tag: String): LOGLEVEL = values().find { it.tag == tag }!!
+            fun forTag(tag: String): LOGLEVEL? = values().find { it.tag == tag }
         }
     }
 
     fun info(message: String) = log(LOGLEVEL.INFO, message, false)
 
-    fun warn(message: String, includeStackTrace: Boolean) =
-        log(LOGLEVEL.WARN, message, includeStackTrace)
-
-    fun critical(message: String, includeStackTrace: Boolean) =
-        log(LOGLEVEL.CRITICAL, message, includeStackTrace)
-
     fun error(message: String, includeStackTrace: Boolean) =
         log(LOGLEVEL.ERROR, message, includeStackTrace)
 
-    private fun log(level: LOGLEVEL, message: String, includeThreadInfo: Boolean) {
-        scope.launch {
-            logStore.logEntryDao().insert(
-                LogEntry(
-                    level, LocalDateTime.now(),
-                    Thread.currentThread().id, Thread.currentThread().name, message,
-                    if (includeThreadInfo) Thread.currentThread().stackTrace.contentDeepToString() else null
-                )
+    private fun log(level: LOGLEVEL, message: String, includeThreadInfo: Boolean) = scope.launch {
+        logStore.logEntryDao().insert(
+            LogEntry(
+                level, LocalDateTime.now(),
+                Thread.currentThread().id, Thread.currentThread().name, message,
+                if (includeThreadInfo) Thread.currentThread().stackTrace.contentDeepToString() else null
             )
-        }
+        )
     }
 }

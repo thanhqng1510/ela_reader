@@ -2,8 +2,6 @@ package com.thanhqng1510.bookreadingapp_android.datastore.localstore
 
 import android.content.Context
 import androidx.room.Room
-import com.thanhqng1510.bookreadingapp_android.models.daos.BookDao
-import com.thanhqng1510.bookreadingapp_android.models.daos.BookmarkDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,15 +14,15 @@ import javax.inject.Singleton
 object LocalStoreModule {
     @Provides
     @Singleton
-    fun provideRoom(@ApplicationContext context: Context): LocalStore = Room.databaseBuilder(
+    fun provideRoom(@ApplicationContext context: Context) = Room.databaseBuilder(
         context, LocalStore::class.java, "local-datadb"
     ).build()
 
     @Provides
     @Singleton
-    fun provideBookDao(database: LocalStore): BookDao = database.bookDao()
+    fun provideBookDao(database: LocalStore) = database.bookDao()
 
     @Provides
     @Singleton
-    fun provideBookmarkDao(database: LocalStore): BookmarkDao = database.bookmarkDao()
+    fun provideBookmarkDao(database: LocalStore) = database.bookmarkDao()
 }
