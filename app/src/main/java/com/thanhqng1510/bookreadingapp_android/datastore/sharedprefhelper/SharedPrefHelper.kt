@@ -9,5 +9,8 @@ import javax.inject.Singleton
 @Singleton
 class SharedPrefHelper @Inject constructor() {
     fun sharedPref(context: Context): SharedPreferences =
-        context.getSharedPreferences(ConstantUtils.globalSharedPreferencesFileKey, Context.MODE_PRIVATE)
+        context.getSharedPreferences(
+            ConstantUtils.globalSharedPreferencesFileKey,
+            Context.MODE_PRIVATE
+        )
 }

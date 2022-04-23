@@ -7,7 +7,7 @@ object AudioUtils {
         NONE(0, "None"),
         MELANCHOLIC(0, "Melancholic"),
         NOSTALGIC(0, "Nostalgic"),
-        RELAXING(R.raw.rain, "Relaxing"),
+        RELAXING(R.raw.when_the_love_falls, "Relaxing"),
         SOOTHING(0, "Soothing"),
         FOCUS(0, "Focus"),
         CINEMATIC(0, "Cinematic");

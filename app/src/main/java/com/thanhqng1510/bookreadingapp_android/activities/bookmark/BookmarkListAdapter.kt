@@ -15,7 +15,10 @@ import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmar
 import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.BookmarkWithBookDiffCallBack
 import com.thanhqng1510.bookreadingapp_android.utils.FileUtils
 
-internal class BookmarkListAdapter(private val context: Context, val onItemClick: (View, Int) -> Unit) :
+internal class BookmarkListAdapter(
+    private val context: Context,
+    val onItemClick: (View, Int) -> Unit
+) :
     ListAdapter<Bookmark.BookmarkWithBook, BookmarkListAdapter.ViewHolder>(
         AsyncDifferConfig.Builder(
             BookmarkWithBookDiffCallBack()
@@ -42,7 +45,8 @@ internal class BookmarkListAdapter(private val context: Context, val onItemClick
 
         holder.run {
             bookTitle.text = data.book.title
-            page.text = context.getString(R.string.bookmark_page, data.bookmark.page, data.book.numPages)
+            page.text =
+                context.getString(R.string.bookmark_page, data.bookmark.page, data.book.numPages)
 
             if (data.book.status == Book.STATUS.ERROR)
                 status.setImageResource(R.drawable.error_status_light)

@@ -1,13 +1,14 @@
 package com.thanhqng1510.bookreadingapp_android.activities.reader
 
 import android.app.Application
-import android.media.SoundPool
+import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.models.entities.bookmarks.Bookmark
+import com.thanhqng1510.bookreadingapp_android.services.SoundService
 import com.thanhqng1510.bookreadingapp_android.utils.AudioUtils
 import com.thanhqng1510.bookreadingapp_android.utils.ConstantUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -24,12 +25,9 @@ class ReaderViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
     lateinit var bookData: Book
 
-    // Null => not currently playing
-    // Not null => audio is playing
-    private var ambientPlayer: SoundPool? = null
-
     override fun onCleared() {
         stopAmbientSound()
+        closeBook()
         super.onCleared()
     }
 
@@ -43,45 +41,33 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
-    // Do not launch coroutine here as this method is call in onStop -> coroutine will be cancel
-    // Update with database lifecycle scope instead
-    fun closeBook() {
-        bookData.lastRead = LocalDateTime.now()
-        dataStore.updateBookAsync(bookData)
-    }
-
     fun playAmbientSoundAsync() {
-        if (ambientPlayer != null)
-            return
-
         viewModelScope.launch {
             dataStore.getSelectedAmbientSoundAsync(getApplication()).await()?.let { ambientSound ->
                 if (ambientSound == AudioUtils.AMBIENT.NONE)
                     return@let
 
-                ambientPlayer = SoundPool.Builder().setMaxStreams(1).build()
-                ambientPlayer?.setOnLoadCompleteListener { player, sampleId, _ ->
-                    player.play(sampleId, 1.0f, 1.0f, 1, -1, 1.0f)
-                }
-                ambientPlayer?.load(
-                    getApplication(),
-                    ambientSound.resId,
-                    1
-                )
+                val service = Intent(getApplication(), SoundService::class.java)
+                service.putExtra(SoundService.rawResIdExtra, ambientSound.resId)
+                getApplication<Application>().startService(service)
             }
         }
     }
 
-    fun stopAmbientSound() {
-        ambientPlayer?.release()
-        ambientPlayer = null
-    }
-
-    fun addBookMark() = dataStore.insertBookmarkAsync(
+    fun addBookmark() = dataStore.insertBookmarkAsync(
         Bookmark(
             bookData.currentPage,
             bookData.id,
             LocalDateTime.now()
         )
     )
+
+    // Do not launch coroutine here as this method is call in onStop -> coroutine will be cancel
+    // Update with database lifecycle scope instead
+    private fun closeBook() {
+        bookData.lastRead = LocalDateTime.now()
+        dataStore.updateBookAsync(bookData)
+    }
+
+    private fun stopAmbientSound() = getApplication<Application>().stopService(Intent(getApplication(), SoundService::class.java))
 }

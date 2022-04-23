@@ -47,11 +47,6 @@ class ReaderActivity : BaseActivity() {
         viewModel.playAmbientSoundAsync()
     }
 
-    override fun onPause() {
-        viewModel.closeBook()
-        super.onPause()
-    }
-
     override fun setupBindings(savedInstanceState: Bundle?) {
         bindings = ActivityReaderBinding.inflate(layoutInflater)
         setContentView(bindings.root)
@@ -66,7 +61,7 @@ class ReaderActivity : BaseActivity() {
         bindings.backBtn.setOnClickListener { finish() }
         bindings.bookmarkBtn.setOnClickListener {
             waitJobShowProcessingOverlayAsync {
-                viewModel.addBookMark()
+                viewModel.addBookmark()
                 return@waitJobShowProcessingOverlayAsync ConstantUtils.bookmarkAddedFriendly
             }
         }
