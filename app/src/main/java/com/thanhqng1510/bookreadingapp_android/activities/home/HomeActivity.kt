@@ -1,4 +1,3 @@
-// TODO: hide nav this on scroll
 package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
@@ -76,6 +75,6 @@ class HomeActivity : DefaultActivity() {
         supportFragmentManager.commit {
             setReorderingAllowed(true)
             replace(R.id.page_fragment, fragmentProvider.provideFragment())
-            // TODO: Do not replace
+            // TODO: Replace is ok for now since fragments don't contain any data to be reloaded
         }
 }
