@@ -62,28 +62,22 @@ class HomeActivity : DefaultActivity() {
     }
 
     private fun setCurrentPage(provider: FragmentProvider) {
-        // TODO: Refactor this
         provider.getTag().let { toAdd ->
-            if (!addedFragments.containsKey(toAdd)) {
-                val fragment = provider.getFragment()
+            val fragment =
+                if (!addedFragments.containsKey(toAdd)) provider.getFragment() else addedFragments[toAdd]
+            val prevFragment = currentFragment
+            currentFragment = fragment
 
-                supportFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    currentFragment?.run { hide(this) }
+            supportFragmentManager.commit {
+                fragment as Fragment
+
+                setReorderingAllowed(true)
+                prevFragment?.run { hide(this) }
+
+                if (!addedFragments.containsKey(toAdd))
                     add(R.id.page_fragment, fragment)
-                }
-
-                currentFragment = fragment
-            } else {
-                val fragment = addedFragments[toAdd] ?: throw IllegalArgumentException()
-
-                supportFragmentManager.commit {
-                    setReorderingAllowed(true)
-                    currentFragment?.run { hide(this) }
+                else
                     show(fragment)
-                }
-
-                currentFragment = fragment
             }
         }
     }

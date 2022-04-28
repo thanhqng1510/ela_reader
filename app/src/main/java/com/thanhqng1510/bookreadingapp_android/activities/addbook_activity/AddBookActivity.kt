@@ -1,11 +1,9 @@
 package com.thanhqng1510.bookreadingapp_android.activities.addbook_activity
 
-import android.content.Context
-import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.OpenableColumns
-import androidx.activity.result.contract.ActivityResultContracts.OpenDocument
+import androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDocuments
 import androidx.activity.viewModels
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
@@ -25,26 +23,21 @@ class AddBookActivity : DefaultActivity() {
 
     private lateinit var bindings: ActivityAddBooksBinding
 
-    private val selectFileLauncher = registerForActivityResult(object : OpenDocument() {
-        override fun createIntent(context: Context, input: Array<String>): Intent =
-            super.createIntent(context, input).addCategory(Intent.CATEGORY_OPENABLE)
-        // TODO: Support select multiple files
-    }) { nullableUri ->
-        nullableUri?.let { uri ->
-            contentResolver.getType(uri)?.let { fileType ->
-                contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                    cursor.moveToFirst()
-                    cursor.getString(nameIndex)
-                }?.let { fileName ->
-                    waitJobShowProgressOverlayAsync {
-                        addBook(fileName, fileType, uri)
-                    }
+    private val selectFileLauncher = registerForActivityResult(OpenMultipleDocuments()) { uriList ->
+        waitJobShowProgressOverlayAsync {
+            uriList.forEach { uri ->
+                contentResolver.getType(uri)?.let { fileType ->
+                    contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                        val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                        cursor.moveToFirst()
+                        cursor.getString(nameIndex)
+                    }?.let { fileName -> addBook(fileName, fileType, uri) }
+                } ?: run {
+                    logUtil.error("Failed to get file info when add book", true)
+                    showSnackbar(ConstantUtils.bookAddFailedFriendly)
                 }
-            } ?: run {
-                logUtil.error("Failed to get file info when add book", true)
-                showSnackbar(ConstantUtils.bookAddFailedFriendly)
             }
+            ConstantUtils.bookAddedFriendly
         }
     }
 
