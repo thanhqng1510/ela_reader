@@ -24,7 +24,7 @@ data class Book(
     var fileUri: Uri,
     var sharingSessionId: UUID?
 ) : UIModel<Book> {
-    enum class STATUS {
+    enum class BookStatus {
         NEW, READING, FINISHED, ERROR
     }
 
@@ -44,15 +44,15 @@ data class Book(
             field = value.coerceIn(1, numPages)
         }
 
-    val status: STATUS
+    val status: BookStatus
         get() {
             if (!fileUri.isExist())
-                return STATUS.ERROR
+                return BookStatus.ERROR
             if (lastRead == null)
-                return STATUS.NEW
+                return BookStatus.NEW
             if (currentPage == numPages)
-                return STATUS.FINISHED
-            return STATUS.READING
+                return BookStatus.FINISHED
+            return BookStatus.READING
         }
 
     override fun areItemsTheSame(other: Book) = id == other.id

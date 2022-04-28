@@ -42,7 +42,7 @@ class ReaderViewModel @Inject constructor(
 
     fun playAmbientSoundAsync() = viewModelScope.launch {
         dataStore.getSelectedAmbientSoundAsync(getApplication()).await().let { ambientSound ->
-            if (ambientSound == AmbientSoundPlayerService.AMBIENT.NONE)
+            if (ambientSound == AmbientSoundPlayerService.AmbientSoundType.NONE)
                 return@let
 
             val service = Intent(getApplication(), AmbientSoundPlayerService::class.java)

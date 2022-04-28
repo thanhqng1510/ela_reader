@@ -14,14 +14,15 @@ class BookmarkListSortOptionSpinnerAdapter(
     context: Context
 ) :
     ArrayAdapter<String>(context, resource, items) {
-    enum class SORTBY(val displayStr: String) {
+    enum class SortOption(val displayStr: String) {
         DATE_ADDED("Date added"),
         TITLE("Title");
 
         companion object {
-            fun forIndex(idx: Int): SORTBY = values().run { this[idx.coerceIn(0, this.size - 1)] }
+            fun forIndex(idx: Int): SortOption =
+                values().run { this[idx.coerceIn(0, this.size - 1)] }
 
-            fun default(): SORTBY = DATE_ADDED
+            fun default(): SortOption = DATE_ADDED
         }
     }
 

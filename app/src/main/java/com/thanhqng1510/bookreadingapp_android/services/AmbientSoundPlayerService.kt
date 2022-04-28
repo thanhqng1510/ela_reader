@@ -10,7 +10,7 @@ import com.thanhqng1510.bookreadingapp_android.R
  * Service to manage and play ambient sounds while reading books
  */
 class AmbientSoundPlayerService : Service() {
-    enum class AMBIENT(val resId: Int, val displayStr: String) {
+    enum class AmbientSoundType(val resId: Int, val displayStr: String) {
         NONE(0, "None"),
         MELANCHOLIC(0, "Melancholic"),
         NOSTALGIC(0, "Nostalgic"),

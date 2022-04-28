@@ -2,12 +2,11 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.commit
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook_activity.AddBookActivity
 import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
-import com.thanhqng1510.bookreadingapp_android.activities.home.bookmarks.BookmarksFragment
-import com.thanhqng1510.bookreadingapp_android.activities.home.library.LibraryFragment
 import com.thanhqng1510.bookreadingapp_android.activities.settings_activity.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
 import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.FragmentProvider
@@ -15,25 +14,16 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeActivity : DefaultActivity() {
-    enum class PAGE : FragmentProvider {
-        LIBRARY {
-            override fun provideFragment() = LibraryFragment()
-        },
-
-        // SHARING,
-        // NOTES,
-        BOOKMARKS {
-            override fun provideFragment() = BookmarksFragment()
-        }
-    }
-
     /// Bindings
     private lateinit var bindings: ActivityHomeBinding
+
+    private val addedFragments = mutableMapOf<String, Fragment>()
+    private var currentFragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bindings.bottomNavigation.selectedItemId =
-            R.id.library_page // Need to set here so our listener will be called
+            HomeFragment.LIBRARY.getLayoutResourceId() // Need to set here so our listener will be called
     }
 
     override fun setupBindings(savedInstanceState: Bundle?) {
@@ -58,12 +48,12 @@ class HomeActivity : DefaultActivity() {
         bindings.refreshLayout.setOnRefreshListener { bindings.refreshLayout.isRefreshing = false }
         bindings.bottomNavigation.setOnItemSelectedListener { item ->
             return@setOnItemSelectedListener when (item.itemId) {
-                R.id.library_page -> {
-                    setCurrentPage(PAGE.LIBRARY)
+                HomeFragment.LIBRARY.getLayoutResourceId() -> {
+                    setCurrentPage(HomeFragment.LIBRARY)
                     true
                 }
-                R.id.bookmarks_page -> {
-                    setCurrentPage(PAGE.BOOKMARKS)
+                HomeFragment.BOOKMARKS.getLayoutResourceId() -> {
+                    setCurrentPage(HomeFragment.BOOKMARKS)
                     true
                 }
                 else -> false
@@ -71,10 +61,30 @@ class HomeActivity : DefaultActivity() {
         }
     }
 
-    private fun setCurrentPage(fragmentProvider: FragmentProvider) =
-        supportFragmentManager.commit {
-            setReorderingAllowed(true)
-            replace(R.id.page_fragment, fragmentProvider.provideFragment())
-            // TODO: Replace is ok for now since fragments don't contain any data to be reloaded
+    private fun setCurrentPage(provider: FragmentProvider) {
+        // TODO: Refactor this
+        provider.getTag().let { toAdd ->
+            if (!addedFragments.containsKey(toAdd)) {
+                val fragment = provider.getFragment()
+
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    currentFragment?.run { hide(this) }
+                    add(R.id.page_fragment, fragment)
+                }
+
+                currentFragment = fragment
+            } else {
+                val fragment = addedFragments[toAdd] ?: throw IllegalArgumentException()
+
+                supportFragmentManager.commit {
+                    setReorderingAllowed(true)
+                    currentFragment?.run { hide(this) }
+                    show(fragment)
+                }
+
+                currentFragment = fragment
+            }
         }
+    }
 }

@@ -24,7 +24,7 @@ class HomeViewModel @Inject constructor() : ViewModel() {
     val bookListFilterStr = MutableStateFlow("")
     val bookmarkListFilterStr = MutableStateFlow("")
 
-    val bookListSortOpt = MutableStateFlow(BookListSortOptionSpinnerAdapter.SORTBY.default())
+    val bookListSortOpt = MutableStateFlow(BookListSortOptionSpinnerAdapter.SortOption.default())
     val bookmarkListSortOpt =
-        MutableStateFlow(BookmarkListSortOptionSpinnerAdapter.SORTBY.default())
+        MutableStateFlow(BookmarkListSortOptionSpinnerAdapter.SortOption.default())
 }

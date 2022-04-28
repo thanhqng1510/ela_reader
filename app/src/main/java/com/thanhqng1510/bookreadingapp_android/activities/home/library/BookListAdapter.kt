@@ -43,9 +43,9 @@ class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
             author.text = book.authors.joinToString(", ")
 
             when (book.status) {
-                Book.STATUS.NEW -> status.setImageResource(R.drawable.new_status_light)
-                Book.STATUS.READING -> status.setImageResource(R.drawable.reading_status_light)
-                Book.STATUS.ERROR -> status.setImageResource(R.drawable.error_status_light)
+                Book.BookStatus.NEW -> status.setImageResource(R.drawable.new_status_light)
+                Book.BookStatus.READING -> status.setImageResource(R.drawable.reading_status_light)
+                Book.BookStatus.ERROR -> status.setImageResource(R.drawable.error_status_light)
                 else -> {}
             }
 

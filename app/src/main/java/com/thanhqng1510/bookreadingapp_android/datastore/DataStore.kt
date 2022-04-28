@@ -91,11 +91,14 @@ class DataStore @Inject constructor(
     fun getSelectedAmbientSoundAsync(context: Context) = scope.async {
         return@async sharedPrefHelper.sharedPref(context)
             .getString(ConstantUtils.ambientSoundSharedPreferenceKey, null)
-            ?.let { return@let AmbientSoundPlayerService.AMBIENT.fromStr(it) }
-            ?: AmbientSoundPlayerService.AMBIENT.RELAXING // TODO: Default as this sound for now
+            ?.let { return@let AmbientSoundPlayerService.AmbientSoundType.fromStr(it) }
+            ?: AmbientSoundPlayerService.AmbientSoundType.RELAXING // TODO: Default as this sound for now
     }
 
-    fun setSelectedAmbientSoundAsync(context: Context, ambient: AmbientSoundPlayerService.AMBIENT) =
+    fun setSelectedAmbientSoundAsync(
+        context: Context,
+        ambient: AmbientSoundPlayerService.AmbientSoundType
+    ) =
         scope.launch {
             with(sharedPrefHelper.sharedPref(context).edit()) {
                 putString(ConstantUtils.ambientSoundSharedPreferenceKey, ambient.displayStr)

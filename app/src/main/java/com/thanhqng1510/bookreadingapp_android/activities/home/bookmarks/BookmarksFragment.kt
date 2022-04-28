@@ -102,7 +102,7 @@ class BookmarksFragment : DefaultFragment() {
 
     override fun setupBindings(savedInstanceState: Bundle?) {
         sortSpinnerAdapter =
-            BookmarkListSortOptionSpinnerAdapter.SORTBY.values().map { it.displayStr }
+            BookmarkListSortOptionSpinnerAdapter.SortOption.values().map { it.displayStr }
                 .let { sortOptionList ->
                     BookmarkListSortOptionSpinnerAdapter(
                         bindings.sortOptionSpinner,
@@ -121,7 +121,7 @@ class BookmarksFragment : DefaultFragment() {
             override fun onItemClick(view: View, position: Int) {
                 val data = viewModel.bookmarkListDisplayData.value[position]
 
-                if (data.book.status == Book.STATUS.ERROR) {
+                if (data.book.status == Book.BookStatus.ERROR) {
                     (activity as DefaultActivity).showSnackbar(ConstantUtils.bookmarkFetchFailedFriendly)
                     return
                 }
@@ -168,7 +168,7 @@ class BookmarksFragment : DefaultFragment() {
                     id: Long
                 ) {
                     viewModel.bookmarkListSortOpt.value =
-                        BookmarkListSortOptionSpinnerAdapter.SORTBY.forIndex(pos)
+                        BookmarkListSortOptionSpinnerAdapter.SortOption.forIndex(pos)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -269,8 +269,8 @@ class BookmarksFragment : DefaultFragment() {
             return list
 
         return when (viewModel.bookmarkListSortOpt.value) {
-            BookmarkListSortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> list.sortedByDescending { it.bookmark.dateAdded }
-            BookmarkListSortOptionSpinnerAdapter.SORTBY.TITLE -> list.sortedBy { it.book.title }
+            BookmarkListSortOptionSpinnerAdapter.SortOption.DATE_ADDED -> list.sortedByDescending { it.bookmark.dateAdded }
+            BookmarkListSortOptionSpinnerAdapter.SortOption.TITLE -> list.sortedBy { it.book.title }
         }
     }
 

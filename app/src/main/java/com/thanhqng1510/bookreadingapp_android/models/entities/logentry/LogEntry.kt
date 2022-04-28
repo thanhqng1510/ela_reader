@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 @Entity(tableName = "logentries")
 @TypeConverters(SharedConverters::class, LogEntryConverter::class)
 data class LogEntry(
-    val level: LogUtil.LOGLEVEL,
+    val level: LogUtil.LogLevel,
     val timeStamp: LocalDateTime,
     val threadId: Long,
     val threadName: String,

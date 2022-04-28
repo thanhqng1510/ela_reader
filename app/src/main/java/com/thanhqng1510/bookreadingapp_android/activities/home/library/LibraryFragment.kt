@@ -107,7 +107,7 @@ class LibraryFragment : DefaultFragment() {
 
     override fun setupBindings(savedInstanceState: Bundle?) {
         sortSpinnerAdapter =
-            BookListSortOptionSpinnerAdapter.SORTBY.values().map { it.displayStr }
+            BookListSortOptionSpinnerAdapter.SortOption.values().map { it.displayStr }
                 .let { sortOptionList ->
                     BookListSortOptionSpinnerAdapter(
                         bindings.sortOptionSpinner,
@@ -126,7 +126,7 @@ class LibraryFragment : DefaultFragment() {
             override fun onItemClick(view: View, position: Int) {
                 val bookData = viewModel.bookListDisplayData.value[position]
 
-                if (bookData.status == Book.STATUS.ERROR) {
+                if (bookData.status == Book.BookStatus.ERROR) {
                     (activity as BaseActivity).showSnackbar(ConstantUtils.bookFetchFailedFriendly)
                     return
                 }
@@ -173,7 +173,7 @@ class LibraryFragment : DefaultFragment() {
                     id: Long
                 ) {
                     viewModel.bookListSortOpt.value =
-                        BookListSortOptionSpinnerAdapter.SORTBY.forIndex(pos)
+                        BookListSortOptionSpinnerAdapter.SortOption.forIndex(pos)
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -272,11 +272,11 @@ class LibraryFragment : DefaultFragment() {
             return list
 
         return when (viewModel.bookListSortOpt.value) {
-            BookListSortOptionSpinnerAdapter.SORTBY.LAST_READ -> list.sortedByDescending {
+            BookListSortOptionSpinnerAdapter.SortOption.LAST_READ -> list.sortedByDescending {
                 it.lastRead ?: LocalDateTime.MIN
             }
-            BookListSortOptionSpinnerAdapter.SORTBY.DATE_ADDED -> list.sortedByDescending { it.dateAdded }
-            BookListSortOptionSpinnerAdapter.SORTBY.TITLE -> list.sortedBy { it.title }
+            BookListSortOptionSpinnerAdapter.SortOption.DATE_ADDED -> list.sortedByDescending { it.dateAdded }
+            BookListSortOptionSpinnerAdapter.SortOption.TITLE -> list.sortedBy { it.title }
         }
     }
 

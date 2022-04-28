@@ -68,7 +68,6 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/page_fragment"
-                android:name="com.thanhqng1510.bookreadingapp_android.activities.home.library.LibraryFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -14,21 +14,21 @@ class LogUtil @Inject constructor(
 ) {
     private val scope = CoroutineScope(Dispatchers.Default)
 
-    enum class LOGLEVEL(val tag: String) {
+    enum class LogLevel(val tag: String) {
         INFO("Info"),
         ERROR("Error");
 
         companion object {
-            fun forTag(tag: String): LOGLEVEL? = values().find { it.tag == tag }
+            fun forTag(tag: String): LogLevel? = values().find { it.tag == tag }
         }
     }
 
-    fun info(message: String) = log(LOGLEVEL.INFO, message, false)
+    fun info(message: String) = log(LogLevel.INFO, message, false)
 
     fun error(message: String, includeStackTrace: Boolean) =
-        log(LOGLEVEL.ERROR, message, includeStackTrace)
+        log(LogLevel.ERROR, message, includeStackTrace)
 
-    private fun log(level: LOGLEVEL, message: String, includeThreadInfo: Boolean) = scope.launch {
+    private fun log(level: LogLevel, message: String, includeThreadInfo: Boolean) = scope.launch {
         logStore.logEntryDao().insert(
             LogEntry(
                 level, LocalDateTime.now(),

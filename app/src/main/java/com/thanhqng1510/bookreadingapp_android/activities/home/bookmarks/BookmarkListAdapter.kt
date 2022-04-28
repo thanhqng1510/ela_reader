@@ -46,7 +46,7 @@ class BookmarkListAdapter(private val context: Context) :
             page.text =
                 context.getString(R.string.bookmark_page, data.bookmark.page, data.book.numPages)
 
-            if (data.book.status == Book.STATUS.ERROR)
+            if (data.book.status == Book.BookStatus.ERROR)
                 status.setImageResource(R.drawable.error_status_light)
 
             data.book.thumbnailUri.let {
