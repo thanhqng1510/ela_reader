@@ -23,6 +23,9 @@ object ActivityUtils {
             })
     }
 
-    fun CoordinatorLayout.showSnackbar(message: String, duration: Int) =
-        Snackbar.make(this, message, duration).show()
+    fun CoordinatorLayout.showSnackbar(message: String, duration: Int, anchor: View?) {
+        val snackBar = Snackbar.make(this, message, duration)
+        anchor?.let { snackBar.anchorView = it }
+        snackBar.show()
+    }
 }

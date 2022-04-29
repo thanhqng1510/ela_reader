@@ -7,16 +7,16 @@ import androidx.lifecycle.whenStarted
 import com.danjdt.pdfviewer.PdfViewer
 import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityReaderBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
+import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ReaderActivity : DefaultActivity() {
+class ReaderActivity : BaseActivity() {
     companion object {
         const val bookIdExtra = "bookIdExtra"
         const val bookPageExtra = "bookPageExtra"

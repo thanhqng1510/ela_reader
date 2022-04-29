@@ -13,8 +13,6 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultFragment
 import com.thanhqng1510.bookreadingapp_android.activities.home.HomeViewModel
 import com.thanhqng1510.bookreadingapp_android.activities.reader_activity.ReaderActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.FragmentBookmarksBinding
@@ -22,8 +20,9 @@ import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.models.entities.bookmark.BookmarkWithBook
 import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.BaseActivity
+import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.EasyActivity
 import com.thanhqng1510.bookreadingapp_android.utils.constant_utils.ConstantUtils
-import com.thanhqng1510.bookreadingapp_android.utils.coroutine_utils.CoroutineUtils.retry
+import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.RefreshableBaseFragment
 import com.thanhqng1510.bookreadingapp_android.utils.listener_utils.IOnItemClickAdapterPositionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -36,7 +35,7 @@ import javax.inject.Inject
 import kotlin.streams.toList
 
 @AndroidEntryPoint
-class BookmarksFragment : DefaultFragment() {
+class BookmarksFragment : RefreshableBaseFragment() {
     @Inject
     lateinit var dataStore: DataStore
 
@@ -61,7 +60,7 @@ class BookmarksFragment : DefaultFragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.getStringExtra(ReaderActivity.showBookResultExtra)?.let {
-                    (activity as BaseActivity).showSnackbar(it)
+                    (activity as EasyActivity).showSnackbar(it)
                 }
             }
         }
@@ -75,13 +74,18 @@ class BookmarksFragment : DefaultFragment() {
         _bindings = null
     }
 
+    override suspend fun refresh() {
+        collectBookmarkListDataJob.cancel()
+        collectBookmarkListDataJob = collectBookmarkListDataAsync()
+    }
+
     override fun onCreateContextMenu(
         menu: ContextMenu,
         v: View,
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        if (v.id == R.id.bookmark_list) {
+        if (v.id == bindings.bookmarkList.id) {
             (activity as Activity).menuInflater.inflate(R.menu.bookmark_list_menu, menu)
         }
     }
@@ -90,7 +94,7 @@ class BookmarksFragment : DefaultFragment() {
         return when (item.itemId) {
             R.id.delete_bookmark -> {
                 bookmarkListAdapter.longClickedPos?.let {
-                    (activity as DefaultActivity).waitJobShowProgressOverlayAsync {
+                    (activity as BaseActivity).waitJobShowProgressOverlayAsync {
                         deleteBookmarkAtIndexAsync(it).await()
                     }
                 }
@@ -122,7 +126,7 @@ class BookmarksFragment : DefaultFragment() {
                 val data = viewModel.bookmarkListDisplayData.value[position]
 
                 if (data.book.status == Book.BookStatus.ERROR) {
-                    (activity as DefaultActivity).showSnackbar(ConstantUtils.bookmarkFetchFailedFriendly)
+                    (activity as BaseActivity).showSnackbar(ConstantUtils.bookmarkFetchFailedFriendly)
                     return
                 }
 
@@ -137,12 +141,6 @@ class BookmarksFragment : DefaultFragment() {
         registerForContextMenu(bindings.bookmarkList)
 
         bindings.searchBar.setQuery(viewModel.bookmarkListFilterStr.value, false)
-
-//        viewModel.onRefreshTriggeredListener = {
-//            collectViewModelDataJob.cancel()
-//            viewModel.refreshLibrary()
-//            collectViewModelDataJob = collectViewModelDataAsync()
-//        }
     }
 
     override fun setupCollectors() {
@@ -190,17 +188,22 @@ class BookmarksFragment : DefaultFragment() {
 
     // Collect job
     private fun collectBookmarkListDataAsync(): Job {
-        if (viewModel.bookmarkListData == null)
-            viewModel.bookmarkListData = dataStore.getAllBookmarksWithBookAsFlow()
-                .stateIn(viewModel.viewModelScope, SharingStarted.Eagerly, emptyList())
+        viewModel.bookmarkListData = dataStore.getAllBookmarksWithBookAsFlow()
+            .stateIn(viewModel.viewModelScope, SharingStarted.Eagerly, emptyList())
 
         return lifecycleScope.launch {
             whenStarted {
-                retry(100, 10) {
-                    viewModel.bookmarkListData?.collectLatest {
+                launch {
+                    viewModel.bookmarkListData.collectLatest {
+                        if (it.isEmpty()) showEmptyListView()
+                        else showPopulatedListView()
+                    }
+                }
+                launch {
+                    viewModel.bookmarkListData.collectLatest {
                         viewModel.bookmarkListDisplayData.value =
                             sortedBookmarkList(filteredBookmarkList(it))
-                    } != null
+                    }
                 }
             }
         }
@@ -209,14 +212,6 @@ class BookmarksFragment : DefaultFragment() {
     private fun collectDisplayDataAsync() = lifecycleScope.launch {
         whenStarted {
             launch {
-                retry(100, 10) {
-                    viewModel.bookmarkListData?.collectLatest {
-                        if (it.isEmpty()) showEmptyListView()
-                        else showPopulatedListView()
-                    } != null
-                }
-            }
-            launch {
                 viewModel.bookmarkListDisplayData.collectLatest {
                     bookmarkListAdapter.submitList(it)
                     bindings.bookmarkCount.text = getString(R.string.num_bookmarks, it.size)
@@ -224,10 +219,8 @@ class BookmarksFragment : DefaultFragment() {
             }
             launch {
                 viewModel.bookmarkListFilterStr.collectLatest {
-                    viewModel.bookmarkListData?.value?.let {
-                        viewModel.bookmarkListDisplayData.value =
-                            sortedBookmarkList(filteredBookmarkList(it))
-                    }
+                    viewModel.bookmarkListDisplayData.value =
+                        sortedBookmarkList(filteredBookmarkList(viewModel.bookmarkListData.value))
                 }
             }
             launch {
@@ -237,12 +230,6 @@ class BookmarksFragment : DefaultFragment() {
                 }
             }
         }
-    }
-
-    // Refresh helper
-    fun refreshLibrary() {
-        collectBookmarkListDataJob.cancel()
-        collectBookmarkListDataJob = collectBookmarkListDataAsync()
     }
 
     // Filter helper

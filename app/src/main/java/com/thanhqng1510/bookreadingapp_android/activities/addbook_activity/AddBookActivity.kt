@@ -6,15 +6,15 @@ import android.provider.OpenableColumns
 import androidx.activity.result.contract.ActivityResultContracts.OpenMultipleDocuments
 import androidx.activity.viewModels
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityAddBooksBinding
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
+import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.BaseActivity
 import com.thanhqng1510.bookreadingapp_android.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddBookActivity : DefaultActivity() {
+class AddBookActivity : BaseActivity() {
     @Inject
     lateinit var logUtil: LogUtil
 
@@ -25,8 +25,10 @@ class AddBookActivity : DefaultActivity() {
 
     private val selectFileLauncher = registerForActivityResult(OpenMultipleDocuments()) { uriList ->
         waitJobShowProgressOverlayAsync {
+            var succeeded = true
             uriList.forEach { uri ->
-                contentResolver.getType(uri)?.let { fileType ->
+                // Use and() instead of && so the expression is not skipped if succeeded is false
+                succeeded = succeeded.and(contentResolver.getType(uri)?.let { fileType ->
                     contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                         val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
                         cursor.moveToFirst()
@@ -35,9 +37,13 @@ class AddBookActivity : DefaultActivity() {
                 } ?: run {
                     logUtil.error("Failed to get file info when add book", true)
                     showSnackbar(ConstantUtils.bookAddFailedFriendly)
-                }
+                    false
+                })
             }
-            ConstantUtils.bookAddedFriendly
+            if (uriList.isNotEmpty()) {
+                if (succeeded) ConstantUtils.bookAddedFriendly
+                else ConstantUtils.bookAddFailedFriendly
+            } else null
         }
     }
 
@@ -71,11 +77,11 @@ class AddBookActivity : DefaultActivity() {
                     .await()
             if (!isSucceed) {
                 logUtil.error("Failed to add book", true)
-                return@let ConstantUtils.bookAddFailedFriendly
+                return@let false
             }
-            ConstantUtils.bookAddedFriendly
+            true
         } ?: run {
         logUtil.error("Failed to copy file to app-specific-dir", true)
-        ConstantUtils.bookAddFailedFriendly
+        false
     }
 }

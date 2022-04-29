@@ -2,28 +2,39 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import androidx.activity.viewModels
 import androidx.fragment.app.commit
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.whenStarted
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.addbook_activity.AddBookActivity
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
 import com.thanhqng1510.bookreadingapp_android.activities.settings_activity.SettingsActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivityHomeBinding
-import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.FragmentProvider
+import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.BaseActivity
+import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.RefreshableBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeActivity : DefaultActivity() {
-    /// Bindings
+class HomeActivity : BaseActivity() {
+    // View model
+    private val viewModel: HomeViewModel by viewModels()
+
+    // Bindings
     private lateinit var bindings: ActivityHomeBinding
 
-    private val addedFragments = mutableMapOf<String, Fragment>()
-    private var currentFragment: Fragment? = null
+    private val addedFragments = mutableMapOf<HomeFragmentType, RefreshableBaseFragment>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        bindings.bottomNavigation.selectedItemId =
-            HomeFragment.LIBRARY.getLayoutResourceId() // Need to set here so our listener will be called
+
+        viewModel.currentFragmentType?.let {
+            addedFragments[it] =
+                supportFragmentManager.findFragmentByTag(it.getTag()) as RefreshableBaseFragment
+        } ?: run {
+            bindings.bottomNavigation.selectedItemId =
+                HomeFragmentType.LIBRARY.getLayoutResourceId() // Need to set here so our listener will be called
+        }
     }
 
     override fun setupBindings(savedInstanceState: Bundle?) {
@@ -32,6 +43,7 @@ class HomeActivity : DefaultActivity() {
 
         globalCoordinatorLayout = bindings.coordinatorLayout
         progressOverlay = findViewById(R.id.progress_overlay)
+        snackbarAnchor = bindings.bottomNavigation
     }
 
     override fun setupCollectors() {}
@@ -45,15 +57,22 @@ class HomeActivity : DefaultActivity() {
             val intent = Intent(this, AddBookActivity::class.java)
             startActivity(intent)
         }
-        bindings.refreshLayout.setOnRefreshListener { bindings.refreshLayout.isRefreshing = false }
+        bindings.refreshLayout.setOnRefreshListener {
+            lifecycleScope.launch {
+                whenStarted {
+                    addedFragments[viewModel.currentFragmentType]?.refresh()
+                    bindings.refreshLayout.isRefreshing = false
+                }
+            }
+        }
         bindings.bottomNavigation.setOnItemSelectedListener { item ->
             return@setOnItemSelectedListener when (item.itemId) {
-                HomeFragment.LIBRARY.getLayoutResourceId() -> {
-                    setCurrentPage(HomeFragment.LIBRARY)
+                HomeFragmentType.LIBRARY.getLayoutResourceId() -> {
+                    setCurrentPage(HomeFragmentType.LIBRARY)
                     true
                 }
-                HomeFragment.BOOKMARKS.getLayoutResourceId() -> {
-                    setCurrentPage(HomeFragment.BOOKMARKS)
+                HomeFragmentType.BOOKMARKS.getLayoutResourceId() -> {
+                    setCurrentPage(HomeFragmentType.BOOKMARKS)
                     true
                 }
                 else -> false
@@ -61,24 +80,20 @@ class HomeActivity : DefaultActivity() {
         }
     }
 
-    private fun setCurrentPage(provider: FragmentProvider) {
-        provider.getTag().let { toAdd ->
-            val fragment =
-                if (!addedFragments.containsKey(toAdd)) provider.getFragment() else addedFragments[toAdd]
-            val prevFragment = currentFragment
-            currentFragment = fragment
+    private fun setCurrentPage(type: HomeFragmentType) {
+        val fragment = addedFragments[type] ?: type.getFragment()
+        val prevFragmentType = viewModel.currentFragmentType
+        viewModel.currentFragmentType = type
 
-            supportFragmentManager.commit {
-                fragment as Fragment
+        supportFragmentManager.commit {
+            setReorderingAllowed(true)
+            prevFragmentType?.run { hide(addedFragments[this] ?: throw IllegalArgumentException()) }
 
-                setReorderingAllowed(true)
-                prevFragment?.run { hide(this) }
-
-                if (!addedFragments.containsKey(toAdd))
-                    add(R.id.page_fragment, fragment)
-                else
-                    show(fragment)
-            }
+            if (!addedFragments.containsKey(type)) {
+                add(bindings.pageFragment.id, fragment, type.getTag())
+                addedFragments[type] = fragment
+            } else
+                show(fragment)
         }
     }
 }

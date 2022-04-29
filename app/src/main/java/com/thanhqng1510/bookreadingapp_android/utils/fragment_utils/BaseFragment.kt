@@ -4,33 +4,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 
-/**
- * Base fragment interface for a cleaner implementation
- */
-interface BaseFragment {
-    /**
-     * Method to handle view creating
-     */
-    fun setupView(inflater: LayoutInflater, container: ViewGroup?): View?
+abstract class BaseFragment : Fragment(), EasyFragment {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? = setupView(inflater, container)
 
-    /**
-     * Method to handle layout binding and initializing
-     */
-    fun setupBindings(savedInstanceState: Bundle?)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupBindings(savedInstanceState)
+        setupCollectors()
+        setupListeners()
+    }
 
-    /**
-     * Method to handle flow collecting
-     */
-    fun setupCollectors()
-
-    /**
-     * Method to handle event callbacks setup
-     */
-    fun setupListeners()
-
-    /**
-     * Method to handle view destroying
-     */
-    fun cleanUpView()
+    override fun onDestroyView() {
+        cleanUpView()
+        super.onDestroyView()
+    }
 }

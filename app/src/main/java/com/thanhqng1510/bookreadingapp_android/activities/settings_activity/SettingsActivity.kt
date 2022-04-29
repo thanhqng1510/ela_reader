@@ -2,10 +2,10 @@ package com.thanhqng1510.bookreadingapp_android.activities.settings_activity
 
 import android.os.Bundle
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.ActivitySettingsBinding
+import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.BaseActivity
 
-class SettingsActivity : DefaultActivity() {
+class SettingsActivity : BaseActivity() {
     private lateinit var bindings: ActivitySettingsBinding
 
     override fun setupBindings(savedInstanceState: Bundle?) {

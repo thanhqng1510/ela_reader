@@ -12,9 +12,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor() : ViewModel() {
+    // Current attached fragment on HomeActivity
+    // View model can only safe fragment's type not fragment's instance since view model do not own any fragments
+    var currentFragmentType: HomeFragmentType? = null
+
     // All data loaded from DB as flow
-    var bookListData: StateFlow<List<Book>>? = null
-    var bookmarkListData: StateFlow<List<BookmarkWithBook>>? = null
+    lateinit var bookListData: StateFlow<List<Book>>
+    lateinit var bookmarkListData: StateFlow<List<BookmarkWithBook>>
 
     // Portion of data to render on screen only
     val bookListDisplayData = MutableStateFlow<List<Book>>(emptyList())

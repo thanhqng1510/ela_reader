@@ -6,25 +6,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.AsyncDifferConfig
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.models.ModelDiffCallback
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
 import com.thanhqng1510.bookreadingapp_android.models.entities.bookmark.BookmarkWithBook
+import com.thanhqng1510.bookreadingapp_android.utils.adapter_utils.ModelListAdapter
 import com.thanhqng1510.bookreadingapp_android.utils.file_utils.FileUtils.isExist
-import com.thanhqng1510.bookreadingapp_android.utils.listener_utils.IOnItemClickAdapterPositionListener
 
 class BookmarkListAdapter(private val context: Context) :
-    ListAdapter<BookmarkWithBook, BookmarkListAdapter.ViewHolder>(
-        AsyncDifferConfig.Builder(ModelDiffCallback<BookmarkWithBook>()).build()
-    ) {
-    var longClickedPos: Int? = null
-        private set
-
-    lateinit var onItemClickListener: IOnItemClickAdapterPositionListener
-
+    ModelListAdapter<BookmarkWithBook, BookmarkListAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val bookTitle: TextView = view.findViewById(R.id.book_title)
         val cover: ImageView = view.findViewById(R.id.cover)

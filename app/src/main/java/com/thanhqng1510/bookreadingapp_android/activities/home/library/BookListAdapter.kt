@@ -5,23 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.recyclerview.widget.AsyncDifferConfig
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.models.ModelDiffCallback
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
+import com.thanhqng1510.bookreadingapp_android.utils.adapter_utils.ModelListAdapter
 import com.thanhqng1510.bookreadingapp_android.utils.file_utils.FileUtils.isExist
-import com.thanhqng1510.bookreadingapp_android.utils.listener_utils.IOnItemClickAdapterPositionListener
 
-class BookListAdapter : ListAdapter<Book, BookListAdapter.ViewHolder>(
-    AsyncDifferConfig.Builder(ModelDiffCallback<Book>()).build()
-) {
-    var longClickedPos: Int? = null
-        private set
-
-    lateinit var onItemClickListener: IOnItemClickAdapterPositionListener
-
+class BookListAdapter : ModelListAdapter<Book, BookListAdapter.ViewHolder>() {
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val title: TextView = view.findViewById(R.id.title)
         val author: TextView = view.findViewById(R.id.author)

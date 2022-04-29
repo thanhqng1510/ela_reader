@@ -3,9 +3,9 @@ package com.thanhqng1510.bookreadingapp_android.activities.home
 import com.thanhqng1510.bookreadingapp_android.R
 import com.thanhqng1510.bookreadingapp_android.activities.home.bookmarks.BookmarksFragment
 import com.thanhqng1510.bookreadingapp_android.activities.home.library.LibraryFragment
-import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.FragmentProvider
+import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.RefreshableFragmentProvider
 
-enum class HomeFragment : FragmentProvider {
+enum class HomeFragmentType : RefreshableFragmentProvider {
     LIBRARY {
         override fun getFragment() = LibraryFragment()
 

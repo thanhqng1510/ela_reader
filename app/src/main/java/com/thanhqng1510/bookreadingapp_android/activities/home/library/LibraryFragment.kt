@@ -13,18 +13,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.whenStarted
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.thanhqng1510.bookreadingapp_android.R
-import com.thanhqng1510.bookreadingapp_android.activities.default_activity.DefaultFragment
 import com.thanhqng1510.bookreadingapp_android.activities.home.HomeViewModel
 import com.thanhqng1510.bookreadingapp_android.activities.reader_activity.ReaderActivity
 import com.thanhqng1510.bookreadingapp_android.databinding.FragmentLibraryBinding
 import com.thanhqng1510.bookreadingapp_android.datastore.DataStore
 import com.thanhqng1510.bookreadingapp_android.logstore.LogUtil
 import com.thanhqng1510.bookreadingapp_android.models.entities.book.Book
-import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.BaseActivity
+import com.thanhqng1510.bookreadingapp_android.utils.activity_utils.EasyActivity
 import com.thanhqng1510.bookreadingapp_android.utils.constant_utils.ConstantUtils
 import com.thanhqng1510.bookreadingapp_android.utils.coroutine_utils.CoroutineGroup
-import com.thanhqng1510.bookreadingapp_android.utils.coroutine_utils.CoroutineUtils.retry
 import com.thanhqng1510.bookreadingapp_android.utils.file_utils.FilePath
+import com.thanhqng1510.bookreadingapp_android.utils.fragment_utils.RefreshableBaseFragment
 import com.thanhqng1510.bookreadingapp_android.utils.listener_utils.IOnItemClickAdapterPositionListener
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -38,7 +37,7 @@ import javax.inject.Inject
 import kotlin.streams.toList
 
 @AndroidEntryPoint
-class LibraryFragment : DefaultFragment() {
+class LibraryFragment : RefreshableBaseFragment() {
     @Inject
     lateinit var dataStore: DataStore
 
@@ -55,7 +54,7 @@ class LibraryFragment : DefaultFragment() {
     // Bindings
     private var _bindings: FragmentLibraryBinding? = null
 
-    // This property is only valid between onCreateView and onDestroyView.
+    // This property is only valid between onCreateView and onDestroyView
     private val bindings get() = _bindings!!
 
     // Adapters
@@ -66,7 +65,7 @@ class LibraryFragment : DefaultFragment() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 result.data?.getStringExtra(ReaderActivity.showBookResultExtra)?.let {
-                    (activity as BaseActivity).showSnackbar(it)
+                    (activity as EasyActivity).showSnackbar(it)
                 }
             }
         }
@@ -80,13 +79,18 @@ class LibraryFragment : DefaultFragment() {
         _bindings = null
     }
 
+    override suspend fun refresh() {
+        collectBookListDataJob.cancel()
+        collectBookListDataJob = collectBookListDataAsync()
+    }
+
     override fun onCreateContextMenu(
         menu: ContextMenu,
         v: View,
         menuInfo: ContextMenu.ContextMenuInfo?
     ) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        if (v.id == R.id.book_list) {
+        if (v.id == bindings.bookList.id) {
             (activity as Activity).menuInflater.inflate(R.menu.book_list_menu, menu)
         }
     }
@@ -95,7 +99,7 @@ class LibraryFragment : DefaultFragment() {
         return when (item.itemId) {
             R.id.delete_book -> {
                 bookListAdapter.longClickedPos?.let {
-                    (activity as BaseActivity).waitJobShowProgressOverlayAsync {
+                    (activity as EasyActivity).waitJobShowProgressOverlayAsync {
                         deleteBookAtIndexAsync(it).await()
                     }
                 }
@@ -127,7 +131,7 @@ class LibraryFragment : DefaultFragment() {
                 val bookData = viewModel.bookListDisplayData.value[position]
 
                 if (bookData.status == Book.BookStatus.ERROR) {
-                    (activity as BaseActivity).showSnackbar(ConstantUtils.bookFetchFailedFriendly)
+                    (activity as EasyActivity).showSnackbar(ConstantUtils.bookFetchFailedFriendly)
                     return
                 }
 
@@ -141,13 +145,6 @@ class LibraryFragment : DefaultFragment() {
         registerForContextMenu(bindings.bookList)
 
         bindings.searchBar.setQuery(viewModel.bookListFilterStr.value, false)
-
-        // TODO: Refresh feature
-//        viewModel.onRefreshTriggeredListener = {
-//            collectViewModelDataJob.cancel()
-//            viewModel.refreshLibrary()
-//            collectViewModelDataJob = collectViewModelDataAsync()
-//        }
     }
 
     override fun setupCollectors() {
@@ -195,16 +192,21 @@ class LibraryFragment : DefaultFragment() {
 
     // Collect job
     private fun collectBookListDataAsync(): Job {
-        if (viewModel.bookListData == null)
-            viewModel.bookListData = dataStore.getAllBooksAsFlow()
-                .stateIn(viewModel.viewModelScope, SharingStarted.Eagerly, emptyList())
+        viewModel.bookListData = dataStore.getAllBooksAsFlow()
+            .stateIn(viewModel.viewModelScope, SharingStarted.Eagerly, emptyList())
 
         return lifecycleScope.launch {
             whenStarted {
-                retry(100, 10) {
-                    viewModel.bookListData?.collectLatest {
+                launch {
+                    viewModel.bookListData.collectLatest {
+                        if (it.isEmpty()) showEmptyListView()
+                        else showPopulatedListView()
+                    }
+                }
+                launch {
+                    viewModel.bookListData.collectLatest {
                         viewModel.bookListDisplayData.value = sortedBookList(filteredBookList(it))
-                    } != null
+                    }
                 }
             }
         }
@@ -213,24 +215,9 @@ class LibraryFragment : DefaultFragment() {
     private fun collectDisplayDataAsync() = lifecycleScope.launch {
         whenStarted {
             launch {
-                retry(100, 10) {
-                    viewModel.bookListData?.collectLatest {
-                        if (it.isEmpty()) showEmptyListView()
-                        else showPopulatedListView()
-                    } != null
-                }
-            }
-            launch {
-                viewModel.bookListDisplayData.collectLatest {
-                    bookListAdapter.submitList(it)
-                    bindings.bookCount.text = getString(R.string.num_books, it.size)
-                }
-            }
-            launch {
                 viewModel.bookListFilterStr.collectLatest {
-                    viewModel.bookListData?.value?.let {
-                        viewModel.bookListDisplayData.value = sortedBookList(filteredBookList(it))
-                    }
+                    viewModel.bookListDisplayData.value =
+                        sortedBookList(filteredBookList(viewModel.bookListData.value))
                 }
             }
             launch {
@@ -239,13 +226,13 @@ class LibraryFragment : DefaultFragment() {
                         sortedBookList(viewModel.bookListDisplayData.value)
                 }
             }
+            launch {
+                viewModel.bookListDisplayData.collectLatest {
+                    bookListAdapter.submitList(it)
+                    bindings.bookCount.text = getString(R.string.num_books, it.size)
+                }
+            }
         }
-    }
-
-    // Refresh helper
-    fun refreshLibrary() {
-        collectBookListDataJob.cancel()
-        collectBookListDataJob = collectBookListDataAsync()
     }
 
     // Filter helper
