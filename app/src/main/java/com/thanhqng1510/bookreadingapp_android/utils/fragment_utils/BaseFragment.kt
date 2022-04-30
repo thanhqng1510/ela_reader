@@ -5,8 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.transition.TransitionInflater
+import com.thanhqng1510.bookreadingapp_android.R
 
 abstract class BaseFragment : Fragment(), EasyFragment {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        TransitionInflater.from(requireContext()).let {
+            enterTransition = it.inflateTransition(R.transition.fade)
+            exitTransition = it.inflateTransition(R.transition.fade)
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
