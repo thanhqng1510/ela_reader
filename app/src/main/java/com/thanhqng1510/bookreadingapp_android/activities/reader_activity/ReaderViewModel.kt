@@ -46,7 +46,7 @@ class ReaderViewModel @Inject constructor(
                 return@let
 
             val service = Intent(getApplication(), AmbientSoundPlayerService::class.java)
-            service.putExtra(AmbientSoundPlayerService.rawResIdExtra, ambientSound.resId)
+            service.putExtra(AmbientSoundPlayerService.arrayRawResIdExtra, ambientSound.resIds)
             getApplication<Application>().startService(service)
         }
     }
