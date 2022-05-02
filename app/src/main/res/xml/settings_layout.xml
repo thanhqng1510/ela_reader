@@ -2,17 +2,17 @@
 
     <PreferenceCategory
         app:key="notifications_category"
-        app:title="Notifications">
+        app:title="Settings">
 
         <SwitchPreferenceCompat
-            app:key="notifications"
-            app:title="Enable message notifications" />
+            app:key="dark_theme_enabler"
+            app:title="Enable dark theme" />
 
     </PreferenceCategory>
 
     <Preference
-        app:key="feedback"
-        app:summary="Report technical issues or suggest new features"
-        app:title="Send feedback" />
+        app:key="alarm_setter"
+        app:summary="Not set"
+        app:title="Set alarm" />
 
 </PreferenceScreen>
