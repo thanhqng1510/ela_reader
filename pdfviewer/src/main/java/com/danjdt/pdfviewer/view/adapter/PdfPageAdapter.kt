@@ -9,13 +9,13 @@ import com.danjdt.pdfviewer.interfaces.PdfRendererInterface
  */
 abstract class PdfPageAdapter<T : PdfPageViewHolder> : RecyclerView.Adapter<T>() {
 
-    lateinit var mPdfRenderer : PdfRendererInterface
+    lateinit var mPdfRenderer: PdfRendererInterface
 
     private var mNumPages: Int = 0
 
-    var mPageSize : Size? = null
+    var mPageSize: Size? = null
 
-    fun setup(pdfRenderer: PdfRendererInterface, pageWidth : Int) {
+    fun setup(pdfRenderer: PdfRendererInterface, pageWidth: Int) {
         this.mPdfRenderer = pdfRenderer
         this.mNumPages = pdfRenderer.getPageCount()
         this.mPageSize = pdfRenderer.getPageSize(pageWidth)

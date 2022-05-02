@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeScreen">
+
+    <fragment
+        android:id="@+id/homeScreen"
+        android:name="com.thanhqng1510.ela_reader.screens.home.HomeScreen"
+        android:label="@string/home_screen_label"
+        tools:layout="@layout/home_screen">
+
+        <action
+            android:id="@+id/action_homeScreen_to_settingsScreen"
+            app:destination="@id/settingsScreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/fade_out" />
+
+        <action
+            android:id="@+id/action_homeScreen_to_addBookScreen"
+            app:destination="@id/addBookScreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/fade_out" />
+
+        <action
+            android:id="@+id/action_homeScreen_to_readerScreen"
+            app:destination="@id/readerScreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addBookScreen"
+        android:name="com.thanhqng1510.ela_reader.screens.add_book.AddBookScreen"
+        android:label="@string/add_book_screen_label"
+        tools:layout="@layout/add_books_screen" />
+
+    <fragment
+        android:id="@+id/settingsScreen"
+        android:name="com.thanhqng1510.ela_reader.screens.settings.SettingsScreen"
+        android:label="@string/settings_screen_label"
+        tools:layout="@layout/settings_screen" />
+
+    <activity
+        android:id="@+id/readerScreen"
+        android:name="com.thanhqng1510.ela_reader.screens.reader.ReaderScreen"
+        android:label="@string/reader_screen_label"
+        tools:layout="@layout/reader_screen">
+
+        <argument
+            android:name="bookId"
+            app:argType="long" />
+
+        <argument
+            android:name="bookPage"
+            app:argType="integer" />
+    </activity>
+</navigation>

@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/cover"
-        android:layout_width="@dimen/listRowCoverWidth"
+        android:layout_width="@dimen/smallCoverWidth"
         android:layout_height="@dimen/listRowHeight"
         android:contentDescription="@string/book_cover_desc"
         app:srcCompat="@mipmap/book_cover_default" />

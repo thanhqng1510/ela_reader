@@ -14,7 +14,11 @@ import com.danjdt.pdfviewer.interfaces.ViewHolderInterface
  * Created by daniel.teixeira on 15/01/19
  */
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
-abstract class PdfPageViewHolder(view: View, val pdfRenderer: PdfRendererInterface, val pageSize: Size?) :
+abstract class PdfPageViewHolder(
+    view: View,
+    val pdfRenderer: PdfRendererInterface,
+    val pageSize: Size?
+) :
     RecyclerView.ViewHolder(view), ViewHolderInterface {
 
     var mPagePosition = -1

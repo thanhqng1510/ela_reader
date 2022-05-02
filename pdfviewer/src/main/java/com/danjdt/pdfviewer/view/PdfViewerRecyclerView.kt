@@ -6,9 +6,7 @@ import android.graphics.Canvas
 import android.os.Build
 import android.view.MotionEvent
 import android.view.ScaleGestureDetector
-import android.view.View
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
@@ -177,7 +175,7 @@ class PdfViewerRecyclerView(context: Context) :
     override fun onScrolled(dx: Int, dy: Int) {
         super.onScrolled(dx, dy)
         val position = (layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
-        if(position != mPosition && position != -1) {
+        if (position != mPosition && position != -1) {
             mPosition = position
             mOnPageChangedListener?.onPageChanged(mPosition + 1, adapter?.itemCount ?: 0)
         }

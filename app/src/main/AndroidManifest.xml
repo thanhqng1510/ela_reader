@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.thanhqng1510.bookreadingapp_android">
+    package="com.thanhqng1510.ela_reader">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -8,36 +8,34 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
-        android:name=".application.MainApplication"
+        android:name="com.thanhqng1510.ela_reader.application.MainApplication"
         android:allowBackup="true"
         android:fullBackupOnly="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.BookReadingApp_Android">
+        android:theme="@style/Theme.ElaReader">
+
         <activity
-            android:name=".activities.home.HomeActivity"
+            android:name="com.thanhqng1510.ela_reader.screens.AppScreen"
             android:exported="true"
             android:windowSoftInputMode="stateAlwaysHidden|adjustPan">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
-            android:name=".activities.addbook_activity.AddBookActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.settings_activity.SettingsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.reader_activity.ReaderActivity"
-            android:exported="false" />
+            android:name="com.thanhqng1510.ela_reader.screens.reader.ReaderScreen"
+            android:exported="false"
+            android:label="@string/reader_screen_label"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan" />
 
         <service
-            android:name=".services.AmbientSoundPlayerService"
+            android:name="com.thanhqng1510.ela_reader.services.AmbientSoundPlayerService"
             android:enabled="true" />
     </application>
 

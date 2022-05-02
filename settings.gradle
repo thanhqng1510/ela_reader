@@ -1,2 +1,2 @@
 include ':app', ':pdfviewer', ':shared'
-rootProject.name = "BookReadingApp_Android"
+rootProject.name = "ela_reader "

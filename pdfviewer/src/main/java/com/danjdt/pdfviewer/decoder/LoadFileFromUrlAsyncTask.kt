@@ -9,7 +9,11 @@ import java.net.URL
  * Created by daniel.teixeira on 23/01/19
  */
 
-class LoadFileFromUrlAsyncTask(private val outFile: File, private val listener: OnLoadFileListener, private val url: String) :
+class LoadFileFromUrlAsyncTask(
+    private val outFile: File,
+    private val listener: OnLoadFileListener,
+    private val url: String
+) :
     AsyncTask<Void, Void, Void>() {
     override fun doInBackground(vararg void: Void?): Void? {
         try {

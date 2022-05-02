@@ -12,8 +12,8 @@ interface PdfRendererInterface {
 
     fun get(listener: PdfRendererListener, position: Int)
 
-    fun getPageCount() : Int
+    fun getPageCount(): Int
 
-    fun getPageSize(width : Int) : Size
+    fun getPageSize(width: Int): Size
 
 }

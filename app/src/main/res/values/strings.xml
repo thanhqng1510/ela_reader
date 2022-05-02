@@ -1,26 +1,36 @@
 <resources>
-    <string name="app_name">BookReadingApp_Android</string>
+    <string name="app_name">Ela Reader</string>
 
-    // Bottom navigation bar
-    <string name="library_page_name">Library</string>
-    <string name="bookmarks_page_name">Bookmarks</string>
-    <string name="notes_page_name">Notes</string>
-    <string name="sharing_page_name">Sharing</string>
-
-    // Shared
+    <!-- Shared -->
     <string name="settings_btn_desc">Settings</string>
     <string name="back_btn_desc">Back</string>
     <string name="book_cover_desc">Book cover</string>
 
-    // Library page
+    <!-- App bar-->
+    <string name="home_screen_label">Home</string>
+    <string name="reader_screen_label">Reader</string>
+    <string name="add_book_screen_label">Add Book</string>
+    <string name="settings_screen_label">Settings</string>
+    <string name="library_tab_label">Library</string>
+    <string name="bookmarks_tab_label">Bookmarks</string>
+    <string name="notes_tab_label">Notes</string>
+    <string name="sharing_tab_label">Sharing</string>
+
+    <!-- Bottom navigation bar-->
+    <string name="library_tab_nav_label">Library</string>
+    <string name="bookmarks_tab_nav_label">Bookmarks</string>
+    <string name="notes_tab_nav_label">Notes</string>
+    <string name="sharing_tab_nav_label">Sharing</string>
+
+    <!-- Library page-->
     <string name="sort_books_btn_desc">Sort books</string>
     <string name="add_book_btn_desc">Add book</string>
     <string name="book_status_img_desc">Book status</string>
     <string name="delete_book_spinner">Delete</string>
     <string name="num_books">%1$d books</string>
-    <string name="empty_book_list_desc">Your bookshelf is empty\nAdd a new book and start reading</string>
+    <string name="empty_book_list_desc">Your bookshelf is empty</string>
 
-    // Bookmarks page
+    <!-- Bookmarks page-->
     <string name="sort_bookmarks_btn_desc">Sort bookmarks</string>
     <string name="add_bookmark_btn_desc">Add bookmark</string>
     <string name="bookmark_status_img_desc">Bookmark status</string>

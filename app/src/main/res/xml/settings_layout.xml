@@ -7,12 +7,10 @@
         <SwitchPreferenceCompat
             app:key="notifications"
             app:title="Enable message notifications" />
-
     </PreferenceCategory>
 
     <Preference
         app:key="feedback"
         app:summary="Report technical issues or suggest new features"
         app:title="Send feedback" />
-
 </PreferenceScreen>

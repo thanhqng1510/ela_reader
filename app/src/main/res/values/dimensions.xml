@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="dropdownListPreferredItemHeight">48dp</dimen>
+    <!-- Text size-->
+    <dimen name="heading1">40sp</dimen>
+    <dimen name="body">20sp</dimen>
+
+    <!-- Component size-->
+    <dimen name="listRowHeight">90dp</dimen>
+    <dimen name="listRowTextMaxWidth">250dp</dimen>
+    <dimen name="dropdownRowHeight">48dp</dimen>
+    <dimen name="smallCoverWidth">60dp</dimen>
+    <dimen name="appBarHeight">70dp</dimen>
+
+    <!-- Component spacing-->
     <dimen name="globalSpacing">20dp</dimen>
     <dimen name="componentSpacing">15dp</dimen>
-
-    <dimen name="heading1Text">40sp</dimen>
-    <dimen name="bodyText">20sp</dimen>
-
-    <dimen name="listRowHeight">90dp</dimen>
-    <dimen name="listRowCoverWidth">60dp</dimen>
-    <dimen name="listRowTextMaxWidth">250dp</dimen>
 </resources>

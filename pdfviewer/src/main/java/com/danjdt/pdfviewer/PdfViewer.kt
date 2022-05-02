@@ -10,8 +10,8 @@ import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.danjdt.pdfviewer.decoder.FileLoader
-import com.danjdt.pdfviewer.interfaces.OnLoadFileListener
 import com.danjdt.pdfviewer.interfaces.OnErrorListener
+import com.danjdt.pdfviewer.interfaces.OnLoadFileListener
 import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
 import com.danjdt.pdfviewer.interfaces.PdfViewInterface
 import com.danjdt.pdfviewer.utils.PdfPageQuality
@@ -19,12 +19,11 @@ import com.danjdt.pdfviewer.view.PdfViewerRecyclerView
 import java.io.File
 import java.io.IOException
 import java.io.InputStream
-import java.lang.Exception
 import kotlin.properties.Delegates
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PdfViewer private constructor(private val rootView: ViewGroup) : OnLoadFileListener {
-    private var context = rootView.context
+    private val context = rootView.context
 
     private var onErrorListener: OnErrorListener? = null
 

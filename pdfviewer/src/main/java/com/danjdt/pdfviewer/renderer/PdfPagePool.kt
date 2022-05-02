@@ -26,7 +26,7 @@ class PdfPagePool {
         }
     }
 
-    fun get(position: Int) : Bitmap? {
+    fun get(position: Int): Bitmap? {
         return mPool[position]
     }
 

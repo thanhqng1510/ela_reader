@@ -16,7 +16,7 @@ class FileLoader {
 
         private const val FILE_NAME = "pdfView.pdf"
 
-        private fun getTempFile(context : Context) : File {
+        private fun getTempFile(context: Context): File {
             return File(context.cacheDir, FILE_NAME)
         }
 
@@ -40,7 +40,13 @@ class FileLoader {
 
         fun loadFile(context: Context, listener: OnLoadFileListener, uri: Uri) {
             val input = context.contentResolver.openInputStream(uri)
-            input?.let { LoadFileFromInputStreamAsyncTask(getTempFile(context), listener, input).execute() }
+            input?.let {
+                LoadFileFromInputStreamAsyncTask(
+                    getTempFile(context),
+                    listener,
+                    input
+                ).execute()
+            }
         }
 
         fun loadFile(context: Context, listener: OnLoadFileListener, input: InputStream) {

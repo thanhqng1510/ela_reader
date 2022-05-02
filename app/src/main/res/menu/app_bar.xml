@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/add_book_btn"
+        android:icon="@drawable/add_light"
+        android:title="@string/add_book_btn_desc"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/settings_btn"
+        android:icon="@drawable/settings_light"
+        android:title="@string/settings_btn_desc"
+        app:showAsAction="ifRoom" />
+</menu>

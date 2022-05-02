@@ -6,5 +6,5 @@ interface PdfRendererListener {
 
     fun onRender(bitmap: Bitmap?, position: Int)
 
-    fun shouldRender(index: Int) : Boolean
+    fun shouldRender(index: Int): Boolean
 }
