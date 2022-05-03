@@ -9,12 +9,12 @@
     <color name="white">#FFFFFF</color>
     <color name="transparent">#00000000</color>
 
-    <color name="blue">#448AFF</color>
-    <color name="blue_dark">#005ECB</color>
-    <color name="blue_light">#83B9FF</color>
-    <color name="pink">#D181FA</color>
-    <color name="pink_dark">#A96DC9</color>
-    <color name="pink_light">#FFA7FF</color>
+    <color name="blue">#407ADC</color>
+    <color name="blue_dark">#0458B8</color>
+    <color name="blue_light">#6C98D1</color>
+    <color name="pink">#CB64FF</color>
+    <color name="pink_dark">#984DBF</color>
+    <color name="pink_light">#CA72CA</color>
     <color name="grey_light">#ECECEC</color>
-    <color name="grey_dark">#505050</color>
+    <color name="grey_dark">#313131</color>
 </resources>

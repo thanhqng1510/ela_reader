@@ -1,9 +1,13 @@
 package com.thanhqng1510.ela_reader.screens.home.bookmarks
 
 import android.app.Activity
+import android.graphics.Color
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.*
 import android.widget.AdapterView
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.get
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -78,6 +82,11 @@ class BookmarksTab : RefreshableBaseFragment() {
         super.onCreateContextMenu(menu, v, menuInfo)
         if (v.id == bindings!!.bookmarkList.id) {
             (activity as Activity).menuInflater.inflate(R.menu.bookmark_clicked, menu)
+
+            val deleteOption = menu[1]
+            deleteOption.title = SpannableString(deleteOption.title).apply {
+                setSpan(ForegroundColorSpan(Color.RED), 0, length, 0)
+            }
         }
     }
 

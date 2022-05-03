@@ -33,7 +33,6 @@
                 app:submitBackground="@null" />
 
             <LinearLayout
-                android:id="@+id/info_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/globalSpacing"
@@ -78,7 +77,7 @@
                 android:id="@+id/book_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/listRowHeight"
+                android:paddingBottom="@dimen/listRowHeight"
                 android:paddingTop="@dimen/componentSpacing" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
