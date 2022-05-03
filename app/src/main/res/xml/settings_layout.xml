@@ -7,12 +7,10 @@
         <SwitchPreferenceCompat
             app:key="dark_theme_enabler"
             app:title="Enable dark theme" />
-
     </PreferenceCategory>
 
     <Preference
         app:key="alarm_setter"
         app:summary="Not set"
         app:title="Set alarm" />
-
 </PreferenceScreen>

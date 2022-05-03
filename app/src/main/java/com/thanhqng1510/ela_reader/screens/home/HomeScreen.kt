@@ -17,6 +17,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 // TODO: There's a bug about status icon
+// TODO: Show scrollbar
+// TODO: Bottom nav bar not show
 @AndroidEntryPoint
 class HomeScreen : BaseFragment() {
     // This property is only valid between onCreateView and onDestroyView

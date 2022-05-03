@@ -25,6 +25,7 @@
                 android:layout_marginHorizontal="@dimen/globalSpacing"
                 android:layout_marginTop="@dimen/componentSpacing"
                 android:background="@drawable/custom_searchview"
+                android:paddingTop="@dimen/componentSpacing"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@null"
                 app:queryHint="Search Here"

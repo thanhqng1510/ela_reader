@@ -12,9 +12,9 @@
     <color name="blue">#448AFF</color>
     <color name="blue_dark">#005ECB</color>
     <color name="blue_light">#83B9FF</color>
-    <color name="pink">#DC9CFC</color>
+    <color name="pink">#D181FA</color>
     <color name="pink_dark">#A96DC9</color>
-    <color name="pink_light">#FFCEFF</color>
+    <color name="pink_light">#FFA7FF</color>
     <color name="grey_light">#ECECEC</color>
     <color name="grey_dark">#505050</color>
 </resources>

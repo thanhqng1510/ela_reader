@@ -26,12 +26,14 @@
                 android:layout_marginHorizontal="@dimen/globalSpacing"
                 android:layout_marginTop="@dimen/componentSpacing"
                 android:background="@drawable/custom_searchview"
+                android:paddingTop="@dimen/componentSpacing"
                 app:iconifiedByDefault="false"
                 app:queryBackground="@null"
                 app:queryHint="Search Here"
                 app:submitBackground="@null" />
 
             <LinearLayout
+                android:id="@+id/info_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/globalSpacing"
@@ -75,9 +77,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/book_list"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/listRowHeight"
-                android:layout_weight="1"
                 android:paddingTop="@dimen/componentSpacing" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
