@@ -14,8 +14,9 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="@dimen/appBarHeight"
         android:background="?attr/colorPrimary"
+        app:buttonGravity="center_vertical"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
@@ -24,7 +25,7 @@
         android:id="@+id/main_body"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginTop="@dimen/appBarHeight"
         android:orientation="vertical"
         android:paddingTop="@dimen/componentSpacing" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -33,6 +33,7 @@
 
     <!-- Bookmarks page-->
     <string name="sort_bookmarks_btn_desc">Sort bookmarks</string>
+    <string name="change_ambient_sound_btn_desc">Change ambient</string>
     <string name="add_bookmark_btn_desc">Add bookmark</string>
     <string name="bookmark_status_img_desc">Bookmark status</string>
     <string name="delete_bookmark_spinner">Delete bookmark</string>

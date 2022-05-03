@@ -19,6 +19,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 
 // TODO: This is an activity for now
+// TODO: Support scrollbar for this and home screen
 @AndroidEntryPoint
 class ReaderScreen : BaseActivity() {
     private val viewModel: ReaderViewModel by viewModels()

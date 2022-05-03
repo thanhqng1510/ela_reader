@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/change_ambient_sound_btn"
+        android:icon="@drawable/ambient_sound_light"
+        android:title="@string/change_ambient_sound_btn_desc"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/add_bookmark_btn"
         android:icon="@drawable/bookmark_collection_light"
         android:title="@string/add_bookmark_btn_desc"

@@ -95,6 +95,7 @@ class LibraryTab : RefreshableBaseFragment() {
             deleteOption.title = SpannableString(deleteOption.title).apply {
                 setSpan(ForegroundColorSpan(Color.RED), 0, length, 0)
             }
+            // TODO: Support overview page
         }
     }
 

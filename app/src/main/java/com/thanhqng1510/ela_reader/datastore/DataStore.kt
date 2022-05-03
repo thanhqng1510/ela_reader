@@ -99,7 +99,7 @@ class DataStore @Inject constructor(
         return@async sharedPrefHelper.sharedPref(context)
             .getString(ConstantUtils.ambientSoundSharedPreferenceKey, null)
             ?.let { return@let AmbientSoundPlayerService.AmbientSoundType.fromStr(it) }
-            ?: AmbientSoundPlayerService.AmbientSoundType.RELAXING // TODO: Default as this sound for now
+            ?: AmbientSoundPlayerService.AmbientSoundType.default()
     }
 
     fun setSelectedAmbientSoundAsync(

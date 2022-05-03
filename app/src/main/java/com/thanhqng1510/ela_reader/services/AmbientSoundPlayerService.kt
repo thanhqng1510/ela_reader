@@ -30,6 +30,8 @@ class AmbientSoundPlayerService : Service() {
 
         companion object {
             fun fromStr(string: String) = values().find { ambient -> ambient.displayStr == string }
+
+            fun default() = SOOTHING
         }
     }
 
