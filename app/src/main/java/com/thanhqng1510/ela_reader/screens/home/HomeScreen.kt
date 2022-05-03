@@ -15,6 +15,7 @@ import com.thanhqng1510.ela_reader.utils.fragment_utils.BaseFragment
 import com.thanhqng1510.ela_reader.utils.fragment_utils.RefreshableBaseFragment
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+
 // TODO: There's a bug about status icon
 @AndroidEntryPoint
 class HomeScreen : BaseFragment() {

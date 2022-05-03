@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.annotation.RawRes
 import androidx.annotation.RequiresApi
+import androidx.recyclerview.widget.LinearSnapHelper
+import androidx.recyclerview.widget.PagerSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.danjdt.pdfviewer.decoder.FileLoader
 import com.danjdt.pdfviewer.interfaces.OnErrorListener
@@ -20,6 +22,7 @@ import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import kotlin.properties.Delegates
+
 
 @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
 class PdfViewer private constructor(private val rootView: ViewGroup) : OnLoadFileListener {
@@ -57,8 +60,12 @@ class PdfViewer private constructor(private val rootView: ViewGroup) : OnLoadFil
     }
 
     override fun onFileLoaded(file: File) {
-        (mainView as RecyclerView).layoutManager?.scrollToPosition((startPage - 1).coerceAtLeast(0))
+        (mainView as RecyclerView).layoutManager?.scrollToPosition((startPage - 2).coerceAtLeast(0))
         // Minus 1 since page starts at 1 and adapter position starts at 0
+        // TODO: Minus 2 for now since some book have short page height and app get confused about current page
+
+        val linearSnapHelper = PagerSnapHelper()
+        linearSnapHelper.attachToRecyclerView(mainView as RecyclerView)
 
         (context as Activity).runOnUiThread {
             display(file)
