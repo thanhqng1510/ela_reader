@@ -38,4 +38,8 @@
     <string name="num_bookmarks">%1$d bookmarks</string>
     <string name="bookmark_page">Page %1$d / %2$d</string>
     <string name="empty_bookmark_list_desc">You haven\'t add any bookmarks</string>
+
+    <!-- Add book page-->
+    <string name="add_book_qr_label">Scan QR code</string>
+    <string name="add_book_file_label">Import from file</string>
 </resources>

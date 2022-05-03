@@ -9,12 +9,53 @@
     android:paddingTop="@dimen/componentSpacing"
     tools:context=".screens.add_book.AddBookScreen">
 
-    <ImageButton
-        android:id="@+id/add_book_btn"
+    <LinearLayout
+        android:layout_margin="@dimen/globalSpacing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#00FFFFFF"
-        android:contentDescription="@string/add_book_btn_desc"
-        android:foreground="?android:attr/selectableItemBackground"
-        app:srcCompat="@drawable/add_light" />
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/add_book_file_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="@string/add_book_btn_desc"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:srcCompat="@drawable/add_file_light" />
+
+        <TextView
+            android:textSize="@dimen/body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_book_file_label"/>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/globalSpacing" />
+
+    <LinearLayout
+        android:layout_margin="@dimen/globalSpacing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <ImageButton
+            android:id="@+id/add_book_qr_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#00FFFFFF"
+            android:contentDescription="@string/add_book_btn_desc"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:srcCompat="@drawable/add_qr_light" />
+
+        <TextView
+            android:textSize="@dimen/body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_book_qr_label"/>
+    </LinearLayout>
 </LinearLayout>

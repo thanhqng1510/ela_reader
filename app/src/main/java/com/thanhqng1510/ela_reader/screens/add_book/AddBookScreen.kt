@@ -68,11 +68,12 @@ class AddBookScreen : BaseFragment() {
     override fun setupCollectors() {}
 
     override fun setupListeners() {
-        bindings!!.addBookBtn.setOnClickListener {
+        bindings!!.addBookFileBtn.setOnClickListener {
             selectFileLauncher.launch(
                 arrayOf("application/pdf") // TODO: Only support PDF for now
             )
         }
+        // TODO: Support QR
     }
 
     override fun cleanUpView() {

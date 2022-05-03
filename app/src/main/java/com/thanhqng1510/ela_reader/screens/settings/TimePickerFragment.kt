@@ -1,4 +1,4 @@
-package com.thanhqng1510.bookreadingapp_android.activities.settings_activity
+package com.thanhqng1510.ela_reader.screens.settings
 
 import android.app.Dialog
 import android.app.TimePickerDialog

@@ -3,7 +3,6 @@ package com.thanhqng1510.ela_reader.screens.settings
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import com.thanhqng1510.bookreadingapp_android.activities.settings_activity.TimePickerFragment
 import com.thanhqng1510.ela_reader.R
 
 class SettingsSupportFragment : PreferenceFragmentCompat() {

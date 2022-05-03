@@ -4,12 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../layout/custom_preview.xml" value="0.43020833333333336" />
+        <entry key="app/src/main/res/drawable/add_file_light.xml" value="0.403" />
         <entry key="app/src/main/res/drawable/add_light.xml" value="0.403" />
         <entry key="app/src/main/res/drawable/back_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/book_light.xml" value="0.403" />
         <entry key="app/src/main/res/drawable/bookmark_collection_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/custom_searchview.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/error_status_light.xml" value="0.333" />
+        <entry key="app/src/main/res/drawable/ic_qr_svgrepo_com.xml" value="0.403" />
         <entry key="app/src/main/res/drawable/note_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/settings_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/shadow_down_light.xml" value="0.333" />
