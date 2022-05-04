@@ -19,6 +19,7 @@ import com.thanhqng1510.ela_reader.services.AmbientSoundPlayerService
 import com.thanhqng1510.ela_reader.utils.activity_utils.BaseActivity
 import com.thanhqng1510.ela_reader.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -75,10 +76,12 @@ class ReaderScreen : BaseActivity() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        if (viewModel.bookData?.currentPage!! < 5)
-            menu?.get(1)?.icon = ResourcesCompat.getDrawable(resources, R.drawable.bookmark_added, null)
-        else
-            menu?.get(1)?.icon = ResourcesCompat.getDrawable(resources, R.drawable.bookmark_collection_light, null)
+        viewModel.currentBookmarkIconId =
+            if (viewModel.currentBookmarkIconId == R.drawable.bookmark_collection_light) R.drawable.bookmark_added
+            else R.drawable.bookmark_collection_light
+
+        menu?.get(1)?.icon =
+            ResourcesCompat.getDrawable(resources, viewModel.currentBookmarkIconId, null)
 
         return super.onPrepareOptionsMenu(menu)
     }
@@ -99,12 +102,24 @@ class ReaderScreen : BaseActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    override fun setupCollectors() {}
+    override fun setupCollectors() {
+        lifecycleScope.launch {
+            whenStarted {
+                viewModel.bookmarksFlow.collectLatest {
+                    if (needSwitchBookmarkIcon())
+                        invalidateOptionsMenu()
+                }
+            }
+        }
+    }
 
     override fun setupListeners() {}
 
-    private fun needInvalidateOptionsMenu() {
-
+    private fun needSwitchBookmarkIcon(): Boolean {
+        val bookmarkAdded =
+            viewModel.bookmarksFlow.value.any { b -> b.page == viewModel.bookData?.currentPage }
+        return ((bookmarkAdded && viewModel.currentBookmarkIconId == R.drawable.bookmark_collection_light) ||
+                (!bookmarkAdded && viewModel.currentBookmarkIconId == R.drawable.bookmark_added))
     }
 
     private fun showBookAsync(bookId: Long, bookPage: Int) = lifecycleScope.launch {
@@ -120,7 +135,8 @@ class ReaderScreen : BaseActivity() {
                 .setOnPageChangedListener(object : OnPageChangedListener {
                     override fun onPageChanged(page: Int, total: Int) {
                         viewModel.bookData?.currentPage = page
-                        invalidateOptionsMenu()
+                        if (needSwitchBookmarkIcon())
+                            invalidateOptionsMenu()
                     }
                 })
                 .setOnErrorListener(object : OnErrorListener {

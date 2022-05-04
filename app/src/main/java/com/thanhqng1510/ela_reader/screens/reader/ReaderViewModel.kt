@@ -4,6 +4,7 @@ import android.app.Application
 import android.content.Intent
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.thanhqng1510.ela_reader.R
 import com.thanhqng1510.ela_reader.datastore.DataStore
 import com.thanhqng1510.ela_reader.logstore.LogUtil
 import com.thanhqng1510.ela_reader.models.entities.book.Book
@@ -14,7 +15,9 @@ import com.thanhqng1510.ela_reader.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -28,6 +31,11 @@ class ReaderViewModel @Inject constructor(
     var bookData: Book? = null
 
     val selectedAmbientSoundType = MutableStateFlow<AmbientSoundType?>(null)
+
+    val bookmarksFlow = dataStore.getAllBookmarksAsFlow()
+        .stateIn(viewModelScope, SharingStarted.Eagerly, emptyList())
+
+    var currentBookmarkIconId = R.drawable.bookmark_collection_light
 
     init {
         getSelectedAmbientSoundTypeAsync()
