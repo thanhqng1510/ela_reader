@@ -10,8 +10,7 @@
         <entry key="app/src/main/res/drawable/ambient_sound_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/back_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/book_light.xml" value="0.403" />
-        <entry key="app/src/main/res/drawable/bookmark_added.xml" value="0.2535" />
-        <entry key="app/src/main/res/drawable/bookmark_collection_light.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/bookmark_collection_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/custom_searchview.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/error_status_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/ic_qr_svgrepo_com.xml" value="0.403" />
@@ -24,13 +23,14 @@
         <entry key="app/src/main/res/drawable/sharing_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/sort_light.xml" value="0.333" />
         <entry key="app/src/main/res/drawable/tick_light.xml" value="0.403" />
-        <entry key="app/src/main/res/layout/add_books_screen.xml" value="0.328804347826087" />
+        <entry key="app/src/main/res/layout/add_books_screen.xml" value="0.44574312956436823" />
         <entry key="app/src/main/res/layout/app_screen.xml" value="0.328804347826087" />
         <entry key="app/src/main/res/layout/bookmarks_tab.xml" value="0.328804347826087" />
-        <entry key="app/src/main/res/layout/home_screen.xml" value="0.328804347826087" />
+        <entry key="app/src/main/res/layout/home_screen.xml" value="0.1" />
         <entry key="app/src/main/res/layout/library_tab.xml" value="0.328804347826087" />
+        <entry key="app/src/main/res/layout/progress_overlay.xml" value="0.1" />
         <entry key="app/src/main/res/layout/reader_screen.xml" value="0.328804347826087" />
-        <entry key="app/src/main/res/layout/settings_screen.xml" value="0.328804347826087" />
+        <entry key="app/src/main/res/layout/settings_screen.xml" value="0.1" />
         <entry key="app/src/main/res/menu/book_clicked.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/menu/bookmark_clicked.xml" value="0.4036458333333333" />
         <entry key="app/src/main/res/menu/home_bottom_nav.xml" value="0.4036458333333333" />
