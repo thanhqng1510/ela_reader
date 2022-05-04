@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.whenStarted
 import androidx.navigation.navArgs
@@ -12,6 +15,7 @@ import com.danjdt.pdfviewer.interfaces.OnErrorListener
 import com.danjdt.pdfviewer.interfaces.OnPageChangedListener
 import com.thanhqng1510.ela_reader.R
 import com.thanhqng1510.ela_reader.databinding.ReaderScreenBinding
+import com.thanhqng1510.ela_reader.services.AmbientSoundPlayerService
 import com.thanhqng1510.ela_reader.utils.activity_utils.BaseActivity
 import com.thanhqng1510.ela_reader.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.AndroidEntryPoint
@@ -42,6 +46,26 @@ class ReaderScreen : BaseActivity() {
                 }
                 true
             }
+            R.id.change_ambient_sound_btn -> {
+                val soundTypes =
+                    AmbientSoundPlayerService.AmbientSoundType.values().map { it.displayStr }
+                        .toTypedArray()
+
+                AlertDialog.Builder(this).apply {
+                    setIcon(R.drawable.ambient_sound_light)
+                    setTitle(resources.getString(R.string.select_ambient_type))
+                    setSingleChoiceItems(
+                        soundTypes,
+                        viewModel.selectedAmbientSoundType.value?.ordinal ?: -1
+                    ) { _, selected ->
+                        viewModel.selectedAmbientSoundType.value =
+                            AmbientSoundPlayerService.AmbientSoundType.fromOrdinal(selected)
+                    }
+                    setNegativeButton(resources.getString(R.string.cancel)) { _, _ -> }
+                    create().show()
+                }
+                true
+            }
             android.R.id.home -> {
                 onBackPressed()
                 true
@@ -50,10 +74,18 @@ class ReaderScreen : BaseActivity() {
         }
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (viewModel.bookData?.currentPage!! < 5)
+            menu?.get(1)?.icon = ResourcesCompat.getDrawable(resources, R.drawable.bookmark_added, null)
+        else
+            menu?.get(1)?.icon = ResourcesCompat.getDrawable(resources, R.drawable.bookmark_collection_light, null)
+
+        return super.onPrepareOptionsMenu(menu)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         showBookAsync(args.bookId, args.bookPage)
-        viewModel.playAmbientSoundAsync()
     }
 
     override fun setupBindings(savedInstanceState: Bundle?) {
@@ -71,6 +103,10 @@ class ReaderScreen : BaseActivity() {
 
     override fun setupListeners() {}
 
+    private fun needInvalidateOptionsMenu() {
+
+    }
+
     private fun showBookAsync(bookId: Long, bookPage: Int) = lifecycleScope.launch {
         whenStarted {
             val errMsg = viewModel.getBookByIdAsync(bookId).await()
@@ -84,6 +120,7 @@ class ReaderScreen : BaseActivity() {
                 .setOnPageChangedListener(object : OnPageChangedListener {
                     override fun onPageChanged(page: Int, total: Int) {
                         viewModel.bookData?.currentPage = page
+                        invalidateOptionsMenu()
                     }
                 })
                 .setOnErrorListener(object : OnErrorListener {

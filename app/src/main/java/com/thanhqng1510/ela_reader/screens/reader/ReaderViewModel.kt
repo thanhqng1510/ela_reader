@@ -9,9 +9,12 @@ import com.thanhqng1510.ela_reader.logstore.LogUtil
 import com.thanhqng1510.ela_reader.models.entities.book.Book
 import com.thanhqng1510.ela_reader.models.entities.bookmark.Bookmark
 import com.thanhqng1510.ela_reader.services.AmbientSoundPlayerService
+import com.thanhqng1510.ela_reader.services.AmbientSoundPlayerService.AmbientSoundType
 import com.thanhqng1510.ela_reader.utils.constant_utils.ConstantUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
@@ -23,6 +26,19 @@ class ReaderViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
     var bookData: Book? = null
+
+    val selectedAmbientSoundType = MutableStateFlow<AmbientSoundType?>(null)
+
+    init {
+        getSelectedAmbientSoundTypeAsync()
+
+        viewModelScope.launch {
+            selectedAmbientSoundType.collectLatest {
+                playAmbientSound()
+                updateSelectedAmbientSoundTypeAsync()
+            }
+        }
+    }
 
     override fun onCleared() {
         stopAmbientSound()
@@ -37,17 +53,6 @@ class ReaderViewModel @Inject constructor(
         } ?: run {
             logUtil.error("Failed to fetch book with id: $id", true)
             return@run ConstantUtils.bookFetchFailedFriendly
-        }
-    }
-
-    fun playAmbientSoundAsync() = viewModelScope.launch {
-        dataStore.getSelectedAmbientSoundAsync(getApplication()).await().let { ambientSound ->
-            if (ambientSound == AmbientSoundPlayerService.AmbientSoundType.NONE)
-                return@let
-
-            val service = Intent(getApplication(), AmbientSoundPlayerService::class.java)
-            service.putExtra(AmbientSoundPlayerService.arrayRawResIdExtra, ambientSound.resIds)
-            getApplication<Application>().startService(service)
         }
     }
 
@@ -69,10 +74,32 @@ class ReaderViewModel @Inject constructor(
         }
     }
 
+    private fun playAmbientSound() {
+        selectedAmbientSoundType.value?.let {
+            stopAmbientSound()
+
+            if (it == AmbientSoundType.NONE)
+                return
+
+            val service = Intent(getApplication(), AmbientSoundPlayerService::class.java)
+            service.putExtra(AmbientSoundPlayerService.arrayRawResIdExtra, it.resIds)
+            getApplication<Application>().startService(service)
+        }
+    }
+
     private fun stopAmbientSound() = getApplication<Application>().stopService(
         Intent(
             getApplication(),
             AmbientSoundPlayerService::class.java
         )
     )
+
+    private fun getSelectedAmbientSoundTypeAsync() = viewModelScope.launch {
+        selectedAmbientSoundType.value =
+            dataStore.getSelectedAmbientSoundAsync(getApplication()).await()
+    }
+
+    private fun updateSelectedAmbientSoundTypeAsync() = selectedAmbientSoundType.value?.let {
+        dataStore.setSelectedAmbientSoundAsync(getApplication(), it)
+    }
 }

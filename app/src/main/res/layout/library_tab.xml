@@ -77,8 +77,8 @@
                 android:id="@+id/book_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingBottom="@dimen/listRowHeight"
-                android:paddingTop="@dimen/componentSpacing" />
+                android:paddingTop="@dimen/componentSpacing"
+                android:paddingBottom="@dimen/listRowHeight" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

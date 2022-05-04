@@ -6,6 +6,7 @@
     <string name="back_btn_desc">Back</string>
     <string name="book_cover_desc">Book cover</string>
     <string name="book_overview_spinner">Book overview</string>
+    <string name="cancel">Cancel</string>
 
     <!-- App bar-->
     <string name="home_screen_label">Home</string>
@@ -44,4 +45,5 @@
     <!-- Add book page-->
     <string name="add_book_qr_label">Scan QR code</string>
     <string name="add_book_file_label">Import from file</string>
+    <string name="select_ambient_type">Choose an ambient type</string>
 </resources>

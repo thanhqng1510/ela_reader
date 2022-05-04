@@ -29,6 +29,8 @@ class AmbientSoundPlayerService : Service() {
         CINEMATIC(intArrayOf(), "Cinematic");
 
         companion object {
+            fun fromOrdinal(ordinal: Int) = values()[ordinal]
+
             fun fromStr(string: String) = values().find { ambient -> ambient.displayStr == string }
 
             fun default() = SOOTHING

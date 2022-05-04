@@ -10,11 +10,11 @@
     tools:context=".screens.add_book.AddBookScreen">
 
     <LinearLayout
-        android:layout_margin="@dimen/globalSpacing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_margin="@dimen/globalSpacing"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/add_book_file_btn"
@@ -26,10 +26,10 @@
             app:srcCompat="@drawable/add_file_light" />
 
         <TextView
-            android:textSize="@dimen/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_book_file_label"/>
+            android:text="@string/add_book_file_label"
+            android:textSize="@dimen/body" />
     </LinearLayout>
 
     <Space
@@ -37,11 +37,11 @@
         android:layout_height="@dimen/globalSpacing" />
 
     <LinearLayout
-        android:layout_margin="@dimen/globalSpacing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_margin="@dimen/globalSpacing"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <ImageButton
             android:id="@+id/add_book_qr_btn"
@@ -53,9 +53,9 @@
             app:srcCompat="@drawable/add_qr_light" />
 
         <TextView
-            android:textSize="@dimen/body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_book_qr_label"/>
+            android:text="@string/add_book_qr_label"
+            android:textSize="@dimen/body" />
     </LinearLayout>
 </LinearLayout>

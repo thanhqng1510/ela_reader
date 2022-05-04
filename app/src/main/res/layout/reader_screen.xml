@@ -16,9 +16,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/appBarHeight"
         android:background="?attr/colorPrimary"
-        app:buttonGravity="center_vertical"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:buttonGravity="center_vertical"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <LinearLayout
