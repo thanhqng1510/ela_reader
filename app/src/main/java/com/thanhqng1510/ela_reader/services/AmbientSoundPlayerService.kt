@@ -41,7 +41,7 @@ class AmbientSoundPlayerService : Service() {
         const val arrayRawResIdExtra = "arrayRawResIdExtra"
     }
 
-    private lateinit var player: MediaPlayer
+    private var player: MediaPlayer? = null
 
     private var currentSongIdx = 0
 
@@ -50,32 +50,32 @@ class AmbientSoundPlayerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
-        val resIds = intent?.getIntArrayExtra(arrayRawResIdExtra) ?: run {
-            stopSelf()
-            return START_NOT_STICKY
-        }
+        val resIds = intent?.getIntArrayExtra(arrayRawResIdExtra)
 
-        player = createAmbientPlayer(resIds)
-        player.start()
+        if (resIds == null || resIds.isEmpty())
+            stopSelf()
+        else {
+            player = createAmbientPlayer(resIds)
+            player!!.start()
+        }
 
         return START_NOT_STICKY
     }
 
     override fun onDestroy() {
-        player.stop()
-        player.release()
+        player?.stop()
+        player?.release()
         stopSelf()
         super.onDestroy()
     }
 
     private fun createAmbientPlayer(resIds: IntArray): MediaPlayer {
-        var player = MediaPlayer.create(this, resIds[currentSongIdx])
-        player.setOnCompletionListener {
+        player = MediaPlayer.create(this, resIds[currentSongIdx])
+        player!!.setOnCompletionListener {
             currentSongIdx = (currentSongIdx + 1) % resIds.size
             player = createAmbientPlayer(resIds)
-            player.start()
+            player!!.start()
         }
-
-        return player
+        return player!!
     }
 }
